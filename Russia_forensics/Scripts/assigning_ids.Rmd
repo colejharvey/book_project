@@ -1,0 +1,44 @@
+---
+title: "Russian electoral data generating IDs"
+output: html_notebook
+---
+
+```{r setup}
+library(tidyverse)
+library(stringi)
+library(here)
+library(openxlsx)
+
+filenames <- list.files(here("Russia_forensics", "Data"), pattern="*.xlsx", full.names=TRUE)
+
+
+```
+
+```{r}
+region_names <- data.frame(region = NA)
+for(i in 1:length(filenames)){
+ elex_data <- read.xlsx(filenames[i])
+ unique_regs <- data.frame(unique(elex_data$region))
+ region_names <- bind_rows(region_names, unique_regs)
+
+}
+
+unique_regs_all <- unique(region_names)
+```
+
+
+```{r}
+write.xlsx(unique_regs_all, here("region_ids_cyr1.xlsx")) #This ithen cleaned and IDs assigned manually
+```
+
+Applying IDs
+```{r}
+region_ids <- read.xlsx(here("region_ids_cyr.xlsx"))
+
+for(i in 1:length(filenames)){
+ elex_data <- read.xlsx(filenames[i])
+ elex_data <- elex_data %>% left_join(region_ids, by = "region")
+write.xlsx(elex_data, filenames[i])
+}
+```
+

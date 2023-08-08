@@ -1,0 +1,110 @@
+---
+title: "Digits tests"
+output: html_notebook
+---
+
+```{r setup}
+library(tidyverse)
+library(stringi)
+library(here)
+library(openxlsx)
+
+filenames <- list.files(here("Russia_forensics", "Data"), pattern="*.xlsx", full.names=TRUE)
+filenames_sub <- filenames[-10]
+
+
+```
+
+In the precinct election data, all KPRF results (legislative and presidential) are called 'kprf'. All regime results are coded as "yed_ro" (so, United Russia, Putin/Medvedev, and YES on the constitutional referendum.) NO on the referendum is still has its original name.  When the code generates NAs for region_id, those observations are polling places outside the RF.
+
+```{r}
+p<-as.vector(rbind(.1, .1, .1, .1, .1, .1, .1, .1, .1, .1)) # Expected uniform distribution
+year.list <- c("2000", "2003", "2004", "2007", "2008", "2011", "2012", "2016", "2018", "2021") #Do referendum separately
+fraud_scores <- data.frame(ur_chi = NA, kprf_chi = NA, region_id = NA, year = NA, ur_fraud = NA, kprf_fraud = NA)
+
+for(i in 1:length(filenames_sub)){
+  elex_data <- read.xlsx(filenames_sub[i])
+  n.regions <- length(unique(elex_data$region_id))
+  elex_data <- elex_data %>% mutate(kprf_digit = kprf %% 10)
+  elex_data <- elex_data %>% mutate(ur_digit = yed_ro %% 10)
+  regionids <- unique(elex_data$region_id)
+  chivalues<-matrix(NA, nrow=n.regions, ncol=4) #Four columns: chi values for two parties, year, and regionid
+
+  for (j in 1:length(regionids)){
+    grouping_id <- regionids[j]
+  group<-subset(elex_data, region_id==grouping_id)
+  table1<-table(group$ur_digit)
+  table2<-table(group$kprf_digit)
+  
+  if (nrow(table1) == 10 & nrow(table2) == 10){
+  chi1<-chisq.test(x=table1, p=p)
+  chi2<-chisq.test(x=table2, p=p)
+  
+  chivalues[j, ]<-rbind(chi1$p.value, chi2$p.value, grouping_id, year.list[i])  
+  }
+  if (nrow(table1) < 10 & nrow(table2) == 10) {
+    chivalues[j, ]<-rbind(0, chi2$p.value, grouping_id, year.list[i])  
+  }
+   if (nrow(table1) == 10 & nrow(table2) < 10) {
+    chivalues[j, ]<-rbind(chi1$p.value, 0, grouping_id, year.list[i])  
+   }
+  if (nrow(table1) < 10 & nrow(table2) < 10)  {
+    chivalues[j, ]<-rbind(0, 0, grouping_id, year.list[i])  
+  }
+  
+ }
+ chivalues <- data.frame(chivalues) 
+ chivalues <- chivalues %>% mutate(ur_fraud = ifelse(chivalues[,1] < .05, 1, 0))
+ chivalues <- chivalues %>% mutate(kprf_fraud = ifelse(chivalues[,2] < .05, 1, 0))
+fraud_scores <- bind_rows(fraud_scores, chivalues)
+}
+####
+
+fraud_scores <- fraud_scores %>% select(-ur_chi, -kprf_chi, -region_id, -year)
+fraud_scores <- fraud_scores %>% rename(ur_chi = X1, kprf_chi = X2, region_id = X3, year = X4)
+
+
+write.csv(fraud_scores, here("Russia_forensics", "Data", "russia_elex_fraudscores.csv"))
+
+```
+
+The referendum:
+
+```{r}
+p<-as.vector(rbind(.1, .1, .1, .1, .1, .1, .1, .1, .1, .1)) # Expected uniform distribution
+fraud_scores <- data.frame(ur_chi = NA, kprf_chi = NA, region_id = NA, year = NA, ur_fraud = NA, kprf_fraud = NA)
+
+  elex_data <- read.xlsx(filenames[10])
+  n.regions <- length(unique(elex_data$region_id))
+  elex_data <- elex_data %>% mutate(ur_digit = yed_ro %% 10)
+  regionids <- unique(elex_data$region_id)
+  chivalues<-matrix(NA, nrow=n.regions, ncol=3) #Four columns: chi values for yes result, year, and regionid
+
+  for (j in 1:length(regionids)){
+    grouping_id <- regionids[j]
+  group<-subset(elex_data, region_id==grouping_id)
+  table1<-table(group$ur_digit)
+
+  if (nrow(table1) == 10){
+  chi1<-chisq.test(x=table1, p=p)
+
+  chivalues[j, ]<-rbind(chi1$p.value, grouping_id, "2020")  
+  }
+  if (nrow(table1) < 10) {
+    chivalues[j, ]<-rbind(0, grouping_id, "2020")  
+  }
+  
+ }
+ chivalues <- data.frame(chivalues) 
+ chivalues <- chivalues %>% mutate(ur_fraud = ifelse(chivalues[,1] < .05, 1, 0))
+fraud_scores <- bind_rows(fraud_scores, chivalues)
+
+####
+
+fraud_scores <- fraud_scores %>% select(-ur_chi, -kprf_chi, -region_id, -year, -kprf_fraud)
+fraud_scores <- fraud_scores %>% rename(ur_chi = X1, region_id  = X2, year = X3)
+
+write.csv(fraud_scores, here("Russia_forensics", "Data", "russia_2020ref_fraudscores.csv"))
+
+```
+

@@ -1,0 +1,53 @@
+---
+title: "Nonstandard voting"
+output: html_notebook
+---
+
+Note that absentee voting was abolished in Russia from 2018 on.
+
+```{r setup}
+library(tidyverse)
+library(stringi)
+library(here)
+library(openxlsx)
+
+
+filenames <- list.files(here("Russia_forensics", "Data"), pattern="*.xlsx", full.names=TRUE)
+filenames_sub <- filenames[-10]
+
+
+```
+
+
+
+```{r}
+mobile_coefs <- data.frame(mobile_coef_ur = NA, region_id = NA, year = NA)
+year.list <- c("2000", "2003", "2004", "2007", "2008", "2011", "2012", "2016", "2018", "2021") #Do referendum separately
+
+
+for(i in 1:length(filenames_sub)){
+  elex_data <- read.xlsx(filenames_sub[i])
+  elex_data <- elex_data %>% filter(is.na(region_id) == FALSE)
+  n.regions <- length(unique(elex_data$region_id))
+  regionids <- unique(elex_data$region_id)
+  
+  ## Getting variables
+  
+  elex_data <- elex_data %>% mutate(ur_abshare = yed_ro / voter_list)
+  elex_data <- elex_data %>% mutate(mobile_turnout = mobile / voter_list)
+
+   for (j in 1:length(regionids)){
+    grouping_id <- regionids[j]
+    group<-subset(elex_data, region_id==grouping_id)
+    model<-lm(ur_abshare~mobile_turnout, data=group)
+    coef_group <- as.numeric(coef(model)[2])
+    temp_row <- data.frame(mobile_coef_ur = coef_group, region_id = grouping_id, year = year.list[i])
+    mobile_coefs <- bind_rows(mobile_coefs, temp_row)
+   }
+}
+    
+write.csv(mobile_coefs, here("Russia_forensics", "Data", "russia_elex_mobile_coefs.csv"))
+
+
+```
+
