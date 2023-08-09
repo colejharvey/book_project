@@ -1,0 +1,24 @@
+---
+title: "Reshaping regional competitiveness scores"
+output: html_notebook
+---
+
+These scores are the vote-shares in regional legislature elections. 
+
+```{r setup}
+library(tidyverse)
+library(here)
+library(openxlsx)
+
+data_wide <- read.xlsx(here("Russia_forensics", "Data", "regional_comp_wide.xlsx"))
+```
+
+
+```{r}
+df_long <- pivot_longer(data_wide, cols = -c("region_id","region"), names_to = "year")
+df_long <- df_long %>% rename(regional_comp = value)
+
+
+write.xlsx(df_long, here("Russia_forensics", "Data", "regional_comp_long.xlsx"))
+```
+

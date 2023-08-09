@@ -1,0 +1,55 @@
+---
+title: "Data cleaning"
+output: html_notebook
+---
+
+```{r setup}
+library(tidyverse)
+library(here)
+library(openxlsx)
+library(lme4)
+
+comp_data <- read.xlsx(here("Russia_forensics", "Data", "regional_comp_long.xlsx"))
+fraud_data <- read.csv(here("Russia_forensics", "Data", "russia_elex_fraudscores.csv"))
+
+comp_data <- comp_data %>% mutate(year = as.numeric(year))
+```
+
+Lagging in pre-merge data
+
+```{r}
+comp_data <- comp_data %>% group_by(region_id) %>%  mutate(regional_comp_lag = dplyr::lag(regional_comp, n = 1))
+
+```
+
+
+
+Merging
+
+
+```{r}
+elex_data <- fraud_data %>% left_join(comp_data, by = c("region_id", "year"))
+```
+
+Mutating variables
+
+```{r}
+
+elex_data <- elex_data %>% mutate(total_fraud = ur_fraud + kprf_fraud)
+elex_data <- elex_data %>% mutate(any_fraud = ifelse(is.na(total_fraud) == T, NA, ifelse(total_fraud >= 1, 1, 0)))
+elex_data <- elex_data %>% mutate(presidential = ifelse(year == 2004 | year == 2008 | year == 2012 | year == 2018, 1, 0))
+
+```
+
+
+Lagging in elex_data
+
+```{r}
+```
+
+
+```{r}
+model_test <- glmer(any_fraud ~ regional_comp_lag + presidential + (1 | region_id), data = elex_data, family = binomial(link = "logit"))
+summary(model_test)
+```
+
