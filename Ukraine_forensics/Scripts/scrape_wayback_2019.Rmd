@@ -1,0 +1,91 @@
+---
+title: "Scraping Ukraine 2019 presidential data from wayback machine"
+output: html_notebook
+---
+
+
+## Original version
+
+```{r}
+library(rvest)
+library(stringi)
+library(tidyr)
+library(data.table)
+library(dplyr)
+library(plyr)
+
+
+```
+
+#Create a container for the full, precinct-level results
+
+```{r}
+table.list <- list() #Container for each region
+```
+
+
+#Begin the HTML session at the top-level page
+
+```{r}
+outer.session <- html_session("https://web.archive.org/web/20201101124504/https://www.cvk.gov.ua/pls/vp2019/wp335pt001f01=720.html",
+                              encoding="windows-1251") 
+page_home <- outer.session %>% read_html()
+
+territory_names <- page_home %>% html_nodes(css = "td:nth-child(4)") %>% html_text()
+precinct_links_suffix <- page_home %>% html_nodes(css = ".cntr .a1") %>% html_attr("href") #This gets suffixes
+precinct_links_stem <- "https://web.archive.org/web/20201101124504/https://www.cvk.gov.ua/pls/vp2019/"
+precinct_links_complete <- paste0(precinct_links_stem, precinct_links_suffix)
+```
+
+
+
+
+
+```{r}
+for(i in 1:length(precinct_links_complete)){
+
+test_page <- httr::GET(precinct_links_complete[i]) #If status code >300, break  
+
+ if(status_code(test_page) > 300) {
+    
+    print(paste0("No results site found for territory ", territory_names[i]))
+    next
+ }
+else{
+    
+page <-   outer.session %>% jump_to(precinct_links_complete[i]) %>% read_html()
+
+
+
+table.long <- page %>% html_nodes(css = "#pure-wrap , #pure-wrap .cntr") %>% html_text() #Css found with selector gadget
+
+table_header <- c("precinct_number", "ballots_received", "voter_list", "voter_extract", "revoked_ballots", "not_sure_translation", "ballots_mailed_to_residence", "total_ballots_received_by_voters", "unaccounted_ballots", "n_ballots_cast", "invalid_ballots", "zelenskyi", "poroshenko", "date_time")
+
+
+
+table.long.n <- table.long[2:length(table.long)] %>% as.numeric()
+results_table <- matrix(table.long.n, ncol = 14, byrow = TRUE) #Turns the vector into a matrix with the correct number of columns
+
+results_table <- data.table(results_table) #Convert matrix to table
+setnames(results_table, table_header)      #Name the variables
+
+results_table <- results_table %>% mutate(territory = territory_names[i]) #Add the territory name
+
+
+table.list[[i]] <- results_table
+
+print(paste("Territory", territory_names[i], "Complete. Sleeping for 3 seconds.", sep = " "))
+Sys.sleep(3)  #Pause the loop for 3 seconds
+rm(page)
+ }
+}
+
+region.table <- rbindlist(table.list)
+region.table <- region.table %>% mutate(region = "vinnitska")
+```
+
+```{r}
+openxlsx::write.xlsx(region.table, here::here("Ukraine_forensics", "Data", "Election_presidential_2019", "vinnitska.xlsx"))
+```
+
+To-do: Figure out best way to automate across regions. Need to tell the script when to code what name for what region, when to break to save, etc.

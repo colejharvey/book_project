@@ -1,0 +1,16 @@
+---
+title: "Ukraine data cleaning"
+output: html_notebook
+---
+
+```{r setup}
+library(here)
+library(tidyverse)
+```
+
+```{r}
+load(here("Ukraine_forensics", "Data", "clea_data", "clea_lc_20220908.RData"))
+clea_data <- clea_lc_20220908 %>% filter(ctr_n == "Ukraine")
+rm(clea_lc_20220908)
+```
+
