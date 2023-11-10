@@ -46,7 +46,7 @@ for(i in 1:length(precinct_links_complete)){
 
 test_page <- httr::GET(precinct_links_complete[i]) #If status code >300, break  
 
- if(status_code(test_page) > 300) {
+ if(httr::status_code(test_page) > 300) {
     
     print(paste0("No results site found for territory ", territory_names[i]))
     next
@@ -80,12 +80,17 @@ rm(page)
  }
 }
 
-region.table <- rbindlist(table.list)
-region.table <- region.table %>% mutate(region = "vinnitska")
+big.table <- rbindlist(table.list)
+#region.table <- region.table %>% mutate(region = "vinnitska")
 ```
 
 ```{r}
-openxlsx::write.xlsx(region.table, here::here("Ukraine_forensics", "Data", "Election_presidential_2019", "vinnitska.xlsx"))
+openxlsx::write.xlsx(big.table, here::here("Ukraine_forensics", "Data", "Election_presidential_2019", "results_presidential_2019.xlsx"))
+```
+
+
+```{r}
+#openxlsx::write.xlsx(region.table, here::here("Ukraine_forensics", "Data", "Election_presidential_2019", "vinnitska.xlsx"))
 ```
 
 To-do: Figure out best way to automate across regions. Need to tell the script when to code what name for what region, when to break to save, etc.
