@@ -9,26 +9,26 @@ library(here)
 library(openxlsx)
 library(lme4)
 
-comp_data <- read.xlsx(here("Russia_forensics", "Data", "regional_comp_long.xlsx"))
-fraud_data <- read.csv(here("Russia_forensics", "Data", "russia_elex_fraudscores.csv"))
-
-comp_data <- comp_data %>% mutate(year = as.numeric(year))
 ```
-
-Lagging in pre-merge data
 
 ```{r}
-comp_data <- comp_data %>% group_by(region_id) %>%  mutate(regional_comp_lag = dplyr::lag(regional_comp, n = 1))
+regional_vars <- read.xlsx(here("Russia_forensics", "Data", "regional_vars.xlsx"))
+fraud_data <- read.csv(here("Russia_forensics", "Data", "russia_elex_fraudscores.csv"))
+stuff_data <- read.csv(here("Russia_forensics", "Data", "russia_elex_mobile_coefs.csv"))
+region_ids <- read.xlsx(here("region_ids_cyr.xlsx"))
 
+
+regional_vars <- regional_vars %>% mutate(year = as.numeric(year))
 ```
-
 
 
 Merging
 
 
 ```{r}
-elex_data <- fraud_data %>% left_join(comp_data, by = c("region_id", "year"))
+elex_data <- fraud_data %>% left_join(regional_vars, by = c("region_id", "year"))
+elex_data <- elex_data %>% left_join(stuff_data, by = c("region_id", "year"))
+elex_data <- elex_data %>% left_join(region_ids, by = "region_id")
 ```
 
 Mutating variables
@@ -39,17 +39,75 @@ elex_data <- elex_data %>% mutate(total_fraud = ur_fraud + kprf_fraud)
 elex_data <- elex_data %>% mutate(any_fraud = ifelse(is.na(total_fraud) == T, NA, ifelse(total_fraud >= 1, 1, 0)))
 elex_data <- elex_data %>% mutate(presidential = ifelse(year == 2004 | year == 2008 | year == 2012 | year == 2018, 1, 0))
 
+
+elex_data <- elex_data %>% dplyr::select(-X.x, -X.y)
 ```
 
 
-Lagging in elex_data
-
+Saving
 ```{r}
+write.csv(elex_data, here("Russia_forensics", "Data", "analysis_data.csv"))
 ```
 
 
+### Adding last-digit-zero deviance score
+
 ```{r}
-model_test <- glmer(any_fraud ~ regional_comp_lag + presidential + (1 | region_id), data = elex_data, family = binomial(link = "logit"))
-summary(model_test)
+elex_data <- read.xlsx(here("Russia_forensics", "Data", "analysis_data.xlsx")) #Has cyrillic regions
+master_id_list <- read.xlsx(here("Russia_forensics", "Data", "master_id_list.xlsx")) %>% dplyr::select(master_id, region_cyr)
+dev_data <- read.csv(here("Russia_forensics", "Data", "combined_zero_digit_deviance.csv")) %>% mutate(year = as.character(year))
+
+## Merge master_id_list and elex_data
+
+elex_data <- elex_data %>% left_join(master_id_list, by ="region_cyr")
+
+## Merge in deviance scores
+
+elex_data <- elex_data %>% left_join(dev_data, by = c("master_id", "year"))
+
+write.csv(elex_data, here("Russia_forensics", "Data", "analysis_data_master.csv")) #This file now includes master IDs
+write.xlsx(elex_data, here("Russia_forensics", "Data", "analysis_data_master.xlsx")) #This file now includes master IDs
+```
+
+```{r}
+elex_data <- read.xlsx(here("Russia_forensics", "Data", "analysis_data_master.xlsx"))
+urgov_data <- read.csv(here("Russia_forensics", "Data", "ur_gov_share.csv"))  %>% mutate(year = as.character(year))
+
+elex_data <- elex_data %>% left_join(urgov_data, by = "year")
+
+write.xlsx(elex_data, here("Russia_forensics", "Data", "analysis_data_master.xlsx"))
+write.csv(elex_data, here("Russia_forensics", "Data", "analysis_data_master.csv")) 
+```
+
+
+## Adding non-standard coefs
+
+```{r}
+elex_data <- read.xlsx(here("Russia_forensics", "Data", "analysis_data_master.xlsx"))
+ns_data <- read.csv(here("Russia_forensics", "Data", "russia_elex_nonstandard_coefs.csv")) %>% mutate(region_id = as.character(region_id)) %>% mutate(year = as.character(year))
+
+elex_data <- elex_data %>% left_join(ns_data, by = c("region_id", "year"))
+
+write.xlsx(elex_data, here("Russia_forensics", "Data", "analysis_data_master.xlsx"))
+write.csv(elex_data, here("Russia_forensics", "Data", "analysis_data_master.csv")) 
+```
+
+
+## Adding updated Russian ethnicity to analysis data master
+
+```{r}
+elex_data <- read.xlsx(here("Russia_forensics", "Data", "analysis_data_master.xlsx"))
+russ_data <- read.xlsx(here("Russia_forensics", "Data", "russian_ethnicity_update.xlsx"))
+
+## Reshape russ_data to long
+
+russ_data <- russ_data %>% pivot_longer(cols = starts_with("2"),
+                                        names_to = "year",
+                                        values_to = "pct_russian_upd")
+
+elex_data <- elex_data %>% left_join(russ_data, by = c("master_id", "year"))
+
+write.xlsx(elex_data, here("Russia_forensics", "Data", "analysis_data_master.xlsx"))
+write.csv(elex_data, here("Russia_forensics", "Data", "analysis_data_master.csv")) 
 ```
 

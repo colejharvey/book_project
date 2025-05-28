@@ -1,0 +1,475 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+# Web Scraper for vkks.ru using a file of region links
+# This script reads region links from a file, navigates to each page,
+# finds the "Анализ практики" element and saves the resulting pages
+
+# Load required packages
+if (!require("rvest")) install.packages("rvest")
+if (!require("httr")) install.packages("httr")
+if (!require("stringr")) install.packages("stringr")
+if (!require("xml2")) install.packages("xml2")
+
+library(rvest)
+library(httr)
+library(stringr)
+library(xml2)
+library(here)
+
+# Set base URL
+base_url <- "https://vkks.ru"
+
+# Function to safely navigate to a page with retry logic
+safe_read_html <- function(url, max_attempts = 3, delay = 2, follow_redirects = TRUE) {
+  for (attempt in 1:max_attempts) {
+    tryCatch({
+      # Add a small delay to be respectful to the server
+      Sys.sleep(delay)
+      
+      # Try to get the page with a timeout, following redirects
+      response <- GET(url, timeout(10), config(followlocation = follow_redirects))
+      
+      # Check if request was successful
+      if (status_code(response) == 200) {
+        # Return both the HTML and the final URL after any redirects
+        final_url <- response$url
+        return(list(
+          html = read_html(response),
+          final_url = final_url
+        ))
+      } else {
+        message(paste("Attempt", attempt, "failed with status code:", status_code(response)))
+      }
+    }, error = function(e) {
+      message(paste("Attempt", attempt, "failed with error:", e$message))
+    })
+  }
+  
+  # If all attempts fail, return NULL
+  message(paste("Failed to retrieve", url, "after", max_attempts, "attempts"))
+  return(NULL)
+}
+
+# Create directory for saving HTML files if it doesn't exist
+output_dir <- here("Russia_forensics", "vkks_scraped_pages")
+if (!dir.exists(output_dir)) {
+  dir.create(output_dir)
+}
+
+# Function to sanitize filenames
+sanitize_filename <- function(filename) {
+  # Replace characters that aren't allowed in filenames
+  sanitized <- str_replace_all(filename, "[\\/:*?\"<>|]", "_")
+  # Remove leading/trailing whitespace
+  sanitized <- str_trim(sanitized)
+  return(sanitized)
+}
+
+# Function to extract href and text from HTML link string
+extract_link_info <- function(link_string) {
+  # Create a temporary HTML document with the link
+  temp_html <- read_html(paste0("<html>", link_string, "</html>"))
+  
+  # Extract the href attribute and text
+  href <- temp_html %>%
+    html_nodes("a") %>%
+    html_attr("href")
+  
+  text <- temp_html %>%
+    html_nodes("a") %>%
+    html_text()
+  
+  return(list(href = href, text = text))
+}
+
+# Main scraping function
+scrape_vkks_from_file <- function(file_path) {
+  message("Starting to scrape vkks.ru using region links from file...")
+  
+  # Read the file with region links
+  if (!file.exists(file_path)) {
+    message("File not found: ", file_path)
+    return(FALSE)
+  }
+  
+  region_links <- readLines(file_path, warn = FALSE)
+  message(paste("Read", length(region_links), "region links from file"))
+  
+  # Process each region link
+  for (i in 1:length(region_links)) {
+    # Skip empty lines
+    if (str_trim(region_links[i]) == "") {
+      next
+    }
+    
+    # Extract href and region name from the link string
+    link_info <- extract_link_info(region_links[i])
+    region_url <- link_info$href
+    region_name <- link_info$text
+    
+    if (length(region_url) == 0 || length(region_name) == 0) {
+      message(paste("Couldn't parse link:", region_links[i]))
+      next
+    }
+    
+    # Make sure we have an absolute URL
+    if (!startsWith(region_url, "http")) {
+      full_region_url <- paste0(base_url, region_url)
+    } else {
+      full_region_url <- region_url
+    }
+    
+    message(paste("Processing region:", region_name, "URL:", full_region_url))
+    
+    # Navigate to the region page
+    region_result <- safe_read_html(full_region_url)
+    
+    if (is.null(region_page)) {
+      message(paste("Failed to access region page for", region_name))
+      next
+    }
+    
+    region_page <- region_result$html
+    redirected_url <- region_result$final_url
+    
+    # Extract the base domain from the redirected URL (to use as prefix for subsequent URLs)
+    redirected_base <- sub("(https?://[^/]+).*", "\\1", redirected_url)
+    message(paste("Redirected to:", redirected_base))
+    
+    # Look for "Анализ практики" element - now accounting for span tags inside links
+    analysis_element <- region_page %>%
+     html_nodes(xpath = '//a[.//span[contains(text(), "Анализ практики")]] | //a[contains(text(), "Анализ практики")]')
+    
+    if (length(analysis_element) > 0) {
+      analysis_url <- html_attr(analysis_element[1], "href")
+      
+      # Clean the URL by removing whitespace characters
+      analysis_url <- str_trim(analysis_url)
+      analysis_url <- str_replace_all(analysis_url, "[\n\t\r]", "")
+      
+      # Make sure we have an absolute URL
+        if (!startsWith(analysis_url, "http")) {
+        # Use the redirected base URL as the prefix instead of the original base_url
+        analysis_url <- paste0(redirected_base, sub("^/", "/", analysis_url))
+      }
+      
+      message(paste("Found 'Анализ практики' element, navigating to", analysis_url))
+      
+      # Navigate to the analysis page
+      analysis_page <- safe_read_html(analysis_url)
+      
+      if (is.null(analysis_page)) {
+        message(paste("Failed to access 'Анализ практики' page for", region_name))
+        next
+      }
+      
+      # Save the page locally
+      sanitized_name <- sanitize_filename(region_name)
+      file_path <- file.path(output_dir, paste0(sanitized_name, ".html"))
+      
+      writeLines(as.character(analysis_page), file_path)
+      message(paste("Saved", file_path))
+    } else {
+      message(paste("No 'Анализ практики' element found for", region_name))
+    }
+  }
+  
+  message("Scraping completed!")
+  return(TRUE)
+}
+
+# Example usage
+# Replace 'region_links.txt' with the path to your file containing the region links
+library(here)
+
+file_path <- here("Russia_forensics", "Scripts", "region_links.txt")
+
+# Execute the scraper
+scrape_vkks_from_file(file_path)
+
+# Print summary message
+```
+
+Above script gets to the final page but cannot save content, which is dynamically generated using JS.
+
+Below script will save content successfully, but needs to be integrated into the final step of the above code.
+
+However, we will likely need to go one more step in the process. Links are not correctly saved in the JS version. Instead of pointing to the correct URL, they point to file:///... so we will need to follow each of those links and save the bottom level pages. The links usually have the text "подробнее"
+
+```{r}
+save_webpage <- function(url, output_file, render_js = TRUE) {
+  # Print status message
+  cat("Attempting to download:", url, "\n")
+  
+  if (render_js) {
+    # For JavaScript-heavy pages, we need a browser session
+    # Using httr with a browser user-agent
+    user_agent_string <- "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    
+    # Make request with full browser headers
+    response <- httr::GET(
+      url,
+      httr::user_agent(user_agent_string),
+      httr::add_headers(
+        `Accept` = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        `Accept-Language` = "en-US,en;q=0.5",
+        `Accept-Encoding` = "gzip, deflate, br",
+        `Connection` = "keep-alive",
+        `Upgrade-Insecure-Requests` = "1"
+      )
+    )
+    
+    # Check if request was successful
+    if (httr::status_code(response) == 200) {
+      # Get the content
+      content <- httr::content(response, "text")
+      
+      # Write the content to file
+      writeLines(content, output_file)
+      cat("Successfully saved webpage to:", output_file, "\n")
+      return(TRUE)
+    } else {
+      cat("Failed to download page. Status code:", httr::status_code(response), "\n")
+      return(FALSE)
+    }
+  } else {
+    # For simpler pages, rvest might be sufficient
+    tryCatch({
+      webpage <- read_html(url)
+      html_text <- as.character(webpage)
+      writeLines(html_text, output_file)
+      cat("Successfully saved webpage to:", output_file, "\n")
+      return(TRUE)
+    }, error = function(e) {
+      cat("Error:", e$message, "\n")
+      return(FALSE)
+    })
+  }
+}
+
+# Example usage
+# Replace with your target URL and desired output file
+url <- "https://example.com"
+output_file <- here("Russia_forensics", "saved_webpage.html")
+
+# Call the function
+save_webpage(analysis_url, output_file)
+```
+Version 3
+
+This works beautifully, but will need to be incorporated into Version 1, so that it loops through all the regions.
+
+```{r}
+
+# Install required packages if not already installed
+if (!requireNamespace("rvest", quietly = TRUE)) {
+  install.packages("rvest")
+}
+if (!requireNamespace("httr", quietly = TRUE)) {
+  install.packages("httr")
+}
+if (!requireNamespace("stringr", quietly = TRUE)) {
+  install.packages("stringr")
+}
+
+# Load required libraries
+library(rvest)
+library(httr)
+library(stringr)
+
+# Function to get webpage content
+get_webpage_content <- function(url, render_js = TRUE) {
+  # Print status message
+  cat("Attempting to download:", url, "\n")
+  
+  if (render_js) {
+    # For JavaScript-heavy pages, we need a browser session
+    # Using httr with a browser user-agent
+    user_agent_string <- "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    
+    # Make request with full browser headers
+    response <- httr::GET(
+      url,
+      httr::user_agent(user_agent_string),
+      httr::add_headers(
+        `Accept` = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        `Accept-Language` = "en-US,en;q=0.5",
+        `Accept-Encoding` = "gzip, deflate, br",
+        `Connection` = "keep-alive",
+        `Upgrade-Insecure-Requests` = "1"
+      )
+    )
+    
+    # Check if request was successful
+    if (httr::status_code(response) == 200) {
+      # Get the content
+      content <- httr::content(response, "text")
+      return(list(success = TRUE, content = content))
+    } else {
+      cat("Failed to download page. Status code:", httr::status_code(response), "\n")
+      return(list(success = FALSE, content = NULL))
+    }
+  } else {
+    # For simpler pages, rvest might be sufficient
+    tryCatch({
+      webpage <- read_html(url)
+      html_text <- as.character(webpage)
+      return(list(success = TRUE, content = html_text))
+    }, error = function(e) {
+      cat("Error:", e$message, "\n")
+      return(list(success = FALSE, content = NULL))
+    })
+  }
+}
+
+# Function to save webpage content to file
+save_content_to_file <- function(content, output_file) {
+  tryCatch({
+    writeLines(content, output_file)
+    cat("Successfully saved content to:", output_file, "\n")
+    return(TRUE)
+  }, error = function(e) {
+    cat("Error saving to file:", e$message, "\n")
+    return(FALSE)
+  })
+}
+
+# Function to extract links with specific text
+extract_links_with_text <- function(html_content, link_text) {
+  # Parse HTML content
+  doc <- read_html(html_content)
+  
+  # Find all links
+  all_links <- html_nodes(doc, "a")
+  
+  # Extract href and text
+  link_hrefs <- html_attr(all_links, "href")
+  link_texts <- html_text(all_links, trim = TRUE)
+  
+  # Find links with the specified text
+  matching_indices <- which(link_texts == link_text)
+  matching_hrefs <- link_hrefs[matching_indices]
+  
+  return(matching_hrefs)
+}
+
+# Function to make relative URLs absolute
+make_absolute_url <- function(base_url, relative_url) {
+  if (grepl("^http", relative_url)) {
+    # Already an absolute URL
+    return(relative_url)
+  } else if (grepl("^//", relative_url)) {
+    # Protocol-relative URL
+    protocol <- sub("^(https?://).*$", "\\1", base_url)
+    return(paste0(protocol, substr(relative_url, 3, nchar(relative_url))))
+  } else if (grepl("^/", relative_url)) {
+    # Root-relative URL
+    base_domain <- sub("^(https?://[^/]+).*$", "\\1", base_url)
+    return(paste0(base_domain, relative_url))
+  } else {
+    # Relative URL
+    base_path <- sub("^(https?://[^/]+/.*?)([^/]*)$", "\\1", base_url)
+    return(paste0(base_path, relative_url))
+  }
+}
+
+# Function to create a valid filename from URL
+create_filename_from_url <- function(url, prefix = "", suffix = "") {
+  # Extract the last part of the URL as a base
+  base_name <- sub("^.*/([^/]+)$", "\\1", url)
+  
+  # Remove query parameters
+  base_name <- sub("\\?.*$", "", base_name)
+  
+  # If base_name is empty or just a slash, use a hash of the URL
+  if (base_name == "" || base_name == "/") {
+    base_name <- paste0("page_", substr(digest::digest(url, algo = "md5"), 1, 8))
+  }
+  
+  # Replace invalid filename characters
+  base_name <- gsub("[^a-zA-Z0-9_.-]", "_", base_name)
+  
+  # Ensure it ends with .html
+  if (!grepl("\\.html$", base_name)) {
+    base_name <- paste0(base_name, ".html")
+  }
+  
+  # Add prefix and suffix
+  filename <- paste0(prefix, base_name, suffix)
+  
+  return(filename)
+}
+
+# Function to process a main page and follow "подробнее" links
+process_page_with_podrobnee_links <- function(url, output_dir = ".", main_output_file = NULL) {
+  # Create output directory if it doesn't exist
+  if (!dir.exists(output_dir)) {
+    dir.create(output_dir, recursive = TRUE)
+  }
+  
+  # Get the main page content
+  result <- get_webpage_content(url)
+  
+  if (!result$success) {
+    cat("Failed to download the main page.\n")
+    return(FALSE)
+  }
+  
+  # Save the main page if requested
+  if (!is.null(main_output_file)) {
+    save_content_to_file(result$content, file.path(output_dir, main_output_file))
+  }
+  
+  # Extract "подробнее" links
+  podrobnee_links <- extract_links_with_text(result$content, "подробнее")
+  
+  if (length(podrobnee_links) == 0) {
+    cat("No links with text 'подробнее' found.\n")
+    return(FALSE)
+  }
+  
+  cat("Found", length(podrobnee_links), "links with text 'подробнее'.\n")
+  
+  # Process each link
+  for (i in seq_along(podrobnee_links)) {
+    link <- podrobnee_links[i]
+    # Make sure we have an absolute URL
+    absolute_link <- make_absolute_url(url, link)
+    
+    # Create a filename for this link
+    link_filename <- create_filename_from_url(absolute_link, prefix = paste0("podrobnee_", i, "_"))
+    
+    cat("Processing link", i, "of", length(podrobnee_links), ":", absolute_link, "\n")
+    
+    # Get the linked page content
+    link_result <- get_webpage_content(absolute_link)
+    
+    if (link_result$success) {
+      save_content_to_file(link_result$content, file.path(output_dir, link_filename))
+    } else {
+      cat("Failed to download content for link:", absolute_link, "\n")
+    }
+    
+    # Be nice to the server - add a small delay between requests
+    Sys.sleep(1)
+  }
+  
+  cat("Finished processing all 'подробнее' links.\n")
+  return(TRUE)
+}
+
+# Example usage
+# Replace with your target URL and desired output directory
+url <- "https://irk.vkks.ru/category/1197/"
+output_dir <- here("Russia_forensics", "downloaded_vkks_pages")
+main_output_file <- "main_page.html"
+
+# Call the function to process the page and follow "подробнее" links
+process_page_with_podrobnee_links(url, output_dir, main_output_file)
+```
+

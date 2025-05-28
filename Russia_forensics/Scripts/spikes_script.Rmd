@@ -1,0 +1,62 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+library(tidyverse)
+library(spikes)
+library(here)
+
+data2011 <- read.csv(here("Russia_forensics", "Data", "2011.csv", "2011.csv"))
+
+data2011 <- data2011 %>% rename(N = "Число.избирателей..внесенных.в.список.избирателей")
+
+data2011 <- data2011 %>% rename(valid = "Число.действительных.избирательных.бюллетеней")
+
+data2011 <- data2011 %>% rename(invalid = "Число.недействительных.избирательных.бюллетеней")
+
+data2011 <- data2011 %>% mutate(t = valid + invalid)
+
+data2011 <- data2011 %>% mutate(v = X6..Всероссийская.политическая.партия..ЕДИНАЯ.РОССИЯ.)
+
+
+```
+
+```{r}
+data2011_sub <- data2011 %>% filter(region == "Город Москва")
+data2011_sub <- data2011_sub %>% dplyr::select(N, t, v)
+
+spikes.out <- spikes(data2011_sub)
+```
+```{r}
+library(stringi)
+data2011 <- data2011 %>% mutate(region = stri_trans_general(region, "cyrillic-latin"))
+data2011_sub <- data2011 %>% dplyr::select(N, t, v)
+# Assuming your dataframe is called 'df' and the grouping variable is 'group_var'
+grouped_data <- split(data2011, data2011$region)
+
+# Container for saving spikes output
+fraud_estimate <- matrix(data = NA, nrow = length(grouped_data), ncol = 2)
+
+# Counter for keeping track of estimate rows
+i <- 0
+
+# Now loop through each group
+for (group_name in names(grouped_data)) {
+  i <- i + 1
+  # Access the current group's data
+  current_group_data <- grouped_data[[group_name]]
+  
+  # Perform operations on current_group_data
+  print(paste("Processing group:", group_name))
+  #print(head(current_group_data))
+  
+  # Your analysis code here...
+  spikes.out <- spikes(current_group_data)
+  fraud_estimate[i,1] <- group_name
+  fraud_estimate[i,2] <- spikes.out$fraud
+}
+```
+

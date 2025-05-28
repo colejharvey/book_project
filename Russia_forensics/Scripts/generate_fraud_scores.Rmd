@@ -10,7 +10,7 @@ library(here)
 library(openxlsx)
 
 filenames <- list.files(here("Russia_forensics", "Data"), pattern="*.xlsx", full.names=TRUE)
-filenames_sub <- filenames[-10]
+filenames_sub <- filenames[-10] #TODO: Fix file structure so that covariate data is not in the same folder
 
 
 ```
