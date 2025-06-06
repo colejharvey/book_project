@@ -10,15 +10,124 @@ library(tidyverse)
 library(here)
 library(openxlsx)
 
-data_wide <- read.xlsx(here("Russia_forensics", "Data", "regional_comp_wide.xlsx"))
 ```
 
 
 ```{r}
+data_wide <- read.xlsx(here("Russia_forensics", "Data", "regional_comp_wide.xlsx"))
+
 df_long <- pivot_longer(data_wide, cols = -c("region_id","region"), names_to = "year")
-df_long <- df_long %>% rename(regional_comp = value)
+df_long_comp <- df_long %>% rename(regional_comp = value)
 
 
-write.xlsx(df_long, here("Russia_forensics", "Data", "regional_comp_long.xlsx"))
+write.xlsx(df_long_comp, here("Russia_forensics", "Data", "regional_comp_long.xlsx"))
+```
+
+Other wide-format variables below:
+
+
+Population:
+```{r}
+population_wide <- read.xlsx(here("Russia_forensics", "Data", "regional_population.xlsx"))
+
+df_long <- pivot_longer(population_wide, cols = -c("region_id","region"), names_to = "year")
+df_long_pop <- df_long %>% rename(population = value)
+
+
+write.xlsx(df_long_pop, here("Russia_forensics", "Data", "regional_pop_long.xlsx"))
+
+```
+
+
+
+GRP by pop:
+```{r}
+grp_wide <- read.xlsx(here("Russia_forensics", "Data", "grp_by_pop.xlsx"))
+
+df_long <- pivot_longer(grp_wide, cols = -c("region_id","region"), names_to = "year")
+df_long_grp <- df_long %>% rename(grp_by_pop = value)
+
+
+write.xlsx(df_long_grp, here("Russia_forensics", "Data", "grp_pop_long.xlsx"))
+
+```
+
+
+Pensioners per 1000:
+```{r}
+pensioners_wide <- read.xlsx(here("Russia_forensics", "Data", "pensioners_per_1000.xlsx")) %>% dplyr::select(-X3, -X4)
+
+df_long <- pivot_longer(pensioners_wide, cols = -c("region_id","region"), names_to = "year")
+df_long_pensioners <- df_long %>% rename(pensioners_per_1000 = value)
+
+
+write.xlsx(df_long_pensioners, here("Russia_forensics", "Data", "pensioners_long.xlsx"))
+
+```
+
+Poverty:
+
+```{r}
+poverty_wide <- read.xlsx(here("Russia_forensics", "Data", "poverty_rate.xlsx"))
+
+df_long <- pivot_longer(poverty_wide, cols = -c("region_id","region"), names_to = "year")
+df_long_poverty <- df_long %>% rename(poverty = value)
+
+
+write.xlsx(df_long_poverty, here("Russia_forensics", "Data", "pensioners_long.xlsx"))
+
+```
+
+
+Urban share:
+
+
+```{r}
+urban_wide <- read.xlsx(here("Russia_forensics", "Data", "regional_urban_share.xlsx"))
+
+df_long <- pivot_longer(urban_wide, cols = -c("region_id","region"), names_to = "year")
+df_long_urban <- df_long %>% rename(urban_pct = value)
+
+
+write.xlsx(df_long_urban, here("Russia_forensics", "Data", "urban_long.xlsx"))
+
+```
+
+
+Merging
+
+```{r}
+control_vars <- df_long_comp
+control_vars <- control_vars %>% left_join(df_long_pensioners, by = c("region_id", "year")) %>% select(-region.y)
+
+control_vars <- control_vars %>% left_join(df_long_grp, by = c("region_id", "year"))
+
+control_vars <- control_vars %>% left_join(df_long_pop, by = c("region_id", "year")) 
+
+control_vars <- control_vars %>% left_join(df_long_poverty, by = c("region_id", "year"))
+
+control_vars <- control_vars %>% left_join(df_long_urban, by = c("region_id", "year"))
+
+control_vars <- control_vars %>% select(-region.x.x, -region.y, -region.x.x.x, -region.y.y)
+
+control_vars <- control_vars %>% rename(region = region.x)
+```
+
+Lagging
+
+```{r}
+control_vars <- control_vars  %>% group_by(region_id) %>%  mutate(regional_comp_lag = dplyr::lag(regional_comp, n = 1))
+control_vars <- control_vars  %>% group_by(region_id) %>%  mutate(pensioners_lag = dplyr::lag(pensioners_per_1000, n = 1))
+control_vars <- control_vars  %>% group_by(region_id) %>%  mutate(grp_by_pop_lag = dplyr::lag(grp_by_pop, n = 1))
+control_vars <- control_vars  %>% group_by(region_id) %>%  mutate(pop_lag = dplyr::lag(population, n = 1))
+control_vars <- control_vars  %>% group_by(region_id) %>%  mutate(poverty_lag = dplyr::lag(poverty, n = 1))
+control_vars <- control_vars  %>% group_by(region_id) %>%  mutate(urban_pct_lag = dplyr::lag(urban_pct, n = 1))
+
+
+```
+
+
+```{r}
+write.xlsx(control_vars, here("Russia_forensics", "Data", "regional_vars.xlsx"))
 ```
 

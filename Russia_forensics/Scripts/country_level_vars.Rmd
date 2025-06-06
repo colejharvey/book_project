@@ -1,0 +1,53 @@
+---
+title: "Country-level variables"
+output: html_notebook
+---
+
+```{r setup}
+library(tidyverse)
+library(here)
+library(openxlsx)
+
+data_vdem <- read.csv(here("Russia_forensics", "Data", "vdem_variables.csv"))
+putin_pop <- read.xlsx(here("Russia_forensics", "Data", "putin_pop.xlsx"))
+
+
+```
+
+Lag vdem variables
+
+```{r}
+data_vdem <- data_vdem %>%  mutate(civ_lib_lag = dplyr::lag(civ_lib_index, n = 1))
+
+data_vdem <- data_vdem %>%  mutate(exec_over_lag = dplyr::lag(exec_oversight, n = 1))
+
+data_vdem <- data_vdem %>%  mutate(leg_invest_lag = dplyr::lag(leg_investigates, n = 1))
+
+data_vdem <- data_vdem %>%  mutate(lib_dem_lag = dplyr::lag(lib_dem_index, n = 1))
+
+data_vdem <- data_vdem %>%  mutate(neopat_lag = dplyr::lag(neopatrimonial_index, n = 1))
+
+data_vdem <- data_vdem %>%  mutate(pol_lib_lag = dplyr::lag(pol_liberties_index, n = 1))
+
+data_vdem <- data_vdem %>%  mutate(presidentialism_lag = dplyr::lag(presidentialism_index, n = 1))
+
+data_vdem <- data_vdem %>%  mutate(subnational_control_lag = dplyr::lag(subnational_party_control, n = 1))
+
+
+
+
+```
+
+Merge with putin pop
+
+```{r}
+data_vdem <- data_vdem %>% left_join(putin_pop, by = "year")
+```
+
+
+Save
+
+```{r}
+write.csv(data_vdem, here("Russia_forensics", "Data", "vdem_final.csv"))
+```
+
