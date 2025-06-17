@@ -1,0 +1,361 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# Courts and election integrity in Russia
+
+After the 2012 presidential election in Russia, legal records indicate, an election observer in Kemerovo Oblast' noted that election commissioners in three precincts had engaged in falsification of the election results, a violation of Article 142.1 of the Russian criminal code. To bring these matters to the attention of the authorities, the observer made a complaint to the regional investigative committee. Instead of opening a criminal investigation as required, the investigator subsequently forwarded the observer's complaint to the head of the Territorial Election Commission\textemdash an individual directly involved in the alleged falsification. After a period of months, the observer filed a civil suit against the investigative committee, seeking the initiation of a criminal investigation and monetary damages for 'moral harm'\textemdash physical and mental suffering as a result of the government's inaction. In a decision that came several years later, the court acknowledged that the observer's rights had been violated, and awarded him 1,000 rubles from the state treasury as compensation. It did not order that criminal proceedings against the election commissioners resume.^[Decision in case No. 2-1946/2015 of the Central District Court of Novokuznetsk.]
+
+The above case is unusual in that the court agreed with the plaintiff and awarded damages\textemdash paltry as they may be.^[1000 rubles was worth approximately \$20 at the time.] However, it was typical in other ways. Civil suits against election commissions on the grounds of alleged falsification almost always fail; there is no record of even a single precinct's results being annulled in the dataset considered in this chapter. This is true despite the presence of observers in the polling place, whether the complainants are registered candidates and parties in the election, and even when election officials in those precincts have been convicted of criminal falsification. When individuals are found criminally liable for election fraud, investigations go no further up the chain; individuals charged are often found to have been worked at the behest of "a group of unknown persons" or in pursuit of "a personal interest." In other words, the Putin-era Russian judicial system works generally works to protect the ruling party's interest with regard to elections.
+
+This will come as no surprise to even the most casual of Russia watchers. However, the ruling party's interest does not always align with the interests of its lowest-level agents. At times, precinct-level election commissioners\textemdash often teachers or other individuals subject to state pressure [@Forrat2018]\textemdash are charged with election-related crimes by the state prosecutor. As with other defendants in the Russian legal system [@solomonUnderstandingRussiaLow2015], these individuals are almost invariably found guilty. For some, the repercussions are minimal: a small fine and an end to the proceedings. For others, the consequences are very significant. In 2013, for example, a defendant was fined two hundred thousand rubles, equivalent to more than six months of the average national wage.^[The average monthly wage in 2013 was approximately 29,800 according to the Russian State Statistical Service.] Others are sentenced to jail time, though in the cases examined here such sentences are always converted to a period of probation (a status that nonetheless carries restrictions on the defendant's liberty).
+
+Does such 'successful' operation of the judicial system have an effect on the workings of Russia's machinery of electoral manipulation? Election-manipulation efforts are characterized by principal-agent dynamics, in which party leaders and candidates enjoy the electoral benefit while low-level agents bear the risks [@rundlett2016deliver; @Harvey2019]. While most election-manipulation agents are clearly shielded from negative legal consequences\textemdash only 86 criminal cases for falsification appear in this dataset, which covers more than ten years\textemdash the very rarity of successful prosecutions may serve to amplify their effect among nearby agents.
+
+To answer this question, this paper examines an original dataset of over 7,500 legal decisions in Russia, ranging from 2010 to 2021, that concern alleged administrative or criminal violations of electoral law. The text of these decisions was scraped from a Russian legal repository, SudAct.ru. As Tables 1 and 2 indicate, there are five categories of criminal violations of electoral law and twenty-three administrative violations. This chapter provides some general descriptive patterns concerning the whole dataset, before focusing on the most consequential electoral violation\textemdash falsification of the vote results.
+
+## Literature review
+
+Researchers have increasingly come to recognize the important roles that independently functioning courts can play in authoritarian systems. Courts that can, at times, act to restrain the government or to impartially resolve disputes among citizens serve an important legitimation function. Such judicial systems help bolster claims to rule of law, whatever other democratic shortcomings may be present [@moustafa_tamir_law_2008; @Whiting2017]. In the Russian case, for example, the low-level justice-of-the-peace courts regularly rule against the state in cases with little political salience [@hendleyEverydayLawRussia2017], and there is a general perception among both users and non-users of the judicial system that the courts are fair [@Hendley2016]. More independent courts can also rein in low-level agents of the state, creating accountability for excesses when needed [@Ginsburg2008], and can help the regime collect information and monitor discontent [@rios-figueroa_justice_2018]. Owing to these and other benefits [@Ma2017;@Sievert2018], many non-democratic regimes have instituted reforms that improve courts' *de jure* independence [@Staton2020].
+
+Nevertheless, it would be naively optimistic to assume that even *de jure* independent courts are always *de facto* independent in non-democracies. Governments and ruling parties have many tools with which they can intervene in specific cases to ensure favorable outcomes. At a formal level, ruling parties may split the judicial system into a more independent channel for mundane cases, and more a dependent channel for politically charged cases [@Toharia1974]. Such visible, constitutional structures are not always necessary however. Informal techniques\textemdash social pressure, physical threats and violence, or bribes\textemdash can be used to selectively influence judges' decisions [@Ledeneva2008;@Llanos2016;@Solomon2010;@popova2012politicized;@Taylor2014;@Wang2020]. 
+
+The product of these two elements\textemdash a generally independent court system for most cases combined with sometimes-unpredictable informal intervention by authorities\textemdash has many benefits for the political elite. However, it does mean that low-level agents are sometimes entangled in judicial proceedings for following the orders of their political superiors (or for doing what many other agents do in order to advance in the system). If these agents have broken the law, they may find themselves subject to conviction, fines, probation, or even prison time. These outcomes can occur due to the routine operation of the judicial system absent explicit pressure from outside, or due to strategic decisions by elites to allow some agents to face punishment in order to improve the regime's legitimacy. In other words, a system designed to improve stability for the regime as a whole carries risks for individual low-level agents on whom the regime relies.
+
+These risks are exacerbated by the fact that the existence of a semi-independent judiciary creates an arena of contestation for opposition groups to engage the ruling party. Opposition groups, candidates, and citizens with electoral grievances have several possible incentives for taking an election-related case to court, even if they think of the odds of success are dim. Court cases can be used to bargain for concessions with the ruling party [@chernykh2014], to raise publicity around an issue [@dotanLegalDefeatsPolitical2005;], or to lodge a protest against the authorities through a 'legitimate' channel [@dorLitigationPoliticalParticipation2006]. Merely taking the case to court can send a signal that the litigant\textemdash for example, a defeated candidate\textemdash has credible evidence of electoral malpractice [@kerrElectoralRulingsPublic2021]. As a result, there is the potential that a variety of actors may seek to observe electoral violations, bring them to the attention of the legal authorities, and push for a case in court. For example, in the legal records studied here, there are several examples of defeated candidates, losing parties, and concerned citizens bringing civil suits before the courts, demanding that the local investigative committee open criminal investigations into alleged instances of election malfeasance.
+
+Indeed, courts regularly address electoral violations [@birch2017getting]. There are often multiple ways that the legal system as a whole can address alleged electoral violations, and as such, multiple avenues through which opposition actors or civil society groups may attempt to redress their grievances [@Orozco-Henriquez2010]. Civil courts can order recounts or nullify contested election results [@chernykh2014], administrative courts may impose penalties on representatives of the state (i.e. election commissioners) for failures to follow procedures, while criminal courts may impose the most serious penalties for criminal violations of the law.
+
+In most non-democracies, which typically rely on civil codes rather than common law, the ordinary courts' jurisdiction over electoral issues covers violations of the law rather than the constitutionality of the law itself. As a result, this study is concerned with courts' role in policing illegal forms of electoral manipulation\textemdash in particular, the falsification of election results. Other forms of manipulation that courts may consider include ballot-stuffing, voter pressure, or intimidation\textemdash which are always illegal\textemdash or legal techniques improperly applied, such as selective enforcement of ballot-access rules [@popova2012politicized;@Bækken2015]. This project does not investigate what role non-democratic courts may play, if any, in regulating the formal rules of electoral competition (e.g. electoral district boundaries).
+
+Generally speaking, there are three schools of thought concerning the effect that independent courts may have on the integrity of elections in non-democracies. The first of these argues that court cases themselves reveal information about the fairness of elections, raising the risk of post-election protest. Fearing these protests, ruling parties in countries with more independent courts are less able to manipulate freely [@chernykh2015third]. A second approach considers that ruling parties are more likely to apply pressure to courts around competitive elections, helping to enable to election manipulation in those circumstances [@popova2012politicized]. Finally, a third approach argues that the judicial system creates risks for election-manipulating agents on the front lines [@Harvey2022], which intensifies principal-agent problems inherent in the effort to rig elections [@rundlett2016deliver] and limits manipulation.   
+
+Most of these prior studies share a key limitation, however: they are studies of macro-level measures, with little insight into specific court cases or their effects. Popova's [-@popova2012politicized] work is an exception, drawing as it does on case-level data. However, the data used in her studies are drawn from civil cases on ballot access (i.e. candidate registration or de-registration), rather than the criminal forms of manipulation, and are not used to study the impact of court rulings on subsequent election performance. This paper begins to address this limitation; in doing so, it helps evaluate the competing claims of the protest-centric vs. principal-agent focused theories of courts and electoral manipulation.
+
+## Theory
+
+When a ruling party seeks to manipulate an election using illegal techniques, it must recruit large numbers of front-line agents to carry out the work of falsifying the count, stuffing the ballot boxes, or applying pressure to voters. As identified by Rundlett and Svolik [-@rundlett2016deliver] these efforts combine the challenges of a principal-agent relationship with a coordination problem. The political leaders at the top of the system derive a direct benefit from the manipulated vote totals, in the form of padded margins of victory and/or signals of organizational strength that can secure compliance for other actors in the system [@magaloni2006;@simpser2013]. Their low-level agents, on the other hand, derive an indirect benefit in the form of patronage rewards for fulfilling their assigned tasks. However, agents' actions to inflate the ruling party's vote are likely to be covert and difficult for their patrons to accurately evaluate. This fact, combined with the risks of exposure that may be attendant with breaking the law, create incentives for agents to shirk\textemdash accepting patronage rewards while applying minimal effort to manipulating the vote. In areas where the risk of exposure is sufficiently high, agents will be unwilling to engage in the most detectable forms of fraud, and instead shift to less detectable techniques like vote-buying [@Harvey2019]. Unfortunately for ruling parties, such techniques are even more prone to diversion of resources by agents [@szwarcberg_political_2014]. 
+
+Agents expectations of patronage benefits become more secure the more confident they are that their political patron will win the election [@hale_patronal_2014], an estimation that depends in part on the actions of other election-manipulating agents [@rundlett2016deliver]. If agents believe that others like them are likely to be deterred from engaging in manipulation, they are likely to hold back themselves\textemdash a self-reinforcing cycle. Legal risks can be part of this calculation [@Harvey2022]. A more independent judiciary creates incentives for opposition actors and citizens to monitor elections and attempt to hold election manipulators to account. If agents fear prosecution and conviction, they may be more likely to shirk or otherwise avoid tampering with the election; expecting this, other agents in turn become more reluctant to engage in manipulation. The consequence, as Harvey [-@Harvey2022] finds using macro-level data, is an improvement in election integrity.
+
+Here, I focus on the effect that convictions in election-related cases can have on election fraud in the area under the court's jurisdiction. A conviction for election fraud may influence election-manipulating agents' cost-benefit calculation in several ways. First, such a conviction may send a signal to opposition actors that a vigorous prosecution of election crimes is possible in the region, increasing the incentive for those actors to monitor polling places and record evidence of possible crimes with the intention of going to court. The heightened risk of prosecution due to a more optimistic opposition should reduce agents' incentives to participate in manipulation efforts. Second, a conviction sends a signal directly to agents that the ruling party is unable or unwilling to provide blanket protection for them in the area. This may be due to the regime's desire to improve its rule-of-law based legitimacy, or due to fragmentation within the local elite. In any event, it heightens the risk of participation for the agent, which should similarly lead to reduced manipulation.
+
+There is an important caveat to this expectation, however. When convicted election manipulators receive a very light penalty (or the accused are simply acquitted), the opposite signal is sent to opposition actors and agents. Acquittals or 'slaps on the wrist' indicate that even when agents face the worst outcome\textemdash being compelled to appear before a court to answer for their alleged actions\textemdash the ruling party and the legal system will protect them. Such an outcome should reduce opposition groups' incentive to go to court (though not eliminate it), and reduce agents' perception of legal risk. As a result, light penalties and acquittals should have the effect of *increasing* fraud in the subsequent election. There are thus two hypotheses for this study:
+
+>H1: The application of a severe penalty for convicted election manipulators should be associated with reduced election fraud in the court's region in the subsequent election.
+
+>H2: The application of a light penalty for convicted election manipulators should be associated with increased election fraud in the court's region in the subsequent election.
+
+
+
+
+
+
+
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(here)
+library(tidyverse)
+
+crim_descr <- read_csv(here("Courts Data", "code_descriptions_crim.csv"), col_types = "cc") #Two columns, both character
+admin_descr <- read_csv(here("Courts Data", "code_descriptions_admin.csv"),  col_types = "cc")
+case_metadata <- read.csv(here("Courts Data", "case_metadata_142_1.csv"))
+annual_data <- read.csv(here("Courts Data", "annual_data.csv"))
+
+
+## Combining fraud and vb scores for a total
+
+annual_data <- annual_data %>% mutate(any_fine_total = ifelse(treated_fine_any_fraud == 1 | treated_fine_any_vb == 1, 1, 0))
+annual_data <- annual_data %>% mutate(n_defendants_total = sum(n_defendants, n_defendants_vb))
+
+
+```
+
+```{r code-table-crim, echo=FALSE}
+knitr::kable(crim_descr, "latex", caption = "Criminal election violations")
+```
+
+```{r code-table-admin, echo=FALSE}
+knitr::kable(admin_descr, "latex", caption = "Administrative election violations")
+```
+
+## Data and methods
+
+The source of the data collected for this project is the online database SudAct (<https://sudact.ru>), which claims to include 'all published judicial documents' from 'all courts included in the Russian judicial system.' To collect the dataset, the author conducted automated webscraping of SudAct's online search interface, after specifying the particular legal codes listed in Tables 1 and 2. The text of judicial decisions was only collected if there were more than 10 rulings under a given legal code over the period studied. There are limitations to this approach; most importantly, the SudAct database only contains cases going back to 2010. As a result, we cannot examine the behavior of the Russian court system during the consolidation of the Putin system in the early 2000s. Instead, the data allows for a study of judicial outcomes from a period of relative 'thaw' (the last year of the Medvedev presidency) through the harshening authoritarian consolidation of Vladimir Putin's third and fourth terms. It is also not possible to know which cases, if any, were concluded by courts without being published (and thus unavailable to SudAct). Nevertheless, this first-of-its-kind dataset does provide insight into the general distribution of cases, as well as considerable qualitative detail concerning how these cases are decided.
+
+As Figure \@ref(fig:allCases) shows, criminal cases (legal codes 141, 142, and 142.1, at the top of the bars) make up a small proportion of election integrity cases that come before the courts. The vast majority are administrative cases. In most years, the most common administrative violation comes under Article 5.12 of the Code of Administrative Violations, (illegal production or distribution of campaign materials), Article 5.10 (campaigning outside the campaign period or in illegal places), and Article 5.17 (failure to provide campaign finance documents). It is also plain to see that administrative cases have steadily declined after the year 2016; criminal cases continue at roughly the same pace, as shown in Figure \@ref(fig:crimCases). Most cases in the dataset involve a single defendant, but in some cases multiple individuals are tried together. The total number of criminal defendants tried under Article 142.1, the focus here, is 82; a further 135 respondents were brought to court under the civil or administrative code.
+
+```{r allCases, fig.cap="All cases by year", out.width='90%', echo=FALSE}
+knitr::include_graphics(rep("C:/Users/colej/Documents/Research projects/scrape_russian_courts/Plots/all_cases_plot.png"))
+#Note to self: Re-do cases for 5.4--some kind of mix-up there--meaning, re-search and download them from sudact
+
+## Additional TODO: Go through case metadata spreadsheet and add region, date, and case_law variables for all cases. That way we can make sure no defendants left out.
+```
+
+```{r crimCases, fig.cap="Criminal cases by year", out.width='90%', echo=FALSE}
+knitr::include_graphics(rep("C:/Users/colej/Documents/Research projects/scrape_russian_courts/Plots/criminal_plot.png"))
+```
+
+In this paper, I focus on the relationship between conviction and punishment for the criminal violation of falsifying results (Article 142.1) and subsequent levels of election fraud. To conduct the study, I hand-coded the 225 cases adjudicated under Article 142.1 for the outcome of the case (among other factors). Despite the absence of any acquittals in the dataset, outcomes do vary. Out of 101 criminal cases in the dataset[^4], 66 end in fines for the defendant. Defendants were sentenced to jail time in 15 cases, though in all 15 the sentence was suspended (analogous to probation in the US system). In four cases, defendants were amnestied in honor of the 70th anniversary of Soviet victory in World War II. Other criminal cases were at an intermediate stage; for example, a court might rule that a lower court should take up the case a second time. As Figure \@ref(fig:fines) shows, the most common fine was a small one\textemdash on the order of a few thousand rubles. Despite this, the mean fine was approximately 90,000 rubles, driven by a substantial number of much larger fines.
+
+[^4]: The remaining cases were civil suits brought, often seeking the annulment of elections following incidents of falsification
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+p.fines <- ggplot(case_metadata, aes(x=(fine_amount)/1000)) +
+  geom_histogram() +
+  xlab("Fine amount (thousands of rubles)") +
+  ylab("Count") +
+  theme_bw()
+```
+
+```{r fines, message=FALSE, warning=FALSE, echo=FALSE, fig.cap="Distribution of fine amounts"}
+
+
+p.fines
+```
+
+I construct a small number of measures of the severity of a penalty, in an attempt to capture this disparity. All are binary variables. First, I code any fine greater than 50,000 rubles as a significant fine, and any value below that threshold as a minor fine. This threshold is selected as it amounts to about one month's average salary by the end of the data collection period. Second, I create an additional dummy variable for cases where the defendant was sentenced to prison time. Lastly, I create dummy variables for 'major penalties' which takes on a value of one if a sentence of either a major fine or jail time was handed down, and 'minor penalties,' which takes on a value of one for small fines and amnesties.
+
+Region-years are considered to have been 'treated' under any of these coding rules if such a sentence was applied in the period prior to a given election. That is, if an individual in Moscow region has been sentenced to a large fine in 2013, Moscow region would be considered treated for the 2016 election, but not the 2012 or 2018 elections. I do not allow 'treatment' to carry beyond the next election on the assumption that once a new election happens, agents will update their understanding of risk based on the presence or absence of any large penalties following the new election. This binary 'treatment' variable based on large fines in the region prior to a given election serves as the main explanatory variable.
+
+The dependent variable for this study is an election-forensic variable adopted from work by @Skovoroda2017, who use a statistical measure of deviance in the distribution of last digits in precinct-level election results to estimate election fraud by region. In particular, I focus here on deviance in the number of precincts where the results for the ruling party (United Russia in legislative elections and Vladimir Putin in presidential ones) end in zero. The deviance formula is $$Deviance_{0,i} = 2(O_{i0}log(\frac{O_{i0}}{0.1n_{i}}) + (n_{i} - O_{i0})log(\frac{(n_{i} - O_{i0})}{.9n_{i}}))$$ where $Deviance_{0,i}$ refers to the region-level deviance in last-digit zeroes, $O_{i0}$ indicates the total number of zeroes in the region, and $n_{i}$ refers to the number of polling places in the region. The deviance variable increases as the number of last-digits zeroes in the region deviates from the expected value of ten percent (zero is one of ten possible values the trailing digit can take). It will be important to control for the number of precincts in the region in the regression models, since increasing the sample size may increase deviance simply due to the increased statistical power of the test [@Skovoroda2017]. In the regression models below, I use both the raw measure of deviance and its log, due to the non-normal distribution of the raw variable. The models are standard OLS models, with two-way fixed effects for election-year and region. This adjusts for any time-invariant confounders by region (such as each region's status as an ordinary region or an often less-competitive titular republic), as well as for nationwide shifts in political competitiveness over time.
+
+```{r echo=FALSE}
+annual_data <- annual_data %>% mutate(deviance_region_adj = ifelse(deviance_region == 0, 0.000001, deviance_region)) #One region has a perfect 0 deviance, so cannot take the log without a tweak
+
+
+m1 <- lm(deviance_region ~ n_precincts + treated_fine_large_fraud + n_defendants + region + as.factor(year), data = annual_data)
+#summary(m1)
+
+m2 <- lm(log(deviance_region_adj) ~ n_precincts + treated_fine_large_fraud + n_defendants + region + as.factor(year), data = annual_data)
+#summary(m2)
+
+```
+
+
+```{r, echo=FALSE}
+annual_data <- annual_data %>% mutate(major_penalty = ifelse(treated_fine_large_fraud == 1 | treated_jail_fraud == 1 & amnestied == 0, 1, 0)) 
+annual_data <- annual_data %>% mutate(treated_fine_small = ifelse(treated_fine_any_fraud == 1 & treated_fine_large_fraud == 0, 1, 0))
+annual_data <- annual_data %>% mutate(minor_penalty = ifelse(treated_fine_small == 1 | amnestied == 1, 1, 0)) 
+
+
+
+
+m3 <- lm(deviance_region ~ n_precincts + treated_fine_large_fraud + treated_fine_small +  treated_jail_fraud + n_defendants + region + as.factor(year), data = annual_data)
+#summary(m3)
+
+m4 <- lm(log(deviance_region_adj) ~ n_precincts + treated_fine_large_fraud + treated_fine_small + treated_jail_fraud + n_defendants + region + as.factor(year), data = annual_data)
+#summary(m4)
+
+```
+
+```{r echo=FALSE}
+
+
+m5a <- lm(deviance_region ~ n_precincts +  major_penalty + n_defendants + region  + as.factor(year), data = annual_data)
+#summary(m5a)
+
+m6a <- lm(log(deviance_region_adj) ~ n_precincts +  major_penalty + n_defendants + region + as.factor(year), data = annual_data)
+#summary(m6a)
+
+
+### Minor
+
+
+m5b <- lm(deviance_region ~ n_precincts +  minor_penalty + n_defendants + region  + as.factor(year), data = annual_data)
+#summary(m5b)
+
+m6b <- lm(log(deviance_region_adj) ~ n_precincts +  minor_penalty + n_defendants + region + as.factor(year), data = annual_data)
+#summary(m6b)
+
+
+```
+
+
+```{r, echo=FALSE}
+m1_vb <- lm(deviance_region ~ n_precincts + treated_fine_any_vb + n_defendants_vb + region + as.factor(year), data = annual_data)
+#summary(m1_vb)
+
+m2_vb <- lm(log(deviance_region_adj) ~ n_precincts + treated_fine_any_vb + n_defendants_vb + region + as.factor(year), data = annual_data)
+#summary(m2_vb)
+
+```
+
+In addition, as a placebo treatment test [@eggers_placebo_2023], I also test for the impact of convictions for a separate electoral crime\textemdash Article 5.16 of the administrative code, which prohibits vote-buying\textemdash on fraud. There should be no expectation of an effect for administrative vote-buying convictions on evidence of fraud for at least three reasons. First, vote-buying agents are typically drawn from different networks than those tasked with falsification. The latter are typically public employees, such as teachers, who have been pressed into service as precinct election commissioners. The former, in the Russian case, tend to either be individuals in supervisory roles who can dole out negative inducements [@Frye2018] or individuals handing out small positive inducements (e.g. cash, vodka, small gifts) on the street. Anecdotally, it is this second type of individual who appears in the courts, with little indication in the legal record of where their resources or sense of initiative came from. It is less likely that convictions for such individuals will inform decision-making by the largely professional civil-service class associated with low-level falsification.
+
+Second, vote-buying remains a somewhat stochastic process: the number of bought votes that end up counting in the sponsor's column will vary according to many of the same factors that affect the distribution of un-bought votes, including weather, illness, and so on. Moreover, once in the privacy of the voting booth, many vote-sellers renege on their bargain and vote their conscience [@nichter2008]. As a result, the success or failure of vote-buying efforts should not meaningfully affect the distribution of trailing digits in ways that the deviance measure will detect. Third and finally, the penalty for violating Article 5.16 on vote-buying is relatively low; most defendants receive a fine of 20,000 rubles. Consequently, there is good reason to expect a null result for recent convictions for vote-buying on subsequent estimations of fraud. A significant correlation, on the other hand, would undermine confidence in any significant findings for convictions under Article 142.1 by suggesting that other factors\textemdash perhaps correlated with the general functioning of the legal system\textemdash were at work. 
+
+## Results
+
+Some general qualitative findings are discussed below, followed by the results of the statistical models. 
+
+### General qualitative findings
+
+Some general qualitative data can also be extracted from the coded cases. First, and perhaps most importantly for the continued smooth functioning of the machinery of electoral manipulation, organizers and higher-level perpetrators of election fraud are never called to criminal account in the cases examined here. Defendants are universally members of precinct electoral commissions, the lowest level of election administration in Russia and the ones with direct contact with voters. There are no members of higher level electoral commissions charged, despite their frequent presence in observers' reports. For example, a search for "Territorial election commission" on the crowdsourced election observation website https://www.kartanarusheniy.org/, a project of Russia's only major independent election monitoring civil society group, yields over 1300 complaints. Yet when the regional and territorial election commissions appear in the legal records examined here, they appear only as oblique references rather than as defendants. In one typical instance^[Case number 1-146/2016, Chelyabinskaya Oblast'], for example, the chairperson of a precinct election commission charged with falsification is accused of having acted
+
+>... out of greed and other personal interest, with a view to obtaining additional material payments by giving the [Territorial Election Commission] leadership a favorable impression of her organization and conduct of the elections, to ensure a high voter turnout on the day of his election, and to increase the results of voting for a party to which she is more sympathetic...
+
+How the defendant may have come to the conclusion that she would be rewarded financially for improving turnout and the vote-share for a particular party is left, by the judge, as an exercise for the reader. This kind of phrasing is not unusual in cases where any kind of motive is ascribed to the defendants. In other cases, no motive at all is ascribed. In this way, the judicial system serves to protect the more central nodes in the election manipulation process. Successful prosecution of such higher-level individuals would likely result in much more severe breakdown in the manipulation process, as they are responsible for assigning targets to lower-level actors, monitoring their performance, and at times engaging in direct, wholesale manipulation themselves.
+
+In addition to protecting higher-level individuals, it appears anecdotally that prosecution is more likely in low-level elections than in high-profile federal ones. While cases in the dataset deal with violations during presidential or State Duma elections, a larger number are concerned with regional or local elections. For example, a large number of cases in the dataset\textemdash 18 out of 225\textemdash were generated by a local referendum in a small town in Kirovskaya Oblast'. The question at hand was whether the city would impose a small tax duty\textemdash 300 rubles per person\textemdash to fund infrastructure improvements. The convicted individuals, some of whom were found to have forged ballots in favor of the proposal and some against, were generally sentenced to small fines.^[Excluding this large cluster of cases from the main analysis does not meaningfully change the results in Tables 3 and 4.] This pattern may indicate that the exposure of a large number of individuals came as a result of divisions among local elites. Given the likelihood that national elections are subject to greater manipulative pressure due to their higher stakes, and the greater degree of patronage centralization at higher levels, it is reasonable to suspect that the system goes to greater efforts to protect agents in federal elections than in local ones.
+
+These general impressions could be considered supportive of the broader claim that, while the judicial system does generate risk for election-manipulating agents, the ruling party takes measures to protect it agents where it is able and willing to do so. Intermediate and high-level agents in the chain of actors needed to manipulate elections appear to be shielded even from prosecution, much less conviction. And it appears that agents in local and regional elections are more at risk than agents acting in national elections. Nevertheless, individual agents cannot be fully certain that they will be protected, should opposition candidates or civil society groups seek to make a judicial case out of their illegal actions.
+
+### Statistical model results
+
+The results of these regression models are shown in Tables \@ref(tab:table1) and \@ref(tab:table2), which present the results for raw and log deviance, respectively. Both sets of models include fixed effects for regions as well as for years, although the former are not presented in order to keep the tables legible. The results offer some cautious support for both hypotheses, with greater support for H1 on the negative effect of strong penalties. Models 1 and 2 show that court cases which end in large fines for defendants are associated with statistically significant reduction in falsification in the subsequent election. The size of this effect is quite significant substantively\textemdash about half the size of one standard deviation of the fraud measure. Model 3 shows that the 'major penalty' measure, which combines large fines and jail time, is also associated with a sizable and statistically significant decrease in fraud. The coefficient for small fines, shown in Model 2, has the predicted, positive sign but falls short of the conventional threshold for statistical significance.
+
+```{r table1, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
+models <- list()
+models[["Model 1"]] <- m1
+models[["Model 2"]] <- m3
+models[["Model 3"]] <- m5a
+models[["Model 4"]] <- m1_vb
+modelsummary::modelsummary(models, coef_omit = "region", stars = T, gof_omit = "AIC|BIC|Log.Lik.|F|RMSE",
+                           coef_map = c("n_precincts" = "Number of precincts",
+                           "treated_jail_fraud" = "Jail time",
+                           "treated_fine_large_fraud" = "Large fine",
+                           "treated_fine_small" = "Small fine",
+                           "n_defendants" = "Number of defendants",
+                           "major_penalty" = "Major penalty",
+                           "treated_fine_any_vb" = "Fine (vote-buying)",
+                           "n_defendants_vb" = "N. of defendants (vote-buying)",
+                           "as.factor(year)2012" = "2012",
+                             "as.factor(year)2016" =  "2016",
+                             "as.factor(year)2018" = "2018",
+                             "as.factor(year)2020" = "2020",
+                             "as.factor(year)2021" = "2021"),
+                           title = "OLS models of last-digit deviance with country-fixed effects"
+                           )
+```
+
+
+
+
+The results in Table 3 should be interpreted cautiously, however, since the non-normal distribution of the raw dependent variables makes the models susceptible to the influence of outliers. In particular, the Dagestani case is highly influential, as it exhibits extremely high levels of deviance in some years and is one of the 'treated' regions. Transforming the dependent variable by taking its logarithm allows for a more normal distribution better suited linear regression models. Table 4 presents these results, which are more muted. In these models, small fines do not show a statistically significant relationship with subsequent fraud. Large fines retain their negative coefficient, but the effect size is far smaller and not statistically significant. In these models, however, prison sentences have a significant and negative effect. The size of the effect of a prison sentence in Model 5 is substantively significant, at roughly the size of one standard deviation of the logged dependent variable. The coefficient for major penalties, while negative, is not statistically significant at the conventional level.
+
+Lastly, the placebo tests in Models 4 and 8 indicate that the significant findings in the other models can be interpreted with greater confidence. As expected, convictions and fines for vote-buying offenses appear to have no correlation with subsequent election fraud. This suggests that only convictions related to falsification influence future fraud, helping support the theory of deterrence outlined here.
+
+```{r table2, echo = FALSE, message=FALSE,results='asis'}
+models <- list()
+models[["Model 5"]] <- m2
+models[["Model 6"]] <- m4
+models[["Model 7"]] <- m6a
+models[["Model 8"]] <- m2_vb
+
+
+modelsummary::modelsummary(models, coef_omit = "region", stars = T, gof_omit = "AIC|BIC|Log.Lik.|F|RMSE",
+                           coef_map = c("n_precincts" = "Number of precincts",
+                           "treated_jail_fraud" = "Jail time",
+                           "treated_fine_large_fraud" = "Large fine",
+                           "treated_fine_small" = "Small fine",
+                           "n_defendants" = "Number of defendants",
+                           "major_penalty" = "Major penalty",
+                           "treated_fine_any_vb" = "Fine (vote-buying)",
+                           "n_defendants_vb" = "N. of defendants (vote-buying)",
+                           "as.factor(year)2012" = "2012",
+                             "as.factor(year)2016" =  "2016",
+                             "as.factor(year)2018" = "2018",
+                             "as.factor(year)2020" = "2020",
+                             "as.factor(year)2021" = "2021"),
+                           title = "OLS models of logged last-digit deviance with country-fixed effects")
+
+```
+
+
+\newpage
+
+## The case of Dagestan
+
+Dagestan in an influential case in the statistical analysis, but is this influence a statistical anomaly or is it plausibly a result of the causal process considered here? While the evidence is circumstantial, a close reading of the relevant court cases and an examination of the district involved are broadly supportive of the theory. Dagestan reports a very large change in its overall deviance from the expected last-digit distribution between the 2016 parliamentary election and the 2018 presidential election: from 49.6 to 9.2.^[This is still quite high\textemdash the average deviance across the whole dataset is 1.5.] In between those elections, a precinct election commission chairman (who is unnamed in the court documents) was convicted of falsifying election returns in his precinct by a district court and sentenced to a large fine\textemdash 200,000 rubles. This is a very substantial sentence in a region where the average monthly salary in 2017 was under 18,000 rubles.^[Data taken from the Russian State Statistical Service's data portal at https://showdata.gks.ru/finder/.] After being convicted by the district court, the precinct chairman twice appealed his case to the Supreme Court of Dagestan, which upheld his conviction and sentence in both cases.
+
+Dagestan is one of Russia's 21 titular republics, regions which nominally hold significant autonomy from the center due to historical legacies of ethnic politics, but in practice are tightly integrated under the Kremlin's 'power vertical' [@white_ethnic_2017]. As a titular republic in the Caucasus region, Dagestan is often considered together with highly centralized regions like neighboring Chechnya and Ingushetia, and while all these regions typically deliver overwhelming victories for the ruling party in national elections, their internal politics are quite different. Where Chechnya, for example, is a relatively homogeneous region that has been ruled as a near personal fiefdom under Ramzan Kadyrov [@tolstrup_souleimanov_2022], Dagestan is extremely ethnically diverse and politically more pluralist. Dagestan is home to more than thirty officially recognized ethnic groups; about thirty percent of the population belong to the largest single ethnic group, the Avars. Ethnic Dargins, the second largest group, account for another sixteen percent of the population, followed by Kumiks (15.6%) and Lezgins (13.1%). Numerous, smaller ethnic groups account for the remaining quarter of the population.^[Ethnic data taken from the 2020 Russian census: https://rosstat.gov.ru/vpn/2020 .] This complex social environment is further complicated by the region's mountainous terrain, which contributes to geographic fragmentation among these ethnic groups. 
+
+Dagestanis have managed this complexity, both in pre- and post-Soviet times, in part through the institution of the *djamaat*:  a community of historically connected villages which is headed by a council of local elders drawn from the various extended family groupings in the area. Djamaat leaders exercise authority within their communities, resolve cross-community disputes, and  form political alliances with out-group leaders. This structure was the informal basis for Dagestan's first post-Soviet constitution, which had explicit consociational features [@ware_ethnic_dagestan]. This consociational system was dismantled through constitutional reforms at the behest of the Putin government, along with its ethnicity-based regional parties. Local elites now depend on the federal state for their political survival and to accomplish their aims, rather than on consociational bargaining [@ware2014dagestan]. United Russia is the dominant regional political party, typically capturing three-quarters of the vote in regional elections. As a result, much intra- and inter-ethnic competition is relegated to behind-the-scenes conflicts to win the right to represent United Russia (or the state more broadly) from higher level authorities [@kapustina2016municipal;@ware_dagestan_elections]. 
+
+Case number 1-35/2017 of the Kaytagskii district court, decided on September 4, 2017, took place in this context of behind-the-scenes competition. The names of all the figures in the case are redacted, which makes a precise accounting of the events difficult to reconstruct, but the general contours are these. During the 2016 election for the Dagestan regional legislature, the defendant served as chairman of a precinct election commission. The regional branch of the state prosecutor brought charges of falsification against the chairman on behalf of a losing candidate in that election. The court found the following facts to be true. First, three members of the five-member commission were not present on election day, yet when the election protocol was submitted to the territorial election commission, all five signatures were present. An expert handwriting analyst claimed that the three missing members' signatures were forged by the precinct chairman. The analyst testified that the person who wrote the words for the vote totals (i.e. "ninety-five") was someone other than the precinct chair, and the person who wrote the numerals for the results (i.e. "95") could not be determined. An examination of the ballots from the precinct showed that the vote totals had been altered, with United Russia's vote-total being inflated by forty-eight votes. Finally, the court found that the facility where the territorial election commission was tabulating precinct protocols had been secured by the police, and that only TEC members at other authorized personnel were present.
+
+The court found that since the precinct chair was the responsible individual for submitting correct results to the TEC, and since the evidence suggested he had forged the other members' signatures, that he was guilty of falsifying the return. His motives for doing so were "of no legal consequence." Reading between the lines, however, suggests a not-uncommon sequence of events: the precinct chair forged the other members' signatures so that the protocol would be valid, but left the results blank when submitting it to the TEC. The TEC, upon collecting multiple blank (but signed) protocols, is then able to allocate whatever results are needed across various precincts to ensure the desired outcome in the election the area under their purview. The defendant in fact argues this point in his appeal, according to the court's conclusion, saying that:
+
+> ...by giving false instructions, the members of the territorial election commission, headed by the chairman, contributed to the very possibility of falsification and forgery of documents... According to the testimony of the victim Radzhabov M.R. the elections were falsified in 30 polling stations, so falsification of this scale could not have been committed if the members of the territorial election commission had accepted the protocols from the PECs in accordance with the legislative procedure.^[Appeal Resolution No. 22-22/2020 22-2609/2019 of the Supreme Court of the Republic of Dagestan.]
+
+Neither the district court nor the high court appear interested in pursuing this line of investigation. Even when laying out the facts of the case which clearly comport with this version of events\textemdash in which the real forgery is completed by the TEC\textemdash these higher-level functionaries are protected by the court. There is no curiosity about their role in the case. When questioned at a hearing, the members of the TEC "could not explain any significant information about the circumstances of the incident, saying that basically, on voting day, [they] dealt with the organization of elections, advising the PEC chairmen, and resolving urgent issues. As a consequence, none of them accepted the PEC voting results protocols."^[Sentence No. 1-35/2017 dated September 4, 2017 in case No. 1-35/2017, Kaitagskii District Court.] The court does not, so far as the record shows, inquire further about this peculiarity.
+
+The actions of the precinct chairman in this case resulted in the addition of a few dozen votes to United Russia, inflating the ruling party's vote total from forty-seven to ninety-five. This is far from enough to be decisive in the outcome of even a regional legislative election. So what accounts for this case being brought to trial? The 'victim' in this case was a high-ranking regime insider from the Communist Party of the Russian Federation (KPRF). The KPRF is part of Russia's so-called systemic opposition; while it takes opposition positions from time to time and can be locally active in opposition in some areas, it has largely been co-opted into a 'loyal' opposition through the distribution of offices and rents to its leadership [@reuter2015]. The victim in question was a member of the republican legislature in the previous two convocations, and was a candidate in the election at hand. He was a member of the Public Council of the Republic of Dagestan\textemdash a consultative, para-state organization that links social groups with regional and federal level authorities. The alleged victim is, as a result, an influential member of the elite.
+
+The defendant's conviction and sentence was appealed to the republican Supreme Court. The high court, in agreement with the state prosecutor, upheld both. While we cannot know the precise motive which led the KPRF lawmaker to file his complaint, winning office does not seem to be the motive. The particular case involves a small number of votes. A personal grudge or community-level dispute could be at work. But it is also possible that the case outcome sprang from a bargaining failure between the ruling party and the co-opted opposition, in which the ruling party overstepped whatever tacit agreement exists about the distribution of resources in the legislature. It is perhaps worth noting that in the previous regional legislative election, United Russia won 62 out of 90 seats; in the 2016 election which figures in the court case, it won 72. So it is at least plausible that KPRF elites in Dagestan utilized the court system to penalize a United Russia agent for engaging in excessive fraud. Doing so sends a message to other precinct election workers that they cannot count on being protected the way that TEC members are. Dagestan is a plausible region for these events to occur; it is a high-fraud region dominated at the regional level by United Russia, but these features are undergirded by local diversity and elite pluralism. These are ripe conditions for legal mobilization against election fraud.
+
+Comparing the estimated deviance in Kaitagskii district between 2012 and 2018 (the presidential elections before and after the sentencing of the precinct chair) shows that precinct-level deviance for last-digit zero declined considerably: from 15.11 to 3.47. This reduction in estimated fraud, a decline of 13.8, is the third largest in Dagestan. Three of the four rural regions that adjoin Kaitagskii district also saw relative declines in deviance. A neighboring urban district, however, saw a large increase in deviance. 
+
+Figure \@ref(fig:fig-map) shows a map of Dagestan with its administrative divisions. The districts on the map have been divided into three bins based on the size and direction of the change in last-digit deviance between the two presidential elections. The variable has been centered and scaled for easier visualization. Large negative changes (the bottom quartile) have been coded in light red; large positive changes (the upper quartile) have been coded in dark blue. Changes in the middle of the distribution, close to zero, have been coded in light blue. Kaytagskii district, where the court case was first heard, has been marked with a solid triangle. 
+
+The patterns revealed in Figure \@ref(fig:fig-map) point toward a possible mechanism for the transmission of information about legal risk. As the map illustrates, some of the largest declines in estimated fraud occur in districts that neighbor Kaitagskii, and are similarly mountainous and rural. The neighboring dark blue regions, where fraud seemingly increased substantially, are qualitatively different\textemdash coastal, more urban, and home to different ethnic groups. This is consistent with a version of events in which a 'signal' about the cost of committing fraud is received by front-line election workers within a similar milieu and similar social networks as the defendant in the court case. Information about the case, and the legal risk it demonstrates, can be spread through social and professional networks of similarly situated agents. In practice in Russia, these individuals are often schoolteachers [@Forrat2018]. While it is also possible that this signal is received by higher level agents, leading a voluntary shift of resources by the ruling party, the impunity for TEC members across the corpus of cases (not just in Dagestan) makes this interpretation less likely.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+library(sf)
+library(ggplot2)
+library(rgdal)
+library(rgeos)
+library(ggrepel)
+
+#Reading the shapefiles
+sf <- st_read(dsn= here("Courts Data", "Maps", "RUS_adm"), layer="RUS_adm2") %>% dplyr::filter(NAME_1 == "Dagestan")
+shape <- readOGR(dsn=here("Courts Data", "Maps", "RUS_adm"), layer="RUS_adm2")  
+shape <- subset(shape, NAME_1 == "Dagestan")
+
+## Read in deviance diffs and merge with sf
+
+deviance_diffs <- read.csv(here("Courts Data", "dagestan_deviance_diffs_mapcodes.csv")) %>% dplyr::select(ID_2, deviance_diff)
+
+sf <- sf %>% left_join(deviance_diffs, by = "ID_2")
+sf <- sf %>% mutate(scale_deviance_diff = scale(deviance_diff))
+
+## Creating a border
+sf <- sf %>%
+ mutate(
+    outline = case_when(
+      NAME_2 == "Kaytagskiy rayon" ~ "blue",
+            TRUE ~ "white"),
+    size = ifelse(outline == "white", 0.5, 3)
+  )
+
+```
+
+```{r fig-map, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="Dagestan: Change in estimated fraud by administrative division (2012-2018)"}
+dag_plot <- ggplot(sf) + 
+  geom_sf(aes(fill = scale_deviance_diff))  +  scale_fill_steps2(low = "red", mid = "lightblue", high = "darkblue", breaks = c(-.08, .06)) +
+  geom_point(x = 47.87, y = 42.1, shape = 17) + 
+  labs(fill = "Binned difference in last-digit deviance\n (centered and scaled)") +
+  theme_bw() + theme(axis.text.x=element_blank(), #remove x axis labels
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.text.y=element_blank(),  #remove y axis labels
+        axis.ticks.y=element_blank()  #remove y axis ticks
+        )
+dag_plot
+#Note: scale_fill_steps2 will produce a smoother, but less clear, gradient (no breaks)
+
+#png(filename = here("Output", "dagestan_map.png"))
+#dag_plot
+#dev.off()
+```
+
+
+
+## Discussion and conclusion
+
+This project is in an early phase, but these preliminary results are supportive of the theory that even a judicial system operating in highly authoritarian systems can have a restraining effect on electoral manipulation. That the small number of treated observations coded here generate statistically significant effects is promising, but more work is needed to improve the credibility of these results. At present, the results may be biased in unpredictable ways due to incomplete coding of treated observations. For example, cases tried under Article 141 of the criminal code\textemdash interference with the work of election commissions, which might be expected to target the opposition and election monitors\textemdash have not yet been coded. It is conceivable that convictions under such cases might embolden election-falsifying agents in future elections, potentially complicating the interpretation of the present results.
+
+
+Nevertheless, the basic results shown here indicate that further work should be undertaken on this research question. The preliminary results are in line with the theory, and the descriptive data indicate that the judicial system hears hundreds, if not thousands, of election-related cases each year in Russia. A qualitative analysis of the text of the 225 cases on election fraud also shows that, throughout the late Medvedev and second Putin presidencies, the criminal justice system has acted to shield higher-ups from responsibility for even confirmed instances of election fraud; front-line agents occasionally take the fall, while the system itself continues to operate. The tension between the needs of the overall system\textemdash to continue to control electoral outcomes, to allow a modest level of judicial independence, and to legitimize the regime itself through apparent rule of law\textemdash and the risks faced by the weakest agents of the ruling party is apparent here.
+
+A brief case study of Dagestan, an influential set of observations in the statistical analysis, also supports the general claims made above. The district where a severe penalty for election fraud was handed down by the court showed a significant decline in evidence of election fraud after the verdict. Similarly situated regions experienced a similar decline, while qualitatively different regions\textemdash perhaps home to agents from different patronage networks\textemdash show an increase in fraud. This result is in keeping with a model in which front-line agents, rather than higher-level decision makers, are a constraining factor in the delivery of election manipulation. Most importantly, it supports the claim that these agents take legal risk into account, even in a highly authoritarian and pro-regime region. The effect that this tension has on election integrity bears further investigation.
+
+
+### Temp analysis
+
+```{r}
+cases_141 <- read_rds("C:\\Users\\colej\\Documents\\Research projects\\scrape_russian_courts\\article-141-cases.RDS")
+```
+

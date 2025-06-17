@@ -1,5 +1,102 @@
 # Theory
 
+## Two theories of election manipulation
+
+- What is electoral manipulation?
+  - In this book, focus is on illegal electoral manipulation.
+  - Look to Schedler chain of democratic choice to explain
+  - See also Simpser 2011 p. 35 on three goals of his definition, and what tactics he includes
+    - In particular, he notes the analytic importance of choice (someone is making a deliberate choice to manipulate)
+
+- Measuring electoral manipulation
+  -Pros and cons of:
+    - Election observation
+    - Survey reports
+    - Crowdsourcing
+    - Election forensics
+    - Expert ratings
+  - This book uses multiple measures
+
+- Note distinction between decisive and severe manipulation. 
+  - Manipulation can be severe and non-decisive, or decisive and mild
+  
+- Simpser's first conventional wisdom: "The first approach is predicated on the idea that the main– in
+ fact, the only– goal of electoral manipulation is to contribute to winning the
+ election at hand.1 This idea, and its implications about when and how electoral
+ manipulation is likely to be pursued, is implicitly or explicitly espoused in most
+ of the literature on the topic, and therefore I shall call it the first conventional
+ wisdom about electoral manipulation." (cites: In this first approach I include scholarship on both democratic and authoritarian electoral systems, where the latter category includes the work by Geddes (2006), Magaloni (2006), Greene (2007), and other authors,)
+  - Other sources on first conventional wisdom: These cover Costa Rica in the first half of the twentieth century (Lehoucq and Molina 1999, 2002), Spain during the Restoration (Darde 1996), Germany in the late nineteenth century (Ziblatt 2009), Argentina at the turn of the twentieth century (Alonso 1996), Victorian England (Kam 2008), and the United States at various points in its history (Cox and Kousser 1981;
+ Argersinger 1985;King2001; Campbell 2003, 2005; among others) +  monograph by James Scott (1972), a study of electoral practices in Latin  America in the nineteenth century by Eduardo Posada-Carb´ o (2000), a famous article by  Schedler in which he surveys the different tools of electoral manipulation (2002), and two
+ recent edited volumes by Schaffer, one devoted to vote buying and the other to electoral reform
+ (2007, 2008). Lehoucq (2003) is a survey article +  Including Carothers 1997; Bjornlund 2004; Hartlyn and McCoy2006;Hyde2006,2011;Hyde and Marinov 2008; Kelley 2008; Simpser 2008; Beaulieu 2009; Beaulieu and Hyde 2009;and Simpser and Donno 2012.(Latter group is on election monitoring--could be an important literature to connect in)
+  - Core idea: "Manipulated elections are associated with small margins of victory... manipulating elections requires considerable effort, money, and personnel, and can lead to punishment or redress." So don't manipulate too much!
+  - Core idea 2 (from Simpser): "third idea is that electoral manipulation will be kept secret– that perpetrators as a rule seek to hide their activities of electoral manipulation from public view, presumably to avoid punishment. This assumption runs deep in the literature; it is virtually unquestioned."
+  --- THE core idea from Simpser: "In particular, electoral manipulation can influence behavior in two capacities: as a coordination device, and as a source of information about the manipulator’s attributes. In both capacities, electoral manipulation provides information about party strength." (P. 81)
+  
+- This first approach is what I call the 'regime weakness' model of electoral manipulation. It rests on two assumptions
+  - 1) Election manipulation carries significant 'legitimacy costs' for the incumbent
+  - 2) Electoral manipulation conveys little information about incumbent resilience, at best, and evidence of incumbent weakness at worst.
+  
+- Regime weakness model shows up most clearly in formal models (due to the necessity of clarity in such models), but is also implicit in informal theory
+  - Little, Tucker, and LaGatta (2015):  "Just as stronger election results for the incumbent lead to less protest because they indicate that she is popular, reports of more fraud lead to more protest because they indicate that the incumbent is, for a given election result, less popular."
+  - In Little (2015), an incumbent chooses an amount of fraud that decreases in the effectiveness of election monitoring--the "audience" offers less support to an unpopular incumbent, and undetected fraud reduces the audience's certainty around the level of popularity. So weak incumbents manipulate more than strong ones, but this effect declines in the degree of monitoring.
+  - Magaloni 2010: "The legitimacy loss of fraud can be conceived as the costs to the autocrat of damaging its reputation before its own supporters and/or before the international community.4 The model thus assumes that if fraud is known, it will invariably be costly for the incumbent." (This loss is modeled as the loss of some of the incumbent's present supporters).
+    - Note that probability of winning post-election conflict is modeled as distinct from popularity
+    - One way that 'weakness' can be conceptualized in this model is the cohesiveness of the incumbent coalition. If few members would defect after fraud, then ever-riskier gambles on fraud become rational. See page 758, column 1 for utility equation
+    
+- But it also shows up implicitly in other, informal theories
+  - Election manipulation can serve as a coordination device for aggrieved citizens (Tucker 2007)
+  - See literature on electoral manipulation (Hyde and Marinov 2014; Kelley 2012)
+  - Masaaki Higashijima (2022): "Two scenarios can emerge where elections destabilize authoritarian rule. In the first, a dictator engages in excessive electoral manipulation to such a degree that it harms the benefits of elections. This makes it **difficult for opposition leaders to correctly estimate the dictator’s true strength and makes it easy to capitalize on popular grievance**, provoking popular protest." (p.10)
+    -Expects protest when manipulation is extensive; regime survival depends on electoral margins and elite decisions (p. 44)
+    - Higashijima focuses on mobilizational capacity of dictators, which is also in line with my approach
+    
+    
+- Higashijima on fraud and protest:
+  - "Popular protests are more likely to occur when dictators excessively manipulate elections in the following three mechanisms. First, excessive electoral manipulation widens a gap between the opposition’s belief in their strength and revealed election outcomes, which in turn may encourage opposition leaders to speculate that the
+regimes are weaker than they had previously thought." (p. 169)
+  - "Second, excessive electoral manipulation unifies the opposition camp. Pro- regime electoral manipulation—blatant electoral fraud and majoritarian electoral systems— is more likely to prevent opposition parties from gaining their legislative representation and political influence within the regime. The extreme pro-regime bias in elections, however, undermines the credibility of electoral processes and thus urges the opposition to unify in adopting anti-system approaches, including post-electoral popular protests, rather than participating in regime- sponsored elections. (p. 170)
+  - "Third, excessive electoral manipulation serves as a coordination mechanism for the opposition to overcome collective action problems and leads to protest movements in the aftermath of elections (Tucker 2007).
+Organizing and joining mass protests runs the risk of state repression--especially when participants are uncertain about whether other people would join them. In this context, as Knutsen, Nygård, and Wig (2017: 108)
+succinctly point out, “elections constitute an easily identifiable focal points around which the expectations of different opposition actors, who otherwise cannot freely communicate, can converge. When first movers among
+the opposition can coordinate, a collective action logic may generate further snowballing since the probability of success increases and the cost of participation decreases as the number of participants grows." (p. 170)
+  - Higashijima finds that fraud in excess of predicted fraud (based on a first-stage model) is associated with greater risk of protest, but lower risk of incumbent turnover.
+  - " The theory provides implications for political order after authoritarian elections. If the dictator is unable to strategically manipulate elections in dealing with the electoral dilemma, then authoritarian elections backfire on him. More specifically, there are two causal pathways through which elections threaten authoritarian stability. If the dictator employs excessive electoral manipulation, then he is more likely to face popular protests because electoral manipulation provides a focal point for collective action and also political elites find difficulty in making sense of the de facto strength of the regime. On the contrary, if the autocrat is overconfident about his election victory and fails to optimize electoral manipulation, then
+election results reveal the weakness of the regime, leading to leadership turnover via a post-electoral coup or the opposition’s landslide election victory."
+  - My argument is that incumbents will almost always want to over manipulate (as the data in his book suggests--it's always better to overmanipulate). Instead, low manipulation happens because of some breakdown in the P-A network (which itself may confound the relationship between manipulation and turnover).
+    
+    
+
+- Regime strength model
+
+- What does extensive manipulation require? Solving a principal-agent problem
+- P-A nature of election manipulation
+- How to solve?
+  - Patronage resources (much discussion will be needed)
+    - Mobilizational resources 
+    - Incentives for supporting the boss
+  - Legal impunity for agents
+  - Birch (2020) notes how these features can be used to produce electoral violence that backstops other forms of manipulation
+    -"In contexts of dominance by informal institutions and corruption, those who control the levers of political power also control vast economic resources, as access to opportunities to generate wealth is guarded by political elites who typically allocate such opportunities to their allies in order to shore up their support bases, to those who offer them kickbacks, or in some cases to opposition elites whom they seek to co-opt. Legal mechanisms are highly politicized in these settings, such that incumbent allies enjoy virtual
+immunity from prosecution, whereas legal sanctions are applied often without justification against the political opponents of those in power. Finally, the public sector itself is a considerable source of patronage and wealth in states dominated by informal institutions and corruption, especially in underdeveloped contexts where private-sector enterprise is limited and the state is heavily reliant on foreign aid, most of which passes through state coffers (Acemoglu and Robinson 2012; Berenschot 2018b; Helmke and Levitsky 2006; Kitschelt and Wilkinson 2007; Mungiu-Pippidi 2015; North, Wallis, and Weingast 2009; Rothstein 2011; Rothstein and Varraich 2017)" (p. 29)
+  - "At the same time, violence will be kept in check if democratic institutions restrain the abuse of power and penalize the use of illicit force. Though corruption is found even in many democracies (Fisman and Golden 2017), democratic mechanisms go some way toward curbing the use of violence to enforce corrupt exchanges and to prevent whistle-blowers from denouncing corrupt transactions. When accountability institutions are strong, the real threat of legal penalty and/or social sanction embodied in democratic institutions raises the cost of corruption as well as that of violent means of facilitating it." (p. 31)
+  - "Moreover, informal institutions of patronage and clientelism reduce the risk of prosecution for regime allies, making violence more attractive for incumbents—and sometimes for opposition elites, if they believe they can bribe their way out of prosecution for criminal acts. Electoral corruption can also be used to buy off opponents." (p. 33)
+  - "Electoral misconduct often relies on violence or the threat of violence to be effective, as the fear generated by the use of force facilitates the successful manipulation of electoral procedures; put another way, the possibility of violence softens populations up for fraud, and ensures that if fraud fails the leadership will nevertheless achieve its ends." (p. 36)
+  
+- Extensive manipulation reveals these capacities, while also (perhaps) coordinating public grievances. This reuslts in:
+  - Post-election protest increasing in manipulation
+  - Protest failure increasing in manipulation
+  - Protest risk having a null or positive effect on election manipulation (contrary to widespread expectation)
+    - Higajishima does predict that greater opposition organizing capacity -> more fraud, because it is even riskier to let the well-organized opposition compete fairly
+    
+
+- Trejo (2014) argues that social movements and political parties in authoritarian systems protest fraud instrumentally (i.e. as a framing device)
+  - When elections become more free and fair (perhaps for reasons orthogonal to protest), opposition parties attempt to demobilize their social movement allies (to downplay the sense of 'being extreme').
+
+ 
+
+
 ## Principals, agents, and electoral manipulation
 
 Electoral manipulation refers here to illegal efforts to influence the outcome of an election, including activities like vote-buying and tampering with election returns, but excluding legal mechanisms of biasing election results. Electoral manipulation has a variety of benefits for candidates and leaders: it can send a signal about the ruling party’s organizational capacity and staying power to other political actors [@gehlbach2015electoral;@simpser2013], and can induce ambitious politicians to join with the ruling party and help prevent elite splits [@magaloni2006], leaving opposition parties to recruit from a pool of relatively extreme ideological activists [@greene_why_2007]. Despite these benefits, there is wide variation in the severity of electoral manipulation [@simpser2013]. 
