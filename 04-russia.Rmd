@@ -53,6 +53,14 @@ full_data <- full_data %>% mutate(gubernatorial_regime = as.factor(ifelse(year <
 
 
 full_data <- full_data %>% mutate(jud_ind_qual_lag = as.factor(jud_ind_qual_lag))
+
+## Adding in combined spikes file
+
+spikes_data <- read.csv(here("Russia_forensics", "spikes_combined.csv"))
+spikes_data <- spikes_data %>% rename(spikes_est = result, spikes_est_adj = result_adjusted)
+
+full_data <- full_data %>% left_join(spikes_data, by = c("master_id", "year")) #Might double-check for dupes here
+
 ```
 
 
@@ -116,8 +124,6 @@ knitr::include_graphics(here("Russia_forensics", "digits_kprf12_moscow.png"))
 Note: We need to mention homogeneity of precincts at some point around here.
 
 
-Next graf: Fraud measures (deviance)
-
 The second measure of electoral manipulation must capture falsification of results only. The digits-based test proposed by Beber and Scacco [-@beber2012] has been useful for estimating falsification of results by election officials [@weidmann_violence_2013;@sjoberg_autocratic_2013;@Cantu2014;@harvey_manipulation_2016]. Their method rests on the assumption that the ones-digit for a party's vote totals across precincts in a territory should be uniformly distributed in a clean election. That is, in the absence of human intervention, a roughly equal number of precincts should report vote totals ending in 0, 1, 2, 3, and so on. Put another way, whether the number of people who turn up to vote for a particular party at a given polling place is 100, 101, 102, etc., is a highly random process, influenced by (among other things) the weather, individuals' moods and obligations, conditions on the evening commute, and so on. Figure \@ref(fig:digitsuniform) illustrates this tendency using precinct-level votes for the KPRF candidate in Moscow city in the 2012 election.
 
 However, as Beber and Scacco demonstrate, human beings are poor random number generators; when asked to produce 'random' numbers they tend to overestimate some integers (especially zeroes and fives), and underestimate others. As a result, when precinct-level election officials are tasked with inflating a party's vote total at their precinct, they tend to over-produce certain digits. This process, when aggregated hundreds or thousands of times, can result in non-uniform distributions across the territory---a signal of human electoral falsification. Figure \@ref(fig:digitsfalse) illustrates a non-uniform distribution of digits, with significant over-representation of zeroes, for the KPRF candidate in Dagestan in the 2012 election. This type of election forensic measure captures falsification only; election results may be highly influenced by vote-buying, voter pressure, or ballot-stuffing and still generate randomly distributed last digits [@harvey_manipulation_2016]. 
@@ -129,7 +135,15 @@ knitr::include_graphics(here("Russia_forensics", "digits_kprf12_dagestan.png"))
 
 
 
-To estimate one form of manipulation by formal agents—falsification of results—I conduct chi-square tests for the uniform distribution of trailing digits for the ruling party and the second-place finisher in each region per election-year.  In an election without administrative fraud, the trailing digits for each party should be roughly evenly distributed from 0 to 9.  I test for deviations from the uniform that are statistically significant at the .05 level for both parties ; the binary variable any fraud is marked as 1 if either party’s results are significantly non-uniform, and 0 otherwise. This variable is used as the dependent variable in a second-stage logit model. This approach measures falsification of results only; it does not measure behaviors like stuffing the ballot box with pre-filled ballots [@Sjoberg2016].
+I estimate centralized manipulation by formal agents (i.e. falsification of results) using three approaches. First, I follow the classic technique from Beber and Scacco, using chi-square tests for the uniform distribution of trailing digits for the ruling party and the second-place finisher in each region per election-year. I test for deviations from the uniform that are statistically significant at the .05 level for both parties; the binary variable *any fraud* is marked as 1 if either party’s results are significantly non-uniform, and 0 otherwise. This variable is used as the dependent variable in a second-stage logit model. This approach measures falsification of results only; it does not measure behaviors like stuffing the ballot box with pre-filled ballots [@Sjoberg2016].
+
+Further research has produced more refined estimates of falsification. While relying on the same logic as Beber and Scacco [-@beber2012], Lankina and Skovoroda [@Lankina2017] propose using the deviance between the expected value for a trailing digit (10%) and its observed value, controlling for the number of precincts in a territory. I follow their measure of deviance for last-digit zero; a larger deviance indicates increasing under- or over-production of zero as a last digit, a possible signal of human tampering with results. Using the deviance measure rather than a binary indicator of significant difference from the uniform allows for a more precise test. Unlike the binary measure, which would classify a chi-squared test with a p-value of 0.049 as fraudulent but one with a p-value of 0.051 as clean, the deviance measure allows for a more continuous measure of 'fraudulent-ness.' However, the original chi-square approach has the advantage of detecting deviations in digits other than zero.
+
+Finally, I also employ the 'resampled kernel density' method developed by Arturas Rozenas [@Rozenas2017]. The intuition behind this approach is that elections which feature human falsification may produce vote-share or turnout distributions with 'spikes'---a high number of precincts reporting certain values. These values might be numbers divisible by five due to their appeal to human beings working in a hurry (i.e. 60 percent vote-share, or 65 percent). Or they might be due to specific targets laid out by political leaders (e.g. 67 percent). However, a certain degree of 'spikiness' is to be expected for simple arithmetic reasons. To account for this, Rozenas develops an approach that estimates the percentage of precincts in 'spikes' that go beyond what would be expected. 
+
+This approach takes the observed precinct-level results from a territory and calculates the smooth distributions of a party's vote-share and overall turnout (i.e. the distribution without any spikes or valleys). It then draws a number of samples from this distribution (i.e. a number of hypothetical elections) and computes new vote-share and turnout distributions from these samples. Finally it compares the actual distribution (with its spikes and valleys) to the sampled distributions. Where the density of precincts at a given point in the distribution (e.g. sixty percent vote-share, or seventy-five percent turnout) exceed the maximum density from the sampled distributions, those precincts are marked as potentially fraudulent. I utilized Rozenas's `spikes` package in R to estimate the percentage of fraudulent precincts in each of Russia's regions across all of the elections in the dataset.^[The package will fail to produce an estimate if the total number of votes exceeds the number of registered voters in any precinct (i.e. when turnout is greater than 100%). Since such precincts are suspicious at face value, I handle regions with any such precinct differently. In order to successfully compute the estimate from `spikes`, I first exclude any precincts with greater than 100% turnout, and then run the models. Once an estimate has been returned, I add the excluded precincts back in and compute an 'adjusted' percentage of suspicious precincts. In other words, this adjusted estimate equals the percentage of fraudulent precincts identified using Rozenas's method, plus the percentage of precincts where turnout exceeds 100 percent.] I utilize this percentage value as a dependent variable.
+
+All three of these variables should only be sensitive to falsification. Ballot-stuffing, vote-buying, voter pressure, and other forms of electoral manipulation cannot reliably produce the deviations from expected distributions that these methods identify since they still produce random vote-shares. In the analysis below,  I model the binary *any fraud* variable using logistic regression. The deviance and 'spikes' dependent variables are modeled using OLS.
 
 there is likely to be a core of precincts that reflect more-or-less the true level of turnout and support for United Russia in the region. Votes in these precincts are subject to less---and less direct---forms of manipulation. Like all voters in the system, they experience the effects of media bias, incumbent resource advantages, and selective access to the ballot. However, they are less subject to artificial inflation of the ruling party's vote-share through . The more the voters in a precinct are subject to the latter forms of electoral malfeasance---due to a lack of election monitors, socioeconomic conditions, or other factors---
 
@@ -137,7 +151,11 @@ a larger positive correlation between the share of absentee ballots and United R
 
 ### Explanatory variables: local political constraint
 
-I operationalize local constraints, first, by using a measure of \textit{local partisan opposition}. I include two additional measures in the appendix: expert ratings of the \textit{openness} of the local political environment to social and political activity, and a dummy variable recording whether a region is a titular \textit{ethnic republic} within the Russian Federation.  Local opposition is constructed by finding United Russia’s margin of victory proportional-representation portion of the most recent regional legislative election prior to the national election at hand (that is, the measure is lagged and taken at a lower administrative level). In rare cases where United Russia lost the regional election, its margin of victory is negative. I subtract the margin of victory from one, so that higher values correspond to a larger opposition presence. However, regional legislative election results are not available prior to the 2004 national election. In order to include data from 2004 and 2003, I rely on the margin of victory in gubernatorial elections.^[Similarly, the results of gubernatorial elections cannot be used for all elections, since Russia abolished gubernatorial elections between 2005 and 2012.]^[There is a clear difference between the two types of elections that affects the value of competitiveness when measured in this way. The proportional nature of legislative elections allows more parties to be competitive, systematically narrowing the margin of victory in these elections. By contrast, the winner-take-all nature of the election tends to make these elections two-way contests, possibly producing wider margins of victory. To account for this difference, I first center and scale each variable according to its variance before combining them. The distribution of these variables is sufficiently similar that the benefit of being able to make use of the data from the 2003 and 2004 elections in the study outweighs the cost of combining them in this fashion. Histograms for the raw and scaled data are available in the appendix.]  
+Across all models, I operationalize local constraints in three ways in the Russian context. First, I measure *regional political opposition* by taking the United Russia's vote-share in the most recent regional election and subtract it from 1. This variable thus increases as United Russia's vote-share in a region decreases. A higher value for this variable indicates greater opposition contestation, reduced popularity of the incumbent, and greater opposition influence in the legislature. While these factors should directly translate into constraints on the ruling party, the measure also raises concerns about endogeneity. United Russia's vote-share in regional elections is, after all, in part attributable to electoral manipulation that it may also deploy during federal elections. I address this concern in two ways. First, as a theoretical matter, I expect that increased competitiveness will affect different types of manipulation differently, rather than being associated with generally cleaner elections. In other words, I do not argue that better showings for opposition parties will be associated with reduced manipulation---an argument that would indeed be vulnerable to accusations of reverse causation. Instead, I argue that competitiveness shifts the form that manipulation takes.
+
+As an empirical matter, I also supplement this measure with two non-electoral measures of political competitiveness in Russia; both are based on ethnicity. Russia's administrative structure---its federal oblasts, okrugs, krais, and republics---is largely inherited from that of Soviet Russia (the Russian Soviet Federated Socialist Republic, which formed the largest constituent of the USSR). In an effort to balance their Marxist distrust of national identity with the ethnic realities they had themselves inherited from the Russian Empire, early Soviet governments built politicized ethnicity into the structure of the Union [@hajdaNationalitiesFactorSoviet2019;@smithRedNationsNationalities2013]. The need to administer a multi-ethnic, multi-lingual (and multiconfessional) state led the Soviet Union to be founded along national-identity dimensions---its constituent republics were drawn up along national lines (a titular republic for Kazakhs, for Uzbeks, for Ukrainians, etc.). The RSFSR, the largest republic, was itself subdivided into national enclaves where non-Russian ethnicities predominated. Ethnic groups that were thus recognized received privileged positions in the Soviet political structure, not least of which were organs of government for the titular territory of the national group (e.g. both a regional government for, and a communist party of, the Kazakh SSR) and party cadres recruited based on nationality [@martin2001affirmative].
+
+by using a measure of \textit{local partisan opposition}. I include two additional measures in the appendix: expert ratings of the \textit{openness} of the local political environment to social and political activity, and a dummy variable recording whether a region is a titular \textit{ethnic republic} within the Russian Federation.  Local opposition is constructed by finding United Russia’s margin of victory proportional-representation portion of the most recent regional legislative election prior to the national election at hand (that is, the measure is lagged and taken at a lower administrative level). In rare cases where United Russia lost the regional election, its margin of victory is negative. I subtract the margin of victory from one, so that higher values correspond to a larger opposition presence. However, regional legislative election results are not available prior to the 2004 national election. In order to include data from 2004 and 2003, I rely on the margin of victory in gubernatorial elections.^[Similarly, the results of gubernatorial elections cannot be used for all elections, since Russia abolished gubernatorial elections between 2005 and 2012.]^[There is a clear difference between the two types of elections that affects the value of competitiveness when measured in this way. The proportional nature of legislative elections allows more parties to be competitive, systematically narrowing the margin of victory in these elections. By contrast, the winner-take-all nature of the election tends to make these elections two-way contests, possibly producing wider margins of victory. To account for this difference, I first center and scale each variable according to its variance before combining them. The distribution of these variables is sufficiently similar that the benefit of being able to make use of the data from the 2003 and 2004 elections in the study outweighs the cost of combining them in this fashion. Histograms for the raw and scaled data are available in the appendix.]  
 
 It may be objected using margins of victory in one election (regardless of the timing and level) to explain electoral manipulation in another election introduces a problematic level of endogeneity to the analysis. I use the variable for two reasons. First, it captures the ability of opposition parties in the regional legislature to criticize the regional administration, to mobilize supporters, to influence regional election commissions, and to divert patronage resources away from the ruling party—all of which are constraints that make pro-regime manipulation more difficult. Second, the empirical strategy uses local opposition to predict levels of two distinct types of manipulation, not the level of overall manipulation or United Russia’s success in national elections. In other words, while it is true that a wide margin of victory in a regional election may be indicative of a high level of manipulation in that election, and thus be uninformative about the overall level of electoral manipulation in a federal election in the same territory, it says nothing about the type of manipulation that may have been used—which is the dependent variable of interest.  Finally, as robustness checks, I include two non-electoral measures of local constraints in the appendix, discussed above. Both of these variables produce results that are substantively similar to those presented here. 
 
@@ -165,17 +183,36 @@ A variable like patronage consolidation is not easily visible; the concept descr
 Deviance
 
 ```{r}
-model_dev_ethnic <- lm(deviance_region ~  ethnic_status + lc_ind + ur_gov_share + subnational_party_control   + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + n_precincts , data = full_data)
+model_dev_ethnic <- lm(deviance_region ~  ethnic_status +  ur_gov_share + subnational_party_control   + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + n_precincts , data = full_data)
 summary(model_dev_ethnic)
 
 
 
-model_dev_pctrus <- lm(deviance_region ~  pct_russian_upd + lc_ind + ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + n_precincts  , data = full_data)
+model_dev_pctrus <- lm(deviance_region ~  pct_russian_upd +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + n_precincts  , data = full_data)
 summary(model_dev_pctrus)
 
 
-model_dev_regcomp <- lm(deviance_region ~  regional_comp + lc_ind + ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + n_precincts  , data = full_data)
+model_dev_regcomp <- lm(deviance_region ~  regional_comp +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + n_precincts  , data = full_data)
 summary(model_dev_regcomp)
+
+```
+
+
+
+Spikes
+
+```{r}
+model_spike_ethnic <- lm(spikes_est_adj ~  ethnic_status +  ur_gov_share + subnational_party_control   + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + population , data = full_data)
+summary(model_spike_ethnic)
+
+
+
+model_spike_pctrus <- lm(spikes_est_adj ~  pct_russian_upd +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + population  , data = full_data)
+summary(model_spike_pctrus)
+
+
+model_spike_regcomp <- lm(spikes_est_adj ~  regional_comp +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + population  , data = full_data)
+summary(model_spike_regcomp)
 
 ```
 
@@ -184,16 +221,16 @@ summary(model_dev_regcomp)
 Non-standard
 
 ```{r}
-model_ns_ethnic <- lm(nonstandard_coef_ur ~  ethnic_status + lc_ind + ur_gov_share + subnational_party_control + population   + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct   , data = full_data)
+model_ns_ethnic <- lm(nonstandard_coef_ur ~  ethnic_status +  ur_gov_share + subnational_party_control + population   + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct   , data = full_data)
 summary(model_ns_ethnic)
 
 
 
-model_ns_pctrus <- lm(nonstandard_coef_ur ~  pct_russian_upd + lc_ind + ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + population  , data = full_data)
+model_ns_pctrus <- lm(nonstandard_coef_ur ~  pct_russian_upd  + ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + population  , data = full_data)
 summary(model_ns_pctrus)
 
 
-model_ns_regcomp <- lm(nonstandard_coef_ur ~  regional_comp + lc_ind + ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + population  , data = full_data)
+model_ns_regcomp <- lm(nonstandard_coef_ur ~  regional_comp  + ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + population  , data = full_data)
 summary(model_ns_regcomp)
 
 
