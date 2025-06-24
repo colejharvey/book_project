@@ -61,6 +61,12 @@ spikes_data <- spikes_data %>% rename(spikes_est = result, spikes_est_adj = resu
 
 full_data <- full_data %>% left_join(spikes_data, by = c("master_id", "year")) #Might double-check for dupes here
 
+## Changing the size of GDP by pop and population variables
+
+full_data <- full_data %>% mutate(grp_by_pop_small = grp_by_pop / 1000)
+full_data <- full_data %>% mutate(population_small = population / 1000)
+
+
 ```
 
 
@@ -158,7 +164,7 @@ This variable thus increases as United Russia's vote-share in a region decreases
 
 As an empirical matter, I also supplement this measure with two non-electoral measures of political competitiveness in Russia; both are based on ethnicity. Russia's administrative structure---its federal oblasts, okrugs, krais, and republics---is largely inherited from that of Soviet Russia (the Russian Soviet Federated Socialist Republic, which formed the largest constituent of the USSR). In an effort to balance their Marxist distrust of national identity with the ethnic realities they had themselves inherited from the Russian Empire, early Soviet governments built politicized ethnicity into the structure of the Union [@hajdaNationalitiesFactorSoviet2019;@smithRedNationsNationalities2013]. The need to administer a multi-ethnic, multi-lingual (and multiconfessional) state led the Soviet Union to be founded along national-identity dimensions---its constituent republics were drawn up along national lines (a titular republic for Kazakhs, for Uzbeks, for Ukrainians, etc.). The RSFSR, the largest republic, was itself subdivided into national enclaves where non-Russian ethnicities predominated. Ethnic groups that were thus recognized received privileged positions in the Soviet political structure, not least of which were organs of government for the titular territory of the national group (e.g. both a regional government for, and a communist party of, the Kazakh SSR) and party cadres recruited based on nationality [@martin2001affirmative;@slezkineUSSRCommunalApartment1994]. The Soviet Union ultimately imploded along national lines, as regional leaders took advantage of the institutional structure of the Union---its internal borders, its regional legislative bodies, its regional party structures---and nationalist movements fostered by politicized ethnicity [@sunyRevengeNationalismRevolution1993;@beissingerNationalismCollapseSoviet2009].A similarly centrifugal process took place within Russia itself, as its ethnically-defined regions likewise pushed for additional sovereignty [@kahn_parade_2000].
 
-Subordinating these regions, with their powerful governors and extensive political machines, was a major objective of the early Putin government [@Reuter2010;@golosovGubernatorialPowersRussia2016]. As a result, those political machines assets were put to use generating electoral support for United Russia; Russia's titular ethnic republics tend to be the least politically competitive regions in the country [@hale2007correlates;@white_ethnic_2017]. Ethnic minority enclaves tend to be politically unified around United Russia, due to the coherence of their political machines, while regions with larger populations of ethnic Russians tend to allow more space for competition. I operationalize this in two ways. First, the proportion of ethnic Russians in a region is taking from the Russian Census, with interpolation between census years. Second, I categorize regions as majority-minority titular ethnic regions, non-majority titular ethnic regions, and ordinary regions (i.e. oblasts). A region is coded as majority-minority if it is both a titular ethnic homeland  and ethnic Russians make up a minority of the population (e.g. Tatarstan, Chechnya). A region is coded as  a non-minority titular ethnic region if it is formally an ethnic homeland, but ethnic Russians make up a majority of the population. All other regions are coded as ordinary regions.
+Subordinating these regions, with their powerful governors and extensive political machines, was a major objective of the early Putin government [@Reuter2010;@golosovGubernatorialPowersRussia2016]. As a result, those political machines assets were put to use generating electoral support for United Russia; Russia's titular ethnic republics tend to be the least politically competitive regions in the country [@hale2007correlates;@white_ethnic_2017]. Ethnic minority enclaves tend to be politically unified around United Russia, due to the coherence of their political machines, while regions with larger populations of ethnic Russians tend to allow more space for competition. I operationalize this in two ways. First, the proportion of ethnic Russians in a region is taking from the Russian Census, with interpolation between census years. Second, I categorize regions as majority-minority titular ethnic regions, non-majority titular ethnic regions, and ordinary regions (i.e. oblasts). A region is coded as majority-minority if it is both a titular ethnic homeland  and ethnic Russians make up a minority of the population (e.g. Tatarstan, Chechnya). A region is coded as  a non-minority titular ethnic region if it is formally an ethnic homeland, but ethnic Russians make up a majority of the population (e.g. Karelia). All other regions are coded as oblasts, or ordinary regions.
 
 
 
@@ -174,22 +180,26 @@ Several variables are measured at the election-year level. First, I include a du
 ## Results and discussion
 
 
+Table \@ref(tab:fraudtable) reports the results for OLS regression models of the two measures of electoral falsification: the last-digit-zero deviance indicator and the resampled kernel density (RKD) indicator. All six models tell a consistent story. Models 1 and 4 show the relationship between the ethnic status of a region and the level of falsification. The baseline category for each model is the least competitive type of region: a majority-minority ethnic republic. The models show that Russia's ordinary regions, along with ethnic republics that lack a majority-minority population, are associated with less fraud as measured by both the deviance and RKD indicators. Similarly, Models 2 and 5 show that fraud decreases in the ethnic Russian share of the population. Lastly, the most direct indicator---regional competitiveness---is also negatively associated with both measures of falsification in Models 3 and 6. 
 
+The effect sizes are substantively significant. The change in the level of last-digit-zero deviance between a majority-minority ethnic region and an ordinary oblast is -2.44; this represents a bigger shift than that between the first (0.13) and third (1.89) quartiles of the deviance variable. The shift is even larger when falsification is measured as the percentage of possibly fraudulent precincts using the RKD estimator. For that variable, the distance between the first and third quartiles is roughly 0.8, about a third the size of the effect for oblast' status. Effect sizes are substantially larger for the *percent ethnic Russian* variable, which also ranges from zero to one. The effect of *regional competitiveness* is smaller, but still statistically and substantively significant. A shift from the first to the third quartile in competitiveness is associated with a reduction in last-digit-zero deviance of 0.48. This is roughly the difference between the deviance value for the city of Moscow in 2004 and the Karachay-Cherkess Republic^[A majority-minority ethnic republic in the Caucasus region.] in the same year. 
 
-Deviance
-
-```{r}
-model_dev_ethnic <- lm(deviance_region ~  ethnic_status +  ur_gov_share + subnational_party_control   + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + n_precincts , data = full_data)
-summary(model_dev_ethnic)
+Regional competitiveness shows a larger effect on the 'spikes' measure of falsification. An increase from the first to the third quartile in competitiveness reduces the estimated share of fraudulent precincts by -11.2 points, or 3.7 standard deviations of the dependent variable. All together, the results are compelling: increasing political openness is associated with substantively significant reductions in falsificaiton operationalized in two distinct ways, across three operationalizations of political openness, and when including a suite of control variables.
 
 
 
-model_dev_pctrus <- lm(deviance_region ~  pct_russian_upd +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + n_precincts  , data = full_data)
-summary(model_dev_pctrus)
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+model_dev_ethnic <- lm(deviance_region ~  ethnic_status +  ur_gov_share + subnational_party_control   + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + n_precincts , data = full_data)
+#summary(model_dev_ethnic)
 
 
-model_dev_regcomp <- lm(deviance_region ~  regional_comp +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + n_precincts  , data = full_data)
-summary(model_dev_regcomp)
+
+model_dev_pctrus <- lm(deviance_region ~  pct_russian_upd +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + n_precincts  , data = full_data)
+#summary(model_dev_pctrus)
+
+
+model_dev_regcomp <- lm(deviance_region ~  regional_comp +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + n_precincts  , data = full_data)
+#summary(model_dev_regcomp)
 
 ```
 
@@ -197,26 +207,56 @@ summary(model_dev_regcomp)
 
 Spikes
 
-```{r}
-model_spike_ethnic <- lm(spikes_est_adj ~  ethnic_status +  ur_gov_share + subnational_party_control   + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + population , data = full_data)
-summary(model_spike_ethnic)
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+model_spike_ethnic <- lm(spikes_est_adj ~  ethnic_status +  ur_gov_share + subnational_party_control   + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + population_small , data = full_data)
+#summary(model_spike_ethnic)
 
 
 
-model_spike_pctrus <- lm(spikes_est_adj ~  pct_russian_upd +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + population  , data = full_data)
-summary(model_spike_pctrus)
+model_spike_pctrus <- lm(spikes_est_adj ~  pct_russian_upd +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + population_small  , data = full_data)
+#summary(model_spike_pctrus)
 
 
-model_spike_regcomp <- lm(spikes_est_adj ~  regional_comp +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + population  , data = full_data)
-summary(model_spike_regcomp)
+model_spike_regcomp <- lm(spikes_est_adj ~  regional_comp +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + population_small  , data = full_data)
+#summary(model_spike_regcomp)
 
 ```
 
 
+```{r fraudtable, echo=FALSE, message=FALSE, warning=FALSE}
+models2 <- list()
+models2[['Model 1']] <- model_dev_ethnic
+models2[['Model 2']] <- model_dev_pctrus
+models2[['Model 3']] <- model_dev_regcomp
+models2[['Model 4']] <- model_spike_ethnic
+models2[['Model 5']] <- model_spike_pctrus
+models2[['Model 6']] <- model_spike_regcomp
 
-Non-standard
+library(kableExtra)
 
-```{r}
+reg_table <- modelsummary(models2, output = "kableExtra",  stars = T, title = 'Table 1: OLS models of election falsification', gof_omit = c("Log|RMSE|AIC|BIC"), coef_map = c("(Intercept)" = "(Intercept)",
+             "ethnic_statusNon-minority Republic" = "Non-minority ethnic region",
+             "ethnic_statusOblast" = "Oblast'",
+             "pct_russian_upd" = "Ethnic Russian percent", 
+             "regional_comp" = "Regional competitiveness",
+             "subnational_party_control" = "Subnational party control",
+"presidential" = "Presidential election",                                                                 "pensioners_per_1000" = "Pensioners per 1000 pop.",                                                                 "grp_by_pop_small" = "GRP per capita",                                                                   "poverty" = "Poverty rate", 
+                 "urban_pct" = "Urban share of pop.",
+                 
+                 "ur_gov_share" = "UR governors share", 
+                 "urban.pct" = "Urbanization", 
+                 "population_small" = "Population size", 
+                 "n_precincts"= "N. precincts"))  %>%
+  add_header_above(c(" " = 1, "Deviance measure" = 3, "RKD (spikes) measure" = 3)) 
+
+reg_table
+```
+
+
+
+Non-standard is next.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
 model_ns_ethnic <- lm(nonstandard_coef_ur ~  ethnic_status +  ur_gov_share + subnational_party_control + population   + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct   , data = full_data)
 summary(model_ns_ethnic)
 
