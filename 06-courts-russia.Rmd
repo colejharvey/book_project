@@ -1,8 +1,3 @@
----
-title: "R Notebook"
-output: html_notebook
----
-
 # Courts and election integrity in Russia
 
 After the 2012 presidential election in Russia, legal records indicate, an election observer in Kemerovo Oblast' noted that election commissioners in three precincts had engaged in falsification of the election results, a violation of Article 142.1 of the Russian criminal code. To bring these matters to the attention of the authorities, the observer made a complaint to the regional investigative committee. Instead of opening a criminal investigation as required, the investigator subsequently forwarded the observer's complaint to the head of the Territorial Election Commission\textemdash an individual directly involved in the alleged falsification. After a period of months, the observer filed a civil suit against the investigative committee, seeking the initiation of a criminal investigation and monetary damages for 'moral harm'\textemdash physical and mental suffering as a result of the government's inaction. In a decision that came several years later, the court acknowledged that the observer's rights had been violated, and awarded him 1,000 rubles from the state treasury as compensation. It did not order that criminal proceedings against the election commissioners resume.^[Decision in case No. 2-1946/2015 of the Central District Court of Novokuznetsk.]
@@ -238,7 +233,7 @@ The results in Table 3 should be interpreted cautiously, however, since the non-
 
 Lastly, the placebo tests in Models 4 and 8 indicate that the significant findings in the other models can be interpreted with greater confidence. As expected, convictions and fines for vote-buying offenses appear to have no correlation with subsequent election fraud. This suggests that only convictions related to falsification influence future fraud, helping support the theory of deterrence outlined here.
 
-```{r table2, echo = FALSE, message=FALSE,results='asis'}
+```{r table2, echo = FALSE, message=FALSE}
 models <- list()
 models[["Model 5"]] <- m2
 models[["Model 6"]] <- m4

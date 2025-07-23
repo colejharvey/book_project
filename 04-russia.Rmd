@@ -33,6 +33,7 @@ library(tidyverse)
 library(here)
 library(openxlsx)
 library(lme4)
+library(modelsummary)
 
 elex_data <- read.csv(here("Russia_forensics", "Data", "analysis_data_master.csv"))
 vdem_data <- read.csv(here("Russia_forensics", "Data", "vdem_final.csv"))
@@ -62,9 +63,13 @@ spikes_data <- spikes_data %>% rename(spikes_est = result, spikes_est_adj = resu
 full_data <- full_data %>% left_join(spikes_data, by = c("master_id", "year")) #Might double-check for dupes here
 
 ## Changing the size of GDP by pop and population variables
-
+full_data <- full_data %>% mutate(grp_by_pop = as.numeric(grp_by_pop))
 full_data <- full_data %>% mutate(grp_by_pop_small = grp_by_pop / 1000)
 full_data <- full_data %>% mutate(population_small = population / 1000)
+
+## Year as factor with 2011 as reference category
+full_data <- full_data %>% mutate(year = as.factor(year))
+full_data$year <- relevel(factor(full_data$year), ref = "2011")
 
 
 ```
@@ -177,14 +182,37 @@ Since large populations may be more difficult to control and require more resour
 Several variables are measured at the election-year level. First, I include a dummy variable to control for \textit{presidential elections}, which may produce higher levels of manipulation due to their high stakes for incumbents [@simpser2013]. As I have argued in prior work, the degree to which an incumbent has consolidated control over patronage resources is a key component of their ability to manipulate elections [@harvey_manipulation_2016;@Harvey2019]. I control for the degree to which the so-called 'power vertical' has been constructed in Russia using two measures. The first measure is the nationwide share of regional governors who belong to the United Russia party, and indicator of the degree to which the Kremlin was able to consolidate control over the regional political machines [@Reuter2010,@Reuter2013].^[I collected these data myself using Russian-language Wikipedia, following linked external sources for confirmation.] The persistence of United Russia as a party of power, where previous partisan experiments by President Yeltsin and his circle failed, is largely tied to it success as a vehicle for channeling patronage resources from patrons to clients [@Remington2008,@Turovskii2010]. Lastly, I use the V-Dem measure of *subnational party control* (v2pssunpar), which measures the degree to which "a single party control[s] important policymaking bodies across subnational units (regional and local governments)." Higher values on this variable indicate greater subnational competitiveness.
 
 
-## Results and discussion
+## Results 
 
 
-Table \@ref(tab:fraudtable) reports the results for OLS regression models of the two measures of electoral falsification: the last-digit-zero deviance indicator and the resampled kernel density (RKD) indicator. All six models tell a consistent story. Models 1 and 4 show the relationship between the ethnic status of a region and the level of falsification. The baseline category for each model is the least competitive type of region: a majority-minority ethnic republic. The models show that Russia's ordinary regions, along with ethnic republics that lack a majority-minority population, are associated with less fraud as measured by both the deviance and RKD indicators. Similarly, Models 2 and 5 show that fraud decreases in the ethnic Russian share of the population. Lastly, the most direct indicator---regional competitiveness---is also negatively associated with both measures of falsification in Models 3 and 6. 
+The results for the three distinct measures of falsification are presented in separate tables. Table \@ref(tab:fraudtable) reports the logit models of the *any fraud* variable, based on the Beber and Scacco digits test. Table \@ref(tab:fraudtable2) reports the results for OLS regression models of the last-digit-zero deviance indicator, and Table \@ref(tab:fraudtable3) shows results from OLS models of the resampled kernel density (RKD) indicator. All nine models tell a consistent story: for all three operationalizations of falsification, and all three measures of political openness, increased openness is associated with reduced falsification. Models 1 through 3 show this effect holds for a binary measure of falsification, which is positive if the distribution of ones-digits across precincts falls outside the uniform for any digit. They show that ordinary regions, on average, are significantly less likely than titular ethnic regions to experience falsification of this kind. The effect extends to measures of ethnicity generally, where an increasing proportion of ethnic Russians (and thus, typically, weaker political machines) yields reduced fraud. Finally, Model 3 shows that, as opposition parties perform better in the regional legislature, falsification in federal elections declines.
 
-The effect sizes are substantively significant. The change in the level of last-digit-zero deviance between a majority-minority ethnic region and an ordinary oblast is -2.44; this represents a bigger shift than that between the first (0.13) and third (1.89) quartiles of the deviance variable. The shift is even larger when falsification is measured as the percentage of possibly fraudulent precincts using the RKD estimator. For that variable, the distance between the first and third quartiles is roughly 0.8, about a third the size of the effect for oblast' status. Effect sizes are substantially larger for the *percent ethnic Russian* variable, which also ranges from zero to one. The effect of *regional competitiveness* is smaller, but still statistically and substantively significant. A shift from the first to the third quartile in competitiveness is associated with a reduction in last-digit-zero deviance of 0.48. This is roughly the difference between the deviance value for the city of Moscow in 2004 and the Karachay-Cherkess Republic^[A majority-minority ethnic republic in the Caucasus region.] in the same year. 
+Models 4 and 7 show the relationship between the ethnic status of a region and the level of falsification is consistent across the deviance and RKD indicators. The baseline category for *ethnic status* in Models 1, 4, and 7 is the least competitive type of region: a majority-minority ethnic republic. The models show that Russia's ordinary regions, along with ethnic republics that lack a majority-minority population, are associated with less fraud as measured by both the deviance and RKD indicators. Similarly, Models 5 and 8 show that fraud decreases in the ethnic Russian share of the population. Lastly, the most direct indicator---regional competitiveness---is also negatively associated with both measures of falsification in Models 3 and 6. 
 
-Regional competitiveness shows a larger effect on the 'spikes' measure of falsification. An increase from the first to the third quartile in competitiveness reduces the estimated share of fraudulent precincts by -11.2 points, or 3.7 standard deviations of the dependent variable. All together, the results are compelling: increasing political openness is associated with substantively significant reductions in falsificaiton operationalized in two distinct ways, across three operationalizations of political openness, and when including a suite of control variables.
+The effect sizes are substantively significant. The change in the level of last-digit-zero deviance between a majority-minority ethnic region and an ordinary oblast is -2.36; this represents a bigger shift than that between the first (0.13) and third (1.89) quartiles of the deviance variable. The shift is even larger when falsification is measured as the percentage of possibly fraudulent precincts using the RKD estimator. For that variable, the distance between the first and third quartiles is roughly 0.8, about a third the size of the effect for oblast' status. Effect sizes are substantially larger for the *percent ethnic Russian* variable, which also ranges from zero to one. The effect of *regional competitiveness* is smaller, but still statistically and substantively significant. A shift from the first to the third quartile in competitiveness is associated with a reduction in last-digit-zero deviance of 0.48. This is roughly the difference between the deviance value for the city of Moscow in 2004 and the Karachay-Cherkess Republic^[A majority-minority ethnic republic in the Caucasus region.] in the same year. 
+
+Regional competitiveness shows a larger effect on the 'spikes' measure of falsification. An increase from the first to the third quartile in competitiveness reduces the estimated share of fraudulent precincts by -1.14 points, or about one-third of a standard deviation of the dependent variable. All together, the results are compelling: increasing political openness is associated with substantively significant reductions in falsificaiton operationalized in two distinct ways, across three operationalizations of political openness, and when including a suite of control variables.
+
+
+
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+model_binary_ethnic <- glm(any_fraud ~  ethnic_status +  ur_gov_share + subnational_party_control   + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + n_precincts , data = full_data, family = binomial(link="logit"))
+#summary(model_binary_ethnic)
+
+
+
+model_binary_pctrus <- glm(any_fraud ~  pct_russian_upd +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + n_precincts  , data = full_data, family = binomial(link="logit"))
+#summary(model_binary_pctrus)
+
+
+model_binary_regcomp <- glm(any_fraud ~  regional_comp +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + n_precincts  , data = full_data,family = binomial(link="logit"))
+#summary(model_binary_regcomp)
+
+```
+
+
+
 
 
 
@@ -205,7 +233,7 @@ model_dev_regcomp <- lm(deviance_region ~  regional_comp +  ur_gov_share + subna
 
 
 
-Spikes
+
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 model_spike_ethnic <- lm(spikes_est_adj ~  ethnic_status +  ur_gov_share + subnational_party_control   + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + population_small , data = full_data)
@@ -223,18 +251,17 @@ model_spike_regcomp <- lm(spikes_est_adj ~  regional_comp +  ur_gov_share + subn
 ```
 
 
+
 ```{r fraudtable, echo=FALSE, message=FALSE, warning=FALSE}
-models2 <- list()
-models2[['Model 1']] <- model_dev_ethnic
-models2[['Model 2']] <- model_dev_pctrus
-models2[['Model 3']] <- model_dev_regcomp
-models2[['Model 4']] <- model_spike_ethnic
-models2[['Model 5']] <- model_spike_pctrus
-models2[['Model 6']] <- model_spike_regcomp
+models <- list()
+models[['Model 1']] <- model_binary_ethnic
+models[['Model 2']] <- model_binary_pctrus
+models[['Model 3']] <- model_binary_regcomp
+
 
 library(kableExtra)
 
-reg_table <- modelsummary(models2, output = "kableExtra",  stars = T, title = 'Table 1: OLS models of election falsification', gof_omit = c("Log|RMSE|AIC|BIC"), coef_map = c("(Intercept)" = "(Intercept)",
+reg_table <- modelsummary(models, output = "kableExtra",  stars = T, title = 'Table 1: Logit models of election falsification (digits test)', gof_omit = c("Log|RMSE|AIC|BIC"), coef_map = c("(Intercept)" = "(Intercept)",
              "ethnic_statusNon-minority Republic" = "Non-minority ethnic region",
              "ethnic_statusOblast" = "Oblast'",
              "pct_russian_upd" = "Ethnic Russian percent", 
@@ -246,28 +273,198 @@ reg_table <- modelsummary(models2, output = "kableExtra",  stars = T, title = 'T
                  "ur_gov_share" = "UR governors share", 
                  "urban.pct" = "Urbanization", 
                  "population_small" = "Population size", 
-                 "n_precincts"= "N. precincts"))  %>%
-  add_header_above(c(" " = 1, "Deviance measure" = 3, "RKD (spikes) measure" = 3)) 
+                 "n_precincts"= "N. precincts"))
 
 reg_table
 ```
 
 
 
-Non-standard is next.
+```{r fraudtable2, echo=FALSE, message=FALSE, warning=FALSE}
+models2 <- list()
+models2[['Model 4']] <- model_dev_ethnic
+models2[['Model 5']] <- model_dev_pctrus
+models2[['Model 6']] <- model_dev_regcomp
+
+
+
+reg_table2 <- modelsummary(models2, output = "kableExtra",  stars = T, title = 'Table 2: OLS models of election falsification (deviance measure)', gof_omit = c("Log|RMSE|AIC|BIC"), coef_map = c("(Intercept)" = "(Intercept)",
+             "ethnic_statusNon-minority Republic" = "Non-minority ethnic region",
+             "ethnic_statusOblast" = "Oblast'",
+             "pct_russian_upd" = "Ethnic Russian percent", 
+             "regional_comp" = "Regional competitiveness",
+             "subnational_party_control" = "Subnational party control",
+"presidential" = "Presidential election",                                                                 "pensioners_per_1000" = "Pensioners per 1000 pop.",                                                                 "grp_by_pop_small" = "GRP per capita",                                                                   "poverty" = "Poverty rate", 
+                 "urban_pct" = "Urban share of pop.",
+                 
+                 "ur_gov_share" = "UR governors share", 
+                 "urban.pct" = "Urbanization", 
+                 "population_small" = "Population size", 
+                 "n_precincts"= "N. precincts")) 
+
+reg_table2
+```
+
+
+
+```{r fraudtable3, echo=FALSE, message=FALSE, warning=FALSE}
+models3 <- list()
+
+models3[['Model 7']] <- model_spike_ethnic
+models3[['Model 8']] <- model_spike_pctrus
+models3[['Model 9']] <- model_spike_regcomp
+
+library(kableExtra)
+
+reg_table3 <- modelsummary(models3, output = "kableExtra",  stars = T, title = 'Table 3: OLS models of election falsification (RKD estimator)', gof_omit = c("Log|RMSE|AIC|BIC"), coef_map = c("(Intercept)" = "(Intercept)",
+             "ethnic_statusNon-minority Republic" = "Non-minority ethnic region",
+             "ethnic_statusOblast" = "Oblast'",
+             "pct_russian_upd" = "Ethnic Russian percent", 
+             "regional_comp" = "Regional competitiveness",
+             "subnational_party_control" = "Subnational party control",
+"presidential" = "Presidential election",                                                                 "pensioners_per_1000" = "Pensioners per 1000 pop.",                                                                 "grp_by_pop_small" = "GRP per capita",                                                                   "poverty" = "Poverty rate", 
+                 "urban_pct" = "Urban share of pop.",
+                 
+                 "ur_gov_share" = "UR governors share", 
+                 "urban.pct" = "Urbanization", 
+                 "population_small" = "Population size", 
+                 "n_precincts"= "N. precincts"))  
+
+reg_table3
+```
+
+
+
+Table \@ref(tab:nstable) reports models of manipulation via non-standard voting (that is, of the relationship between United Russia's vote-share and ballots cast by absentee or mobile ballot box). The table shows that the results are similarly consistent, but with with opposite-signed effects for the explanatory variables. Where regions that lack a titular ethnic majority demonstrate less evidence of falsification in Models 1 and 4, the same regions show an increase in non-standard voting in Model 7. The same result appears for ethnic Russian population share in Model 8, and regional competitiveness in Model 9. Effect sizes for the explanatory variables remain substantively important. The average oblast', for instance, reports a nonstandard voting coefficient that is 0.206 larger than the average majority-minority republic. This is a shift larger than the difference between the median non-standard coefficient (0.45) and the third quartile (0.62), and represents about two-thirds of a standard deviation (0.32). The effect size for Russian ethnicity is somewhat larger, just as it is for falsification. Lastly, the effect size for *regional competitiveness* is smallest. Moving from the first to the third quartile in competitiveness is associated with an increase in non-standard manipulation of only 0.09---about one-third of a standard deviation.  
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
-model_ns_ethnic <- lm(nonstandard_coef_ur ~  ethnic_status +  ur_gov_share + subnational_party_control + population   + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct   , data = full_data)
-summary(model_ns_ethnic)
+model_ns_ethnic <- lm(nonstandard_coef_ur ~  ethnic_status +  ur_gov_share + subnational_party_control + population_small   + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct   , data = full_data)
+#summary(model_ns_ethnic)
 
 
 
-model_ns_pctrus <- lm(nonstandard_coef_ur ~  pct_russian_upd  + ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + population  , data = full_data)
-summary(model_ns_pctrus)
+model_ns_pctrus <- lm(nonstandard_coef_ur ~  pct_russian_upd  + ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + population_small  , data = full_data)
+#summary(model_ns_pctrus)
 
 
-model_ns_regcomp <- lm(nonstandard_coef_ur ~  regional_comp  + ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop +  poverty + urban_pct  + population  , data = full_data)
-summary(model_ns_regcomp)
+model_ns_regcomp <- lm(nonstandard_coef_ur ~  regional_comp  + ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + population_small   , data = full_data)
+#summary(model_ns_regcomp)
+
+
 
 
 ```
+
+```{r nstable, echo=FALSE, message=FALSE, warning=FALSE}
+models4 <- list()
+models4[['Model 10']] <- model_ns_ethnic
+models4[['Model 11']] <- model_ns_pctrus
+models4[['Model 12']] <- model_ns_regcomp
+
+
+library(kableExtra)
+
+reg_table4 <- modelsummary(models4, output = "kableExtra",  stars = T, title = 'Table 4: OLS models of vote-buying and ballot-stuffing', gof_omit = c("Log|RMSE|AIC|BIC"), coef_map = c("(Intercept)" = "(Intercept)",
+             "ethnic_statusNon-minority Republic" = "Non-minority ethnic region",
+             "ethnic_statusOblast" = "Oblast'",
+             "pct_russian_upd" = "Ethnic Russian percent", 
+             "regional_comp" = "Regional competitiveness",
+             "subnational_party_control" = "Subnational party control",
+"presidential" = "Presidential election",                                                                 "pensioners_per_1000" = "Pensioners per 1000 pop.",                                                                 "grp_by_pop_small" = "GRP per capita",                                                                   "poverty" = "Poverty rate", 
+                 "urban_pct" = "Urban share of pop.",
+                 
+                 "ur_gov_share" = "UR governors share", 
+                 "urban.pct" = "Urbanization", 
+                 "population_small" = "Population size", 
+                 "n_precincts"= "N. precincts")) 
+
+reg_table4
+```
+
+As a final check, Table \@ref(tab:fetable) shows results of models of each dependent variable, which include fixed effects by election year. This controls for any nationwide factors that are invariant for that particular election: for instance, the handoff from Putin to Medvedev in 2008, or the reverse in 2012. The reference category for the regression models is the year 2011, due to its substantive importance as the election that sparked Russia's largest electoral protest movement. Taking this approach requires dropping other variables that are constant by election year: *presidential election*, *UR governors share*, and *subnational party control*. For the sake of brevity, I report results only for the *ethnic status* explanatory variable, excluding *ethnic Russian population share* and *regional competitiveness*. While ethnic status, as a categorical variable, is something of a blunt instrument, it has the dual advantages of avoiding endogeneity concerns while still being well-grounded as an indicator of political openness in the Russian context. The results remain substantively unchanged, when compared to the previous models. One interesting observation from the fixed effect models is that there is no significant effect for any election-year for measures of falsification, but there is for nonstandard voting bias. Early years of the Putin era show significantly less evidence of voter pressure and ballot-stuffing than the reference election year (2011), and later years show significantly more. This is in line with prior work suggesting that falsification requires a less-developed patronage machine than more dispersed forms of manipulation require [@Harvey2020].
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+model_binary_ethnic_fe <- glm(any_fraud ~  ethnic_status +  pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + population_small +  year , data = full_data, family = binomial(link="logit"))
+
+model_dev_ethnic_fe <- lm(deviance_region ~  ethnic_status  +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + n_precincts + year, data = full_data)
+#summary(model_dev_ethnic_fe)
+
+model_spike_ethnic_fe <- lm(spikes_est_adj ~  ethnic_status +  pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + population_small + year , data = full_data)
+#summary(model_spike_ethnic_fe)
+
+model_ns_regcomp_fe <- lm(nonstandard_coef_ur ~  ethnic_status   +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + population_small + year  , data = full_data)
+#summary(model_ns_regcomp_fe)
+```
+
+```{r fetable, echo=FALSE, message=FALSE, warning=FALSE}
+models5 <- list()
+models5[['Model 13']] <- model_binary_ethnic_fe
+models5[['Model 14']] <- model_dev_ethnic_fe
+models5[['Model 15']] <- model_spike_ethnic_fe
+models5[['Model 16']] <- model_ns_regcomp_fe
+
+
+library(kableExtra)
+
+reg_table5 <- modelsummary(models5, output = "kableExtra",  stars = T, title = 'Table 5: Regression models of electoral manipulation with year fixed effects', gof_omit = c("Log|RMSE"), coef_map = c("(Intercept)" = "(Intercept)",
+             "ethnic_statusNon-minority Republic" = "Non-minority ethnic region",
+             "ethnic_statusOblast" = "Oblast'",
+             "pct_russian_upd" = "Ethnic Russian percent", 
+             "regional_comp" = "Regional competitiveness",
+             "subnational_party_control" = "Subnational party control",
+"presidential" = "Presidential election",                                                                 "pensioners_per_1000" = "Pensioners per 1000 pop.",                                                                 "grp_by_pop_small" = "GRP per capita",                                                                   "poverty" = "Poverty rate", 
+                 "urban_pct" = "Urban share of pop.",
+                 
+                 "ur_gov_share" = "UR governors share", 
+                 "urban.pct" = "Urbanization", 
+                 "population_small" = "Population size", 
+                 "n_precincts"= "N. precincts",
+"year2000" = "2000",
+"year2003" = "2003",
+"year2004" = "2004",
+"year2007" = "2007",
+"year2008" = "2008",
+"year2012" = "2012",
+"year2016" = "2016",
+"year2018" = "2018",
+"year2021" = "2021")) %>%  add_header_above(c(" " = 1, "Any fraud" = 1, "Deviance" = 1, "RKD", "Nonstandard"))
+
+reg_table5
+```
+
+## Discussion and conclusion
+
+In this chapter, I use data from over 800,000 precinct-level election returns in Russia, across ten election-years, to estimate four election-forensic indicators of electoral manipulation. Three of these indicators estimate falsification of election results by human hands [@beber2012;@Lankina2017;@Rozenas2017]. The fourth indicator, an innovation on my part of a classic forensic technique [@myagkov_forensics_2009], uncovers bias toward the ruling party in 'nonstandard' voting by absentee or mobile ballot box. Since these methods of voting have regularly been used in Russia to facilitate ballot-stuffing and voter pressure, I take this as an indicator of more dispersed manipulation with less obvious perpetrators.
+
+Having generated these indicators of manipulation for each of Russia's regions, I then test how they respond to three different indicators of political openness in Russia: majority-minority republic status, ethnic Russian share of the population, and regional legislative vote-share of the ruling party United Russia. Regardless of which indicators are used, the regression models all tell the same story: increasing competitiveness is associated with reduced falsification, but increased voter pressure and/or ballot-stuffing.
+
+While I identified this pattern in prior work on Russian elections [@Harvey2019;@harvey_manipulation_2016], the analysis in this chapter confirms the pattern using new forensic techniques and shows that it remains robust even after including four additional election years that were then unavailable.^[My previous work considered election years 2003, 2004, 2007, 2008, 2011, and 2012. This study adds election years 2000, 2016, 2018, and 2021.] There are two possible explanations for finding that increasing political openness is associated with more intensive dispersed manipulation, but less intensive centralized manipulation. First, it could be---as the regime-weakness model of manipulation would hold---that incumbents intentionally seek out less visible forms of manipulation when openness is high, to avoid the legitimacy costs associated with exposed manipulation. Alternatively, as I argue in this volume, it could be that low-level agents are less willing to expose themselves to personal risk when political openness is high, leaving the incumbent to rely on less efficient forms of manipulation (or, in the extreme, none at all). 
+
+There are two reasons to doubt the regime-weakness version of events, one empirical and one conceptual. Empirically, the analysis in [CHAPTER 3] shows that election fraud tends to *increase* with protest risk, rather than decline. We observe the opposite pattern here, at the regional level. Ecological inference is unlikely to be the culprit, given that [CHAPTER 3] tests the same sort of manipulation as in this chapter, and it would be difficult for falsification to increase nationally while decreasing in the regions where it is most prevalent. Of course, the analysis in [CHAPTER 3] is cross-national, and Russia is but one case; perhaps Russia operates differently from the secular trend?
+
+```{r russia-fig1, fig.cap="Protest risk and fraud in Russia", out.width="80%"}
+knitr::include_graphics(here::here("Russia_forensics", "russia_risk_fraud.png"))
+
+```
+
+```{r russia-fig2, fig.cap="Pre-election protest and fraud in Russia", out.width="80%"}
+knitr::include_graphics(here::here("Russia_forensics", "russia_preprotest_fraud.png"))
+
+```
+
+Figures \@ref(fig:russia-fig1) and \@ref(fig:russia-fig2) show this is not the case, using the measures from Chapter 3; the data from Russia follow the cross-national pattern. The figures present data from [CHAPTER 3] for the Russian case only. Protest risk is a pre-election measure of the likelihood of post-election protest, based on a variety of predictors (including prior election integrity).^[See Chapter 3 for more details.] As Figure \@ref(fig:russia-fig1) illustrates, election fraud in Russia is consistently higher when protest risk is elevated. Similarly, Figure \@ref(fig:russia-fig2) shows that fraud appears to increase as pre-election unrest increases. The combined pattern appears inconsistent with the regime-weakness model, and with itself! Fraud increases with the risk of protest (both cross-nationally on average, and in Russia specifically), but it also appears to decline with political openness. 
+
+This seeming paradox is resolved if we shift our analytical focus away from incumbents and toward low-level agents of manipulation. This allows us to distinguish between how political openness affects the risks of electoral manipulation for principals and agents. For principals the risk of exposed electoral manipulation is, possibly, legitimacy loss and costly protest. However, the risk is offset to the extent that obvious manipulation sends costly signals of regime resources and capacities [-@simpser2012]. Following this logic, incumbents way be perfectly comfortable using visible forms of manipulation, as long they communicate such costly signals. Indeed, doing so may even reduce the risk of mass mobilization [@Harvey2020].
+
+For agents, however, the risk of exposure is more personal, and has very little upside. An individual who is caught falsifying election results or stuffing ballot boxes faces direct costs: they may have the unpleasant experience of dealing with the police, having charges brought by the public prosecutor, hiring defense attorneys, and going to court. If convicted, as discussed in [COURTS CHAPTER], they may face large fines and even the risk of prison. Even when prison terms are converted to probation (a suspended sentence, in the Russian legal parlance), such a status imposes significant restrictions and vulnerabilities. During the probationary period, the convicted individual must check in regularly with their probationary officer, inform the authorities of any change in work or residence, and---most importantly---avoid committing any other crimes or administrative misdeed. Failure to perform these duties could lead to imposition of the original prison sentence (Articles 73 and 74 of the Russian Criminal Code). Finally, there may be social and reputational harms that accrue to the individual for breaking the law; such social damage cannot be ruled out, given that the typical precinct-level election commissioner is not a hardened party activist, but rather a low-level public servant (often a teacher) pressed into service by their superiors [@Forrat2018].
+
+Finally, why would principals or agents be more comfortable employing decentralized forms of manipulation like voter pressure and vote-buying / multiple-voting when political openness goes up? The principal-focused argument would hold that, by being harder to detect, such activities reduce the legitimacy cost of manipulation compared to falsification. This is a fair assumption, given that such manipulation is more difficult to observe by election monitors. However, in my view it misses the mark, because voter pressure, vote-buying, and multiple-voting are *by necessity* public forms of manipulation---they involve direct contact with voters. Often, voters targeted in vote-buying / multiple voting schemes are asked to recruit additional confederates from their own networks (see [COURTS CHAPTER] for examples). Each individual in the scheme is free to share their experience with others after the fact. On the other hand, election officials who falsify results strive to keep their efforts private. Often, there is no hard evidence of falsification; instead, there is merely evidence that observers were kept separate from officials during the count (an administrative, rather than criminal, offense).
+
+What makes falsification less desirable in political open environments is not its observability---manipulation methods that involve direct contact with voters are inherently more observable to ordinary citizens. Instead, what distinguishes falsification is its easy *attributability*. Election officials are publicly named individuals. They operate at a specified location, date, and time. This means that, when exposed, they are particularly vulnerable to legal penalties. Vote-buying and voter-pressure, on the other hand, are carried out by private, perhaps anonymous or pseudonymous individuals at a multitude of locations throughout the voting period. This means that, even if voters, parties, and observers know that vote-buying or voter pressure operations took place, they are hard pressed to identify the organizers.
+
+As a result, incumbents have little incentive to shift from away from a more private form of manipulation to a more public one, under the regime-weakness approach. Such forms of manipulation are costlier and less efficient, and more public. There is some evidence to suggest that personal experience with vote-buying, as well as knowledge that others have sold their votes, is corrosive to public trust in elections [@cohenVoteBuyingNorms2025;@guerraVoteBuyingRedistribution2022] and to confidence in ballot integrity [@oliverosPerceptionsBallotIntegrity]. Voter pressure has the same effects, boosting turnout among the targeted individuals but at the cost of political support from those who are not targeted [@fryeHowVotersRespond2025]. Both social pressure [@matlandExperimentalTestBacklash2013] and fear of electoral violence [@burchardGetOutVote2020] have been associated with a backlash effect against the sponsoring party. Since vote-buying cannot be concealed from its targets and their social networks, and both are associated with legitimacy costs, it is difficult to see the benefits of shifting to this kind of manipulation in politically open districts under the regime-weakness model. Doing so risks further publicizing failures of election integrity, and potentially incensing the targets of such efforts or those who become aware of them.
+
+International practitioners are well aware of the importance of legal accountability for those who tamper with elections. The ACE Electoral Knowledge Project notes, for example, that "Enforcement is a deterrent to fraud, and a safeguard" of electoral integrity. The report goes on to note that, "Investigating electoral corruption is not easy," highlighting the political biases of prosecutors, judges, and juries as well as the challenges of accessing witnesses and suspects [@finnElectoralIntegrity2012]. The same report notes numerous challenges to the successful prosecution of vote-buying, specifically: certain activities may escape legal scrutiny due to loopholes in the law. Activities that scholars may clearly identify as vote-buying may not fall under the same legal category if, for instance, the giver's intent to influence the election cannot be proven, if the 'gift' in question has small or uncertain value, if the 'gift' is given to communities rather than individuals, if the actual vote-buying agents cannot be tied to a party or candidate, and so on [@finnElectoralIntegrity2012]. The legal ambiguity of vote-buying, relative to falsification, is another key reason that decentralized forms of manipulation are less risky for agents (even as they continue to pose legitimacy costs to principals). Similarly, a report by International IDEA finds that "inadequate law enforcement frequently enables" the persistence of vote-buying [@oliverjosephVoteBuyingInternational2022]. 
+
+These expert opinions, in addition to the more detailed historical analyses presented in [THEORY CHAPTER], strongly suggest that the central distinction between falsification and vote-buying / voter pressure is not in their potential legitimacy costs to principals, but rather in the degree to which these tactics expose agents to individual risk. The next chapter confirms the latter proposition using court records from Russia, along with a demonstration that increasing legal risk to agents is associated with a subsequent reduction in electoral manipulation.
