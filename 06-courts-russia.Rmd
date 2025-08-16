@@ -1,4 +1,4 @@
-# Courts and election integrity in Russia
+# Crime and punishment: Courts and election manipulation in Russia
 
 After the 2012 presidential election in Russia, legal records indicate, an election observer in Kemerovo Oblast' noted that election commissioners in three precincts had engaged in falsification of the election results, a violation of Article 142.1 of the Russian criminal code. To bring these matters to the attention of the authorities, the observer made a complaint to the regional investigative committee. Instead of opening a criminal investigation as required, the investigator subsequently forwarded the observer's complaint to the head of the Territorial Election Commission\textemdash an individual directly involved in the alleged falsification. After a period of months, the observer filed a civil suit against the investigative committee, seeking the initiation of a criminal investigation and monetary damages for 'moral harm'\textemdash physical and mental suffering as a result of the government's inaction. In a decision that came several years later, the court acknowledged that the observer's rights had been violated, and awarded him 1,000 rubles from the state treasury as compensation. It did not order that criminal proceedings against the election commissioners resume.^[Decision in case No. 2-1946/2015 of the Central District Court of Novokuznetsk.]
 
@@ -10,7 +10,7 @@ Does such 'successful' operation of the judicial system have an effect on the wo
 
 To answer this question, this paper examines an original dataset of over 7,500 legal decisions in Russia, ranging from 2010 to 2021, that concern alleged administrative or criminal violations of electoral law. The text of these decisions was scraped from a Russian legal repository, SudAct.ru. As Tables 1 and 2 indicate, there are five categories of criminal violations of electoral law and twenty-three administrative violations. This chapter provides some general descriptive patterns concerning the whole dataset, before focusing on the most consequential electoral violation\textemdash falsification of the vote results.
 
-## Literature review
+## Literature review: Courts and election manipulation in non-democracies
 
 Researchers have increasingly come to recognize the important roles that independently functioning courts can play in authoritarian systems. Courts that can, at times, act to restrain the government or to impartially resolve disputes among citizens serve an important legitimation function. Such judicial systems help bolster claims to rule of law, whatever other democratic shortcomings may be present [@moustafa_tamir_law_2008; @Whiting2017]. In the Russian case, for example, the low-level justice-of-the-peace courts regularly rule against the state in cases with little political salience [@hendleyEverydayLawRussia2017], and there is a general perception among both users and non-users of the judicial system that the courts are fair [@Hendley2016]. More independent courts can also rein in low-level agents of the state, creating accountability for excesses when needed [@Ginsburg2008], and can help the regime collect information and monitor discontent [@rios-figueroa_justice_2018]. Owing to these and other benefits [@Ma2017;@Sievert2018], many non-democratic regimes have instituted reforms that improve courts' *de jure* independence [@Staton2020].
 
@@ -28,7 +28,9 @@ Generally speaking, there are three schools of thought concerning the effect tha
 
 Most of these prior studies share a key limitation, however: they are studies of macro-level measures, with little insight into specific court cases or their effects. Popova's [-@popova2012politicized] work is an exception, drawing as it does on case-level data. However, the data used in her studies are drawn from civil cases on ballot access (i.e. candidate registration or de-registration), rather than the criminal forms of manipulation, and are not used to study the impact of court rulings on subsequent election performance. This paper begins to address this limitation; in doing so, it helps evaluate the competing claims of the protest-centric vs. principal-agent focused theories of courts and electoral manipulation.
 
-## Theory
+## The Russian judicial system
+
+## Theory: Criminal risk of election manipulation
 
 When a ruling party seeks to manipulate an election using illegal techniques, it must recruit large numbers of front-line agents to carry out the work of falsifying the count, stuffing the ballot boxes, or applying pressure to voters. As identified by Rundlett and Svolik [-@rundlett2016deliver] these efforts combine the challenges of a principal-agent relationship with a coordination problem. The political leaders at the top of the system derive a direct benefit from the manipulated vote totals, in the form of padded margins of victory and/or signals of organizational strength that can secure compliance for other actors in the system [@magaloni2006;@simpser2013]. Their low-level agents, on the other hand, derive an indirect benefit in the form of patronage rewards for fulfilling their assigned tasks. However, agents' actions to inflate the ruling party's vote are likely to be covert and difficult for their patrons to accurately evaluate. This fact, combined with the risks of exposure that may be attendant with breaking the law, create incentives for agents to shirk\textemdash accepting patronage rewards while applying minimal effort to manipulating the vote. In areas where the risk of exposure is sufficiently high, agents will be unwilling to engage in the most detectable forms of fraud, and instead shift to less detectable techniques like vote-buying [@Harvey2019]. Unfortunately for ruling parties, such techniques are even more prone to diversion of resources by agents [@szwarcberg_political_2014]. 
 
@@ -50,7 +52,7 @@ There is an important caveat to this expectation, however. When convicted electi
 
 
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(here)
 library(tidyverse)
 
@@ -130,7 +132,7 @@ m2 <- lm(log(deviance_region_adj) ~ n_precincts + treated_fine_large_fraud + n_d
 ```
 
 
-```{r, echo=FALSE}
+```{r echo=FALSE}
 annual_data <- annual_data %>% mutate(major_penalty = ifelse(treated_fine_large_fraud == 1 | treated_jail_fraud == 1 & amnestied == 0, 1, 0)) 
 annual_data <- annual_data %>% mutate(treated_fine_small = ifelse(treated_fine_any_fraud == 1 & treated_fine_large_fraud == 0, 1, 0))
 annual_data <- annual_data %>% mutate(minor_penalty = ifelse(treated_fine_small == 1 | amnestied == 1, 1, 0)) 
@@ -169,7 +171,7 @@ m6b <- lm(log(deviance_region_adj) ~ n_precincts +  minor_penalty + n_defendants
 ```
 
 
-```{r, echo=FALSE}
+```{r echo=FALSE}
 m1_vb <- lm(deviance_region ~ n_precincts + treated_fine_any_vb + n_defendants_vb + region + as.factor(year), data = annual_data)
 #summary(m1_vb)
 
@@ -182,7 +184,7 @@ In addition, as a placebo treatment test [@eggers_placebo_2023], I also test for
 
 Second, vote-buying remains a somewhat stochastic process: the number of bought votes that end up counting in the sponsor's column will vary according to many of the same factors that affect the distribution of un-bought votes, including weather, illness, and so on. Moreover, once in the privacy of the voting booth, many vote-sellers renege on their bargain and vote their conscience [@nichter2008]. As a result, the success or failure of vote-buying efforts should not meaningfully affect the distribution of trailing digits in ways that the deviance measure will detect. Third and finally, the penalty for violating Article 5.16 on vote-buying is relatively low; most defendants receive a fine of 20,000 rubles. Consequently, there is good reason to expect a null result for recent convictions for vote-buying on subsequent estimations of fraud. A significant correlation, on the other hand, would undermine confidence in any significant findings for convictions under Article 142.1 by suggesting that other factors\textemdash perhaps correlated with the general functioning of the legal system\textemdash were at work. 
 
-## Results
+## Qualitative and quantitative results
 
 Some general qualitative findings are discussed below, followed by the results of the statistical models. 
 
@@ -288,7 +290,7 @@ Figure \@ref(fig:fig-map) shows a map of Dagestan with its administrative divisi
 
 The patterns revealed in Figure \@ref(fig:fig-map) point toward a possible mechanism for the transmission of information about legal risk. As the map illustrates, some of the largest declines in estimated fraud occur in districts that neighbor Kaitagskii, and are similarly mountainous and rural. The neighboring dark blue regions, where fraud seemingly increased substantially, are qualitatively different\textemdash coastal, more urban, and home to different ethnic groups. This is consistent with a version of events in which a 'signal' about the cost of committing fraud is received by front-line election workers within a similar milieu and similar social networks as the defendant in the court case. Information about the case, and the legal risk it demonstrates, can be spread through social and professional networks of similarly situated agents. In practice in Russia, these individuals are often schoolteachers [@Forrat2018]. While it is also possible that this signal is received by higher level agents, leading a voluntary shift of resources by the ruling party, the impunity for TEC members across the corpus of cases (not just in Dagestan) makes this interpretation less likely.
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+```{r echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
 library(sf)
 library(ggplot2)
 library(rgdal)

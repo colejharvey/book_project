@@ -1,4 +1,4 @@
-# Theory
+# Theory: The regime-strength model of electoral manipulation in non-democracies
 
 ## Two theories of election manipulation
 
@@ -26,7 +26,7 @@ First, it is this kind of manipulation---falsification, ballot-stuffing, vote-bu
 
 [Note: Expand and fill in cites] Why these? They are substantively important for specific elections (used to backstop formal manipulation). They are theoretically important as the kind of manipulation that can be dialed up or down for each election as needed, and as the kind that is most likely to spark protest (due to procedural injustice and revealed information about incumbent), *and* as the most likely to be called out by observers. For the purpose of my theory here, they are the kinds of behaviors that a person can choose to engage in or not; unlike the choice of electoral system which (once imposed) carries out its logic impersonally.
 
-### Measuring electoral manipulation    
+## Measuring electoral manipulation    
 
 Personal electoral manipulation, like falsification or vote-buying, is often clandestine and almost always illegal; as a result, accurate measurement of electoral manipulation has posed a significant challenge for social scientists and practitioners. This challenge has, however, led to considerable methodological innovation. Scholars have developed several techniques for estimating the severity of electoral manipulation, each with advantages and disadvantages.
 
@@ -163,7 +163,7 @@ Second, the assumption that agents’ local political environment serves only as
 
 In short, the model advanced by Rundlett and Svolik [-@rundlett2016deliver] is a significant step forward in understanding electoral manipulation, but the underlying mechanisms driving the model cannot account for observed local variation in manipulation tactics. The following theory addresses this puzzle by tying local risks to the type of manipulation employed by agents, and by broadening the conception of the incumbent’s staying power to include patronage resources rather than popularity alone. 
 
-## Theory and hypotheses
+## Hypotheses
 
 For the purposes of this paper I consider a principal to be a national-level executive or party leader, while agents are the front-line individuals tasked with directly influencing election results by illegal means. As a result, I refer to principal-level effects as national, and agent-level effects as local. I argue that, while principals benefit from increased electoral manipulation, agents’ willingness to manipulate elections is conditional on two broad factors: the national consolidation of the patronage network the principal controls, and the local-level constraints faced by the agent. These two factors interact to influence agent behavior. When patronage networks are consolidated, agents have a strong incentive to participate in electoral manipulation on behalf of the dominant network; however, local factors like high partisan contestation can make engaging in manipulation risky for agents. Agents can reduce their exposure to local risk by shifting to harder-to-trace forms of electoral manipulation like vote-buying or voter pressure, rather than more easily monitored and traced activities like falsification.
 
@@ -218,7 +218,7 @@ In summary, national patronage consolidation attracts election-manipulating agen
 > Hypothesis 3 (incumbent popularity): Increases in the principal’s national approval rating will be associated with higher levels of  falsification, vote-buying, and voter pressure, especially in regions where the ruling party is popular.\end{quote}
 
 
-## Older text below, use as needed
+## [Older text below, use as needed]
 
 
 The answer lies in the frequently non-strategic (or at least not narrowly strategic) nature of anti-incumbent protest. In regime-weakness models, opposition behavior is narrowly strategic: opposition groups protest when they think they are likely to defeat the incumbent in the streets, and do not when they expect they will lose such a contest. Such models are well-founded in a rational-choice model of political behavior, which expects that individuals will be more likely to participate in collective action when they think the benefits (including likelihood of success in achieving protest goals) outweighs the individual risk of sanction [@Kuran1991, e.g.]. Beyond narrowly instrumental goals, a different model of protest holds that people are more likely to engage in contentious action when they have grievances against those in power [@gurrWhyMenRebel2015;@finkelRationalChoiceDynamics1998], a view which has been further bolstered by deeper understanding of the social psychological correlates of protest [@zomeren2013four;@VanZomeren2012].
@@ -239,7 +239,7 @@ However, if the principal appears less likely to control access to patronage due
 \includegraphics{theory_figure.png}
 
 
-## From dissertation
+From dissertation
 
 When the last vestiges of the Soviet Union finally crumbled in December 1991, the dissipation of the old regime set in motion a process of decentralization within Russia itself: many of the newly-independent country’s regions sought to capture as much sovereignty from the center as they could swallow, to use President Boris Yeltsin’s famous phrase. While many of the old system’s levers of patronage and influence had passed into Yeltsin’s hands, the Communist Party of the Russian Federation (KPRF) remained the only political party in the country that boasted a nationwide network of supporters, activists, and organizational infrastructure. These factors, combined with the economic pain of the transition to a market economy, resulted in the Communists’ victory in Russia’s first regularly scheduled legislative election, in December 1995, six months before Yeltsin himself was up for re-election. 
 

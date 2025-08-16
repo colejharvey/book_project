@@ -173,23 +173,23 @@ A party’s absolute vote-share per precinct is the number of votes it receives 
 
 Negative turnout coefficients for Ukraine’s major parties are not small, as Figure \ref{fig:proeast_coef_hist} illustrates. Large numbers of precincts show turnout coefficients that are not only negative, but substantially so. Such an outcome is highly unlikely to occur in a clean election, as discussed above, but a small positive turnout coefficient cannot be easily regarded as suspicious—a party might simply have a very low latent level of support in a region. As a conservative indicator of possible deflationary manipulation, then, I code a dummy variable that takes on a value of one for regions with a negative turnout coefficient. This binary variable, deflationary manipulation, is used as a dependent variable in logit models.
 
-\begin{figure}
-    \centering
-    \includegraphics[scale=.75]{ukraine_proeast_turnout_coefficients.png}
-    \caption{Histogram of turnout coefficients for major pro-east parties (2002-2014)}
-    \label{fig:proeast_coef_hist}
-\end{figure}
+
+```{r hist-east, echo=FALSE, fig.cap="Histogram of turnout coefficients for major pro-east parties (2002-2014)", out.width = '80%'}
+knitr::include_graphics(here::here("Ukraine_forensics", "ukraine_proeast_turnout_coefficients.png"))
+```
+
+
 
 The vote-share test, used for the second dependent variable, is conducted as follows. For each election year, the precinct-level results are broken down by region. Within each region-year, the results are broken out by party. I examine the results for the primary pro-eastern party for the election year. The Rozenas test is then conducted on the results for each party, by region, according the method described below.
 
 In brief, when the distribution of a party’s vote-shares by precinct is plotted, the distribution will exhibit random peaks that represent a clustering of precincts around particular vote-share values (see Figure \ref{fig:kharkiv_density}). By random chance, for example, a large number of precincts might report vote-shares of 32 percent for the party, resulting in a peak at that value. In an election without falsification, these peaks should be randomly distributed based on voters’ stochastic decisions to turn out and cast their ballots one way or another. However, a particular kind of falsification will distort these random patterns and produce statistically unlikely vote-share clusters (possibly, but not necessarily, at values divisible by 5—55\%, 60\%, and so on). The test compares the ‘spikes’ in the actual vote distribution to those produced randomly through bootstrapped samples of the observed precincts. By comparing the real distribution with the hypothetical distributions, it is possible to estimate the number of precincts per region where fraud is suspected.
 
-\begin{figure}
-    \centering
-    \includegraphics[scale=.65]{kharkivska_density_por_voteshare.png}
-    \caption{Vote-share density for the Party of Regions}
-    \label{fig:kharkiv_density}
-\end{figure}
+```{r kharkiv-por, echo=FALSE, fig.cap="Vote-share density for the Party of Regions", out.width = '80%'}
+knitr::include_graphics(here::here("Ukraine_forensics", "kharkivska_density_por_voteshare.png"))
+```
+
+
+
 
 Such non-random clusters can result from falsification due to human propensity to target whole numbers when making up figures, but are more likely to reflect agents’ fulfillment of direct specifications from their principals [@Rozenas2017]. Consequently, while this election forensic technique is only an indicator of falsification, it is especially well-suited to answering the question at hand since it allows for a test of how much agents engage in the kinds of behavior that can signal loyalty to particular patrons. The measure is used to produce a count of suspicious precincts, which is used as the dependent variable in Poisson models.
 
@@ -236,7 +236,7 @@ In sum, election-forensic analysis shows that overall electoral manipulation and
 ## Results
 
 Voteshare patterns
-```{r}
+```{r error=FALSE, message=FALSE, warning=FALSE}
 merged.data <- merged.data %>% mutate(coef_ratio = coefs.east / (coefs.east + coefs.west))
 merged.data <- merged.data %>% mutate(dev_ratio = deviance_region_east / (deviance_region_east + deviance_region_west))
 merged.data <- merged.data %>% mutate(dev_diff = deviance_region_east - deviance_region_west)
@@ -287,9 +287,9 @@ sjPlot::plot_model(model.rozdiff, type = "pred", terms = c("rcl.proeast", "prewa
 model.count.roz <- MASS::glm.nb(w.roz.count.total ~ prewar.region*rcl.proeast   +  logpop + income.percap +
                            n.precincts + highered 
                             + presidential, data = merged.data )
-summary(model.vs.roz)
-sjPlot::plot_model(model.vs.roz, type = "pred", terms = c("prewar.region [Central, West, East]", "rcl.proeast"))
-sjPlot::plot_model(model.vs.roz, type = "pred", terms = c("rcl.proeast", "prewar.region [Central, West, East]"))
+summary(model.count.roz)
+sjPlot::plot_model(model.count.roz, type = "pred", terms = c("prewar.region [Central, West, East]", "rcl.proeast"))
+sjPlot::plot_model(model.count.roz, type = "pred", terms = c("rcl.proeast", "prewar.region [Central, West, East]"))
 
 
 
@@ -313,7 +313,7 @@ Current thoughts:
 3) Putting this all together:
 
 
-```{r}
+```{r error=FALSE, warning=FALSE, message=FALSE}
 ##East parties; deviance score
 
 model.controls.east.r <- lm(deviance_region_east ~ #average.wage + 
@@ -379,7 +379,7 @@ summary(model.interaction.east.r) #
 sjPlot::plot_model(model.interaction.east.r, type = "pred", terms = c("party.margin", "president.name"))
 ```
 
-```{r}
+```{r error=FALSE, message=FALSE, warning=FALSE}
 ##West parties; deviance score
 
 model.controls.west.r <- lm(deviance_region_west ~ #average.wage + 
@@ -447,7 +447,7 @@ sjPlot::plot_model(model.interaction.west.r, type = "pred", terms = c("party.mar
 
 ### Spikes
 
-```{r}
+```{r error=FALSE, message=FALSE, warning=FALSE}
 ukrdata$scale.west.rozenas <- scale(ukrdata$west.rozenas)
 ukrdata$scale.east.rozenas <- scale(ukrdata$east.rozenas)
 
@@ -676,8 +676,7 @@ model.interaction.west.p2 <- glm.nb(w.roz.count.total ~ #average.wage +
                                 , data=merged.data)
 summary(model.interaction.west.p2) #margin is negative sig, const is negative, interaction is positive sig
 
-interplot(model.interaction.west.p2, var1="party.margin", var2="rcl.proeast") #When RCL proeast is high, party margin has large negative effect on west fraud
-interplot(model.interaction.west.p2, var2="party.margin", var1="rcl.proeast") #Pro-west regions: rclproeast -> more west fraud; pro-east regions: rclproeast -> less
+
 
 model.interaction.west.p3 <- glm.nb(w.roz.count.total ~ #average.wage + 
                                    over.sixty + loggov #+ edu.employ + health.employ
@@ -782,8 +781,8 @@ model.interaction.east.p2 <- glm(e.roz.count.total ~ #average.wage +
                                 , family=poisson, data=merged.data)
 summary(model.interaction.east.p2) #margin is negative sig, const is negative, interaction is negative sig
 
-interplot(model.interaction.east.p2, var1="party.margin", var2="wartime.election") #Yan -> increase in east fraud in pro-east regions
-p.roz.int.e2 <- interplot(model.interaction.east.p2, var2="party.margin", var1="wartime.election") + #Yan increases east fraud in pro-east regions, reduces it in pro-west
+interplot::interplot(model.interaction.east.p2, var1="party.margin", var2="wartime.election") #Yan -> increase in east fraud in pro-east regions
+p.roz.int.e2 <- interplot::interplot(model.interaction.east.p2, var2="party.margin", var1="wartime.election") + #Yan increases east fraud in pro-east regions, reduces it in pro-west
   xlab("Regional margin of victory") + 
   ylab("Estimated coefficient for Euromaidan")+
   theme_bw() #+ geom_hline(yintercept=0, linetype=2)  #In pro-west regions, Yan -> reduced west fraud; in pro-east regions -> increase
