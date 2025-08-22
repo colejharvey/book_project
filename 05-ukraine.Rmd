@@ -33,8 +33,8 @@ ukrdata <- ukrdata %>% mutate(PoR_bastion = ifelse(region == "Donetska" | region
 
 ukrdata <- ukrdata %>% mutate(crimea = ifelse(region == "Crimea" , 1, 0))
 
-ukrdata <- ukrdata %>% mutate(prewar.region = ifelse(region == "Crimea", "Crimea", ifelse(prewar.west == "1", "West", 
-                                                     ifelse(prewar.east == 1, "East", "Central"))))
+ukrdata <- ukrdata %>% mutate(prewar.region = as.factor(ifelse(region == "Crimea", "Crimea", ifelse(prewar.west == "1", "West", 
+                                                     ifelse(prewar.east == 1, "East", "Central")))))
 
 ukrdata$party.margin <- NA
 ukrdata$party.margin <- ifelse(ukrdata$east.party.margin > 0, ukrdata$east.party.margin, 
@@ -77,6 +77,43 @@ merged.data$president.name <- relevel(as.factor(merged.data$president.name), ref
 deviancescores <- read.csv(here("Ukraine_forensics", "Data", "region_deviance_ukraine.csv"))
 
 merged.data <- merged.data %>% left_join(deviancescores, by = c("region", "electionid"))
+
+merged.data <- merged.data %>% mutate(east.party.margin2 = east.party.voteshare - west.party.voteshare)
+
+merged.data <- merged.data %>% mutate(electionid = as.factor(electionid))
+
+```
+
+```{r}
+#Adding in total deviance (not just last digit zero deviance)
+
+
+ukraine_ids <- read.csv("C:\\Users\\colej\\Documents\\Grad school\\Dissertation\\Region ID lists\\ukraine region ids.csv")
+east_party_deviance <- read.csv(here::here("Ukraine_forensics", "Data", "ukraine_full_deviance_east.csv"))
+west_party_deviance <- read.csv(here::here("Ukraine_forensics", "Data", "ukraine_full_deviance_west.csv"))
+
+east_party_deviance <- east_party_deviance %>% rename(region = group)
+west_party_deviance <- west_party_deviance %>% rename(region = group)
+ukraine_ids <- ukraine_ids %>% rename(region = name)
+
+
+east_party_deviance <- east_party_deviance %>% left_join(ukraine_ids, by = "region")
+west_party_deviance <- west_party_deviance %>% left_join(ukraine_ids, by = "region")
+
+## Remove unneeded variables for merging
+
+east_party_deviance <- east_party_deviance %>% dplyr::select(!c(dataset, warning, year, presidential, round.2))
+west_party_deviance <- west_party_deviance %>% dplyr::select(!c(dataset, warning, total_rows, year, presidential, round.2))
+
+## Merging back in with merged.data
+
+merged.data <- merged.data %>% left_join(east_party_deviance, by = c("region", "electionid"))
+merged.data <- merged.data %>% left_join(west_party_deviance, by = c("region", "electionid"))
+
+merged.data <- merged.data %>% mutate(dev_1_9_east = g_statistic_east - deviance_region_east)
+merged.data <- merged.data %>% mutate(dev_1_9_west = g_statistic_west - deviance_region_west)
+
+
 
 ```
 
@@ -235,9 +272,67 @@ In sum, election-forensic analysis shows that overall electoral manipulation and
 
 ## Results
 
+Trying again with a clean setup
+
+Party margin is regional legislative vote-share in prior election
+
+There may be something here: When there is a pro-east president, pro-east regions are free to run up the score using dispersed methods. Infusion of state resources too. But we see that dev_1_9_east is higher in east regions regardless of president. This seems to go against expectations. Total deviance (g_statistic_east) doesn't change across regions or with presidents. G-statistic appears strongly correlated with over-sixty percent, which could have something to do with falsification of older people's ballots?
+
+```{r}
+merged.data <- merged.data %>% mutate(coef_ratio = coefs.east / (coefs.east + coefs.west))
+merged.data <- merged.data %>% mutate(over.sixty_pct = over.sixty / (population*1000))
+
+model.vs_margin <- lm(coef_ratio ~ party.margin + pres.approval + party.margin*east.president + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+summary(model.vs_margin)
+sjPlot::plot_model(model.vs_margin, type = "int")
+
+model.vs_rcl <- lm(coef_ratio ~ rcl.proeast + pres.approval + east.president  + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+summary(model.vs_rcl)
+
+model.vs_region <- lm(coef_ratio ~ prewar.region + pres.approval + east.president +  gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+summary(model.vs_region)
+
+model.vs_elex <- lm(coef_ratio ~ electionid + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+summary(model.vs_elex)
+
+model.vs_elex_east <- lm(coefs.east ~ electionid + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+summary(model.vs_elex_east)
+
+model.vs_elex_west <- lm(coefs.west ~ electionid + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+summary(model.vs_elex_west)
+```
+
+```{r}
+
+model.vs_margin <- lm(dev_1_9_east ~ party.margin + pres.approval + party.margin*east.president + gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
+summary(model.vs_margin)
+sjPlot::plot_model(model.vs_margin, type = "int")
+
+model.vs_margin <- lm(g_statistic_east ~ party.margin + pres.approval + party.margin*east.president + gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
+summary(model.vs_margin)
+sjPlot::plot_model(model.vs_margin, type = "int")
+
+
+model.vs_rcl <- lm(g_statistic_east ~ rcl.proeast + pres.approval + east.president  + gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
+summary(model.vs_rcl)
+
+model.vs_region <- lm(g_statistic_east ~ prewar.region + pres.approval + east.president +  gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
+summary(model.vs_region)
+
+model.vs_elex <- lm(g_statistic_east ~ electionid + gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
+summary(model.vs_elex)
+
+model.vs_elex_east <- lm(g_statistic_east ~ electionid + gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
+summary(model.vs_elex_east)
+
+model.vs_elex_west <- lm(g_statistic_west ~ electionid + gov.employ + over.sixty_pct + average.wage + sample_size_west, data = merged.data)
+summary(model.vs_elex_west)
+```
+
+
+### There are dragons below here:
 Voteshare patterns
 ```{r error=FALSE, message=FALSE, warning=FALSE}
-merged.data <- merged.data %>% mutate(coef_ratio = coefs.east / (coefs.east + coefs.west))
 merged.data <- merged.data %>% mutate(dev_ratio = deviance_region_east / (deviance_region_east + deviance_region_west))
 merged.data <- merged.data %>% mutate(dev_diff = deviance_region_east - deviance_region_west)
 merged.data <- merged.data %>% mutate(dev_sum = deviance_region_east + deviance_region_west)
@@ -253,6 +348,9 @@ model.vs <- lm(east.party.voteshare ~ prewar.region*rcl.proeast, data = merged.d
 sjPlot::plot_model(model.vs, type = "int")
 
 model.vs <- lm(east.party.voteshare ~ coef_ratio, data = merged.data)
+summary(model.vs)
+
+model.vs <- lm(east.party.voteshare ~ g_statistic_east + g_statistic_west + n.precincts, data = merged.data)
 summary(model.vs)
 
 model.vs <- lm(west.party.voteshare ~ prewar.region*log_dev_diff + n.precincts + presidential, data = merged.data %>% filter(log_dev_east != -Inf))
@@ -313,26 +411,31 @@ Current thoughts:
 3) Putting this all together:
 
 
+Here there be dragons:
+
 ```{r error=FALSE, warning=FALSE, message=FALSE}
 ##East parties; deviance score
 
-model.controls.east.r <- lm(deviance_region_east ~ #average.wage + 
+merged.data <- merged.data %>% mutate(post2010 = as.factor(ifelse(year > 2010, 1, 0)))
+
+model.controls.east.r <- lm(g_statistic_east ~ #average.wage + 
                               over.sixty + gov.employ #+ edu.employ + health.employ
                             +urban.pct + logpop + income.percap #+ ukr.lang.pct 
                             + highered 
-                            + presidential + n.precincts#+ crisis.year
+                            + presidential +  n.precincts#+ crisis.year
                             , data=merged.data)
 summary(model.controls.east.r)  
 
-model.local.east.r <- lm(deviance_region_east ~ #average.wage + 
+model.local.east.r <- lm(g_statistic_east ~ #average.wage + 
                            over.sixty + gov.employ #+ edu.employ + health.employ
                          +urban.pct + logpop + income.percap #+ ukr.lang.pct 
                          + highered 
-                         + presidential + party.margin + n.precincts #+ crisis.year
+                         + presidential + east.party.margin2  + n.precincts #+ crisis.year
                          , data=merged.data)
 summary(model.local.east.r)  
+#sjPlot::plot_model(model.local.east.r, type = "pred", terms = c("post2010", "party.margin"))
 
-model.regions.east.r <- lm(deviance_region_east ~ #average.wage + 
+model.regions.east.r <- lm(g_statistic_east ~ #average.wage + 
                              over.sixty + gov.employ #+ edu.employ + health.employ
                            +urban.pct + logpop + income.percap #+ ukr.lang.pct 
                            + highered 
@@ -340,7 +443,7 @@ model.regions.east.r <- lm(deviance_region_east ~ #average.wage +
                            , data=merged.data)
 summary(model.regions.east.r)  
 
-model.national.east.r <- lm(deviance_region_east ~ #average.wage + 
+model.national.east.r <- lm(g_statistic_east ~ #average.wage + 
                               over.sixty + gov.employ #+ edu.employ + health.employ
                             +urban.pct + logpop + income.percap #+ ukr.lang.pct 
                             + highered 
@@ -348,7 +451,7 @@ model.national.east.r <- lm(deviance_region_east ~ #average.wage +
                             , data=merged.data)
 summary(model.national.east.r) 
 
-model.years.east.r <- lm(deviance_region_east ~ #average.wage + 
+model.years.east.r <- lm(g_statistic_east ~ #average.wage + 
                            over.sixty + gov.employ #+ edu.employ + health.employ
                          +urban.pct + logpop + income.percap #+ ukr.lang.pct 
                          + highered 
@@ -357,32 +460,113 @@ model.years.east.r <- lm(deviance_region_east ~ #average.wage +
                          , data=merged.data)
 summary(model.years.east.r) #2014 parl positive
 
-model.interactionyears.east.r <- lm(deviance_region_east ~ #average.wage + 
+model.interactionyears.east.r <- lm(g_statistic_east ~ #average.wage + 
                                       over.sixty + gov.employ #+ edu.employ + health.employ
-                                    +urban.pct + logpop + income.percap #+ ukr.lang.pct 
+                                    +urban.pct  + income.percap #+ ukr.lang.pct 
                                     + highered 
                                     #+ presidential 
-                                    + party.margin + factor(electionid) + 
-                                      party.margin*factor(electionid) + n.precincts #+ crisis.year
+                                    + east.party.margin2 + electionid + 
+                                      east.party.margin2*electionid + n.precincts #+ crisis.year
                                     , data=merged.data)
 summary(model.interactionyears.east.r)
+sjPlot::plot_model(model.interactionyears.east.r, type = "pred", terms = c("electionid", "east.party.margin2 [-.51, .32]"))
 
-model.interaction.east.r <- lm(deviance_region_east ~ #average.wage + 
+model.interaction.east.r <- lm(g_statistic_east ~ #average.wage + 
                                  over.sixty + gov.employ #+ edu.employ + health.employ
-                               +urban.pct + logpop + income.percap #+ ukr.lang.pct 
+                               +urban.pct  + income.percap #+ ukr.lang.pct 
                                +  
-                               + presidential +  party.margin +  president.name + n.precincts +
-                                 party.margin*president.name #+ crisis.year
+                               + presidential +  east.party.margin2 +  president.name + n.precincts +
+                                 prewar.west*president.name #+ crisis.year
                                , data=merged.data)
 summary(model.interaction.east.r) #
 
-sjPlot::plot_model(model.interaction.east.r, type = "pred", terms = c("party.margin", "president.name"))
+sjPlot::plot_model(model.interaction.east.r, type = "pred", terms = c("president.name", "prewar.west"))
 ```
+
+```{r}
+model.interaction.east.all <- lm(coefs.east ~ #average.wage + 
+                                 over.sixty + gov.employ #+ edu.employ + health.employ
+                               +urban.pct  + income.percap #+ ukr.lang.pct 
+                               
+                               +  east.party.margin2 * electionid + n.precincts +
+                                 electionid #+ crisis.year
+                               , data=merged.data)
+summary(model.interaction.east.all) #
+sjPlot::plot_model(model.interaction.east.all, type = "pred", terms = c("electionid", "east.party.margin2 [-.51, .32]"))
+
+model.interaction.east.all <- lm(g_statistic_east ~ #average.wage + 
+                                 over.sixty + gov.employ #+ edu.employ + health.employ
+                               +urban.pct  + income.percap #+ ukr.lang.pct 
+                               
+                               +  east.party.margin2* electionid + n.precincts +
+                                 electionid #+ crisis.year
+                               , data=merged.data)
+summary(model.interaction.east.all) #
+sjPlot::plot_model(model.interaction.east.all, type = "pred", terms = c("electionid", "east.party.margin2 [-.51, .32]"))
+
+
+
+model.interaction.east.all.rcl <- lm(coefs.east ~ #average.wage + 
+                                 over.sixty + gov.employ #+ edu.employ + health.employ
+                               +urban.pct  + income.percap #+ ukr.lang.pct 
+                               +  pres.approve.margin +
+                               + presidential +  east.party.margin2 *rcl.proeast + n.precincts +
+                                 rcl.proeast #+ crisis.year
+                               , data=merged.data)
+summary(model.interaction.east.all.rcl) #
+
+
+
+
+model.interaction.east.all.rcl <- lm(g_statistic_east ~ #average.wage + 
+                                 over.sixty + gov.employ #+ edu.employ + health.employ
+                               +urban.pct  + income.percap #+ ukr.lang.pct 
+                               +  pres.approve.margin +
+                               + presidential +  east.party.margin2 *  rcl.proeast + n.precincts +
+                                 rcl.proeast #+ crisis.year
+                               , data=merged.data)
+summary(model.interaction.east.all.rcl) #
+
+
+model.interaction.east.dev.rcl <- lm(dev_1_9_east ~ #average.wage + 
+                                 over.sixty + gov.employ #+ edu.employ + health.employ
+                               +urban.pct  + income.percap #+ ukr.lang.pct 
+                               +  pres.approve.margin
+                               + presidential +  east.party.margin2*rcl.proeast + n.precincts  #+ crisis.year
+                               , data=merged.data)
+summary(model.interaction.east.dev.rcl) #
+sjPlot::plot_model(model.interaction.east.dev.rcl, type = "pred", terms = c("rcl.proeast", "east.party.margin2 [-.51, .32]"))
+
+
+### post-2010
+
+model.interaction.east.all.2010 <- lm(coefs.east ~ #average.wage + 
+                                 over.sixty + gov.employ #+ edu.employ + health.employ
+                               +urban.pct  + income.percap #+ ukr.lang.pct 
+                               +  pres.approve.margin
+                               + presidential +  east.party.margin2  + n.precincts +
+                                 east.party.margin2*post2010 #+ crisis.year
+                               , data=merged.data)
+summary(model.interaction.east.all.2010) #
+sjPlot::plot_model(model.interaction.east.all.2010, type = "pred", terms = c("east.party.margin2", "post2010"))
+
+model.interaction.east.dev.2010 <- lm(dev_1_9_east ~ #average.wage + 
+                                 over.sixty + gov.employ #+ edu.employ + health.employ
+                               +urban.pct  + income.percap #+ ukr.lang.pct 
+                               +  
+                               + presidential +  east.party.margin2  + n.precincts +
+                                 east.party.margin2*post2010 #+ crisis.year
+                               , data=merged.data)
+summary(model.interaction.east.dev.2010) #
+sjPlot::plot_model(model.interaction.east.dev.2010, type = "pred", terms = c("east.party.margin2", "post2010"))
+```
+
+
 
 ```{r error=FALSE, message=FALSE, warning=FALSE}
 ##West parties; deviance score
 
-model.controls.west.r <- lm(deviance_region_west ~ #average.wage + 
+model.controls.west.r <- lm(g_statistic_west ~ #average.wage + 
                               over.sixty + gov.employ #+ edu.employ + health.employ
                             +urban.pct + logpop + income.percap #+ ukr.lang.pct 
                             + highered 
@@ -390,15 +574,17 @@ model.controls.west.r <- lm(deviance_region_west ~ #average.wage +
                             , data=merged.data)
 summary(model.controls.west.r)  
 
-model.local.west.r <- lm(deviance_region_west ~ #average.wage + 
+model.local.west.r <- lm(g_statistic_west ~ #average.wage + 
                            over.sixty + gov.employ #+ edu.employ + health.employ
                          +urban.pct + logpop + income.percap #+ ukr.lang.pct 
                          + highered 
-                         + presidential + party.margin + n.precincts #+ crisis.year
+                         + presidential + party.margin*post2010 + n.precincts #+ crisis.year
                          , data=merged.data)
 summary(model.local.west.r)  
 
-model.regions.west.r <- lm(deviance_region_west ~ #average.wage + 
+
+
+model.regions.west.r <- lm(g_statistic_west ~ #average.wage + 
                              over.sixty + gov.employ #+ edu.employ + health.employ
                            +urban.pct + logpop + income.percap #+ ukr.lang.pct 
                            + highered 
@@ -406,7 +592,7 @@ model.regions.west.r <- lm(deviance_region_west ~ #average.wage +
                            , data=merged.data)
 summary(model.regions.west.r)  
 
-model.national.west.r <- lm(deviance_region_west ~ #average.wage + 
+model.national.west.r <- lm(g_statistic_west ~ #average.wage + 
                               over.sixty + gov.employ #+ edu.employ + health.employ
                             +urban.pct + logpop + income.percap #+ ukr.lang.pct 
                             + highered 
@@ -414,7 +600,7 @@ model.national.west.r <- lm(deviance_region_west ~ #average.wage +
                             , data=merged.data)
 summary(model.national.west.r) 
 
-model.years.west.r <- lm(deviance_region_west ~ #average.wage + 
+model.years.west.r <- lm(g_statistic_west ~ #average.wage + 
                            over.sixty + gov.employ #+ edu.employ + health.employ
                          +urban.pct + logpop + income.percap #+ ukr.lang.pct 
                          + highered 
@@ -423,7 +609,7 @@ model.years.west.r <- lm(deviance_region_west ~ #average.wage +
                          , data=merged.data)
 summary(model.years.west.r) #2014 parl positive
 
-model.interactionyears.west.r <- lm(deviance_region_west ~ #average.wage + 
+model.interactionyears.west.r <- lm(g_statistic_west ~ #average.wage + 
                                       over.sixty + gov.employ #+ edu.employ + health.employ
                                     +urban.pct + logpop + income.percap #+ ukr.lang.pct 
                                     + highered 
@@ -433,7 +619,7 @@ model.interactionyears.west.r <- lm(deviance_region_west ~ #average.wage +
                                     , data=merged.data)
 summary(model.interactionyears.west.r)
 
-model.interaction.west.r <- lm(deviance_region_west ~ #average.wage + 
+model.interaction.west.r <- lm(g_statistic_west ~ #average.wage + 
                                  over.sixty + gov.employ #+ edu.employ + health.employ
                                +urban.pct + logpop + income.percap #+ ukr.lang.pct 
                                +  
@@ -444,6 +630,30 @@ summary(model.interaction.west.r) #
 
 sjPlot::plot_model(model.interaction.west.r, type = "pred", terms = c("party.margin", "president.name"))
 ```
+### Deviance by p-value
+
+```{r}
+merged.data <- merged.data %>% mutate(deviance_binary_east = ifelse(p_value_east <= .05, 1, 0))
+
+merged.data <- merged.data %>% mutate(deviance_binary_west = ifelse(p_value_west <= .05, 1, 0))
+
+total_dev_east_logit <- glm(deviance_binary_east ~ #average.wage + 
+                              over.sixty + gov.employ #+ edu.employ + health.employ
+                            +urban.pct + logpop + income.percap #+ ukr.lang.pct 
+                            + highered 
+                            + presidential + east.president*post2010*prewar.west + n.precincts#+ crisis.year
+                            , data=merged.data, family = binomial(link = "logit"))
+sjPlot::plot_model(total_dev_east_logit, type = "pred", terms = c("prewar.west", "east.president", "post2010"))
+
+total_dev_west_logit <- glm(deviance_binary_west ~ #average.wage + 
+                              over.sixty + gov.employ #+ edu.employ + health.employ
+                            +urban.pct + logpop + income.percap #+ ukr.lang.pct 
+                            + highered 
+                            + presidential + east.president*post2010*prewar.west + n.precincts#+ crisis.year
+                            , data=merged.data, family = binomial(link = "logit"))
+sjPlot::plot_model(total_dev_west_logit, type = "pred", terms = c("prewar.west", "east.president", "post2010"))
+```
+
 
 ### Spikes
 
@@ -460,13 +670,14 @@ model.controls.west.r <- lm(west.roz.percent ~ #average.wage +
                            , data=ukrdata)
 summary(model.controls.west.r)  
 
-model.local.west.r <- lm(west.roz.percent ~ #average.wage + 
+model.local.west.r <- lm(east.roz.percent ~ #average.wage + 
                               over.sixty + gov.employ #+ edu.employ + health.employ
                             +urban.pct + logpop + income.percap #+ ukr.lang.pct 
                             + highered 
-                            + presidential + party.margin #+ crisis.year
-                            , data=ukrdata)
+                            + presidential + party.margin*east.president*post2010 #+ crisis.year
+                            , data=merged.data)
 summary(model.local.west.r)  #party margin negative at .1
+sjPlot::plot_model(model.local.west.r, type = "pred", terms = c("party.margin", "east.president", "post2010"))
 
 model.regions.west.r <- lm(west.roz.percent ~ #average.wage + 
                            over.sixty + gov.employ #+ edu.employ + health.employ
@@ -928,6 +1139,8 @@ ggplot(data = merged.data %>% filter(prewar.west == "1"), aes(x = deviance_regio
 
 
 ```
+
+
 
 
 
