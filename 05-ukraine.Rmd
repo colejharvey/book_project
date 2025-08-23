@@ -82,6 +82,11 @@ merged.data <- merged.data %>% mutate(east.party.margin2 = east.party.voteshare 
 
 merged.data <- merged.data %>% mutate(electionid = as.factor(electionid))
 
+## Relevel elections to set 2012 as baseline if wanted (otherwise 2002 is baseline)
+
+
+#merged.data$electionid <- relevel(merged.data$electionid, ref = "2012_0_0")
+
 ```
 
 ```{r}
@@ -282,52 +287,101 @@ There may be something here: When there is a pro-east president, pro-east region
 merged.data <- merged.data %>% mutate(coef_ratio = coefs.east / (coefs.east + coefs.west))
 merged.data <- merged.data %>% mutate(over.sixty_pct = over.sixty / (population*1000))
 
-model.vs_margin <- lm(coef_ratio ~ party.margin + pres.approval + party.margin*east.president + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
-summary(model.vs_margin)
-sjPlot::plot_model(model.vs_margin, type = "int")
+model.vs_margin_coef <- lm(east.party.margin2 ~ coefs.east + coefs.west + pres.approval + party.margin + gov.employ + over.sixty_pct  + urban.pct + population, data = merged.data)
+summary(model.vs_margin_coef)
 
-model.vs_rcl <- lm(coef_ratio ~ rcl.proeast + pres.approval + east.president  + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
-summary(model.vs_rcl)
+model.vs_margin_coef2 <- lm(east.party.margin2 ~ coefs.east + pres.approval + party.margin + gov.employ + over.sixty_pct  + urban.pct + population, data = merged.data)
+summary(model.vs_margin_coef2)
 
-model.vs_region <- lm(coef_ratio ~ prewar.region + pres.approval + east.president +  gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
-summary(model.vs_region)
+model.coef_margin_pres <- lm(coef_ratio ~ party.margin + pres.approval + party.margin*east.president + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+summary(model.coef_margin_pres)
+sjPlot::plot_model(model.coef_margin_pres, type = "int")
 
-model.vs_elex <- lm(coef_ratio ~ electionid + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
-summary(model.vs_elex)
+model.coef_rcl <- lm(coef_ratio ~ rcl.proeast + pres.approval + east.president  + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+summary(model.coef_rcl)
 
-model.vs_elex_east <- lm(coefs.east ~ electionid + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
-summary(model.vs_elex_east)
+model.coef_region <- lm(coef_ratio ~ prewar.region + pres.approval + east.president +  gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+summary(model.coef_region)
 
-model.vs_elex_west <- lm(coefs.west ~ electionid + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
-summary(model.vs_elex_west)
+model.coef_elex <- lm(coef_ratio ~ electionid + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+summary(model.coef_elex)
+
+model.coef_elex_east <- lm(coefs.east ~ electionid + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+summary(model.coef_elex_east)
+
+model.coef_elex_west <- lm(coefs.west ~ electionid + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+summary(model.coef_elex_west)
 ```
 
 ```{r}
 
-model.vs_margin <- lm(dev_1_9_east ~ party.margin + pres.approval + party.margin*east.president + gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
+model.vs_gs <- lm(east.party.margin2 ~ g_statistic_east + pres.approval + party.margin + gov.employ + over.sixty_pct  + population + urban.pct +  sample_size_east, data = merged.data)
+summary(model.vs_gs)
+
+model.gs_margin_int <- lm(g_statistic_east ~ party.margin + pres.approval + party.margin*east.president + gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
+summary(model.gs_margin_int)
+sjPlot::plot_model(model.gs_margin_int, type = "int")
+
+model.gs_margin_int2 <- lm(dev_1_9_east ~ party.margin + pres.approval + party.margin*east.president + gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
+summary(model.gs_margin_int2)
+sjPlot::plot_model(model.gs_margin_int2, type = "int")
+
+
+model.gs_margin <- lm(g_statistic_east ~ party.margin + pres.approval + party.margin + gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
 summary(model.vs_margin)
-sjPlot::plot_model(model.vs_margin, type = "int")
-
-model.vs_margin <- lm(g_statistic_east ~ party.margin + pres.approval + party.margin*east.president + gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
-summary(model.vs_margin)
-sjPlot::plot_model(model.vs_margin, type = "int")
 
 
-model.vs_rcl <- lm(g_statistic_east ~ rcl.proeast + pres.approval + east.president  + gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
-summary(model.vs_rcl)
+model.gs_rcl <- lm(g_statistic_east ~ rcl.proeast + pres.approval + east.president  + gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
+summary(model.gs_rcl)
 
-model.vs_region <- lm(g_statistic_east ~ prewar.region + pres.approval + east.president +  gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
-summary(model.vs_region)
+model.gs_region <- lm(g_statistic_east ~ prewar.region + pres.approval + east.president +  gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
+summary(model.gs_region)
 
-model.vs_elex <- lm(g_statistic_east ~ electionid + gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
-summary(model.vs_elex)
+model.gs_elex <- lm(g_statistic_east ~ electionid + gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
+summary(model.gs_elex)
 
-model.vs_elex_east <- lm(g_statistic_east ~ electionid + gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
-summary(model.vs_elex_east)
+model.gs_elex_east <- lm(g_statistic_east ~ electionid + gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
+summary(model.gs_elex_east)
 
-model.vs_elex_west <- lm(g_statistic_west ~ electionid + gov.employ + over.sixty_pct + average.wage + sample_size_west, data = merged.data)
-summary(model.vs_elex_west)
+model.gs_elex_west <- lm(g_statistic_west ~ electionid + gov.employ + over.sixty_pct + average.wage + sample_size_west, data = merged.data)
+summary(model.gs_elex_west)
 ```
+
+
+Table \@ref(tab:vsmodels) shows the expected relationship between the pro-Eastern turnout coefficients, and pro-Eastern vote-share. Model 1, which does not control for pro-Western parties' turnout coefficients, shows a positive and statistically significant effect. The effect remains more or less constant once pro-Western turnout coefficient is included as a control in Model 2. In either case, the effect size is substantial: a one standard deviance increase in pro-Eastern turnout coefficient is associated with a 6-point increase in the pro-Eastern party's margin of victory. In an otherwise tied election, in other words, increasing the pro-Eastern party's turnout coefficient by one standard deviation would change the outcome of the election to 53 - 47 in their favor. 
+
+Model 3 shows that there is no significant effect for deviance from the uniform distribution of last-digits for pro-East parties. This suggestions that outright falsification of the type captured by this measure is rare in Ukraine across the elections covered in the dataset, at least for major pro-Eastern parties. There is one caveat to this conclusion; following best practice [@beber2012], I excluded precincts from the deviance calculations where fewer than 100 votes were counted in that party's favor. A high proportion of precincts with double-digit vote totals will increase the deviance from the uniform distribution naturally, even if the votes are fair. This proportion is extremely high in some of Ukraine's more western regions. For instance, in the 2002 election in Ivano-Frankivska oblast', all but 24 out of 958 precincts are excluded for having fewer than 100 votes for the pro-Eastern party. In 2014, all 914 precincts in Ivano-Frankivska are dropped, as are all precincts in L'vivska, Ternopilska, Vinnitska, Ternopilska, and Cherkaska oblasts. This highlights the difficulty of conducting this sort of analysis conclusively in Ukraine's highly polarized and frequently crisis-driven politics under the period of study.   
+
+```{r vsmodels}
+models <- list()
+models[['Model 1']] <- model.vs_margin_coef2
+models[['Model 2']] <- model.vs_margin_coef
+models[['Model 3']] <- model.vs_gs
+
+
+library(kableExtra)
+
+reg_table_vs <- modelsummary(models, output = "kableExtra",  stars = T, title = 'Table 1: OLS models of pro-Eastern party vote-share', coef_map = c("(Intercept)" = "(Intercept)",
+             "coefs.east" = "Pro-Eastern turnout coefficient",
+             "coefs.west" = "Pro-Western turnout coefficient",
+             "g_statistic_east" = "Pro-East party last-digit deviance",
+             "pres.approval" = "Presidential approval rating",
+             "party.margin" = "Pro-Eastern margin in regional election",
+             "gov.employ" = "Gov. employees",
+             "over.sixty_pct" = "Over-sixty pop. share",
+             "average.wage" = "Average wage",
+             "population" = "Population",
+             "sample_size_east" = "N. precincts > 99 pro-East votes"))
+
+reg_table_vs
+
+
+
+
+
+```
+
+
 
 
 ### There are dragons below here:
