@@ -8,6 +8,24 @@
   - See also Simpser 2011 p. 35 on three goals of his definition, and what tactics he includes
     - In particular, he notes the analytic importance of choice (someone is making a deliberate choice to manipulate)
     
+```{=latex}
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+\begin{table}[]
+\begin{tabular}{@{}lllll@{}}
+\toprule
+\textbf{Manipulation tactic} & \textbf{Perpetrators known} & \textbf{Location known} & \textbf{Time known} & \textbf{Attributability} \\ \midrule
+Falsification                & Yes (Officials)                & Yes      & Yes       & High     \\
+Ballot-stuffing              & Possibly (Officials or voters) & Possibly & Partially & Moderate \\
+Vote-buying / voter pressure & Rarely (Various)               & No       & No        & Low      \\ \bottomrule
+\end{tabular}
+\caption{Variation in how attributable election manipulation tactics are to perpetrators}
+\label{tab:my-table}
+\end{table}
+```
+
+
+    
     
 This book has two principal aims. First, it aims to demonstrate that protest risk is insufficient to restrain election manipulation, a proposition that goes against a substantial body of prior work and has normatively pessimistic implications for democratization. Second, it articulates an alternative theory of electoral manipulation and protest, which explains how manipulation efforts are constructed and how they can be dismantled. To put this discussion on firm footing, it is necessary to define how the concept of electoral manipulation will be used.
 
