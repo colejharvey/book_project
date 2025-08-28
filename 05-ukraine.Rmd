@@ -95,21 +95,19 @@ As a corollary of this hypothesis, it is expected that oligarchs can make use of
 
 To test these hypotheses, I draw on precinct-level results from nine elections in Ukraine from 2002 to 2014. This includes three presidential elections---the third round of the 2004 elections, along with both rounds of the 2010 and 2014 elections---and four legislative elections (2002, 2006, 2007, and 2012). Unfortunately, the dataset excludes the first two rounds of the 2004 presidential elections, for which precinct-level results are not publicly available. Each election-year includes data from approximately 30,000 to 35,000 precincts nested within Ukraine’s 27 regions. As a result of the annexation of Crimea and the conflict in Eastern Ukraine, the legislative and presidential elections in 2014 draw on approximately 28,000 precincts within 23 regions: Crimea, Sevastopol, Donetsk, and Luhansk regions drop out of the data. This precinct-level data is used to conduct election-forensic estimates of falsification and overall evidence of electoral manipulation. Unlike in the Russian case, I am unable to estimate levels of vote-buying and related tactics, since Ukraine did not release precinct-level numbers of absentee or mobile-ballot-box voting until the 2014 elections. Explanatory and control variables are taken at the regional level.
 
-Start here:
+
 
 ### Dependent variables
 
-Two dependent variables are estimated by region. First, a turnout test is used to estimate overall levels of manipulation [@myagkov_forensics_2009]. Second, a vote-share test designed by Rozenas [-@Rozenas2017] is used to estimate the number of precincts in each region that may have been subject to falsification. To estimate the overall degree of manipulation, I conduct turnout tests on the results for the major pro-eastern party in the election.  These tests assume that, in a clean election, a party’s absolute vote-share (the party’s number of votes divided by the number of registered voters) should increase consistently across precincts within a territory, as precinct turnout increases. This approach assumes homogeneous precincts, an assumption which is bolstered by testing precincts within regions or through the use of relevant socioeconomic control variables to weed out potentially confounding relationships [@deckert2013patterns]. I employ both approaches here. 
+Two dependent variables are estimated for each region in each election year, using precinct-level data. First, an estimate of overall manipulation is calculated by regressing the absolute-vote share for the largest pro-Western and pro-Eastern parties (per election) on precinct-level turnout [@myagkov_forensics_2009], using multilevel models with random slopes and intercepts.^[This allows for the turnout coefficient to vary freely by region, an accounts for varying 'baseline' support for each party in the region.] Such a test assumes that, in a clean election, a party’s absolute vote-share (the party’s number of votes divided by the number of registered voters) should increase consistently across precincts within a country, as precinct turnout increases. This approach assumes homogeneous precincts across the country, an assumption which is bolstered by testing precincts within regions or through the use of relevant socioeconomic control variables to weed out potentially confounding relationships [@deckert2013patterns]. I employ both approaches here. Figures \@ref(fig:hist-east) and \@ref(fig:hist-west) show the distribution of coefficients for the major parties.  
 
-First, I use multilevel models to estimate the relationship between turnout and absolute vote-share for both parties, for each region-year, along with standard errors for those coefficients. The coefficients generated at this first stage are then used as dependent variables in a second-stage model. Turnout coefficients in the Ukrainian case appear systematically different from those in the Russian case, discussed in a previous chapter. While the ruling United Russia party regularly produces large turnout coefficients, suggesting that the party draws relatively more votes from the population as turnout increases—likely illicitly—major parties in Ukraine frequently exhibit negative turnout coefficients. A negative coefficient indicates that a party systematically loses absolute vote-share as turnout increases; that is, it draws fewer votes in absolute terms when turnout is high than when turnout is low—a suspicious outcome, though one that is of course not impossible under a clean election. A notional example helps clarify this. 
-
-A party’s absolute vote-share per precinct is the number of votes it receives divided by the total number of registered voters in that precinct. Turnout is the total number of votes cast divided by the number of registered voters. If there are 1,000 registered voters in each precinct, a precinct with ten percent turnout will have 100 total voters, and a precinct with ninety percent turnout will have 900. Assuming that a party has an approval rating of about forty percent across all precincts, under a clean election the party will receive about forty votes in the low-turnout district, and about 360 in the high turnout one. The corresponding turnout coefficient, represented by the slope of the line between the two points, will be about 0.4. For the party to produce a negative turnout coefficient, significant deflation in vote-share must occur; in other words, the number of votes it receives in high-turnout regions must be exceedingly low. In the current example, if the party wins forty percent of votes in the low-turnout precinct and one percent of the votes in the high turnout precinct (i.e. 9 out of 900 votes), it will produce a small negative turnout coefficient of -0.04. In other words, to earn even a small negative coefficient a party must suffer dramatic losses in absolute vote-share as turnout increases. Here, the party wins 40 out of 100 votes in the low-turnout precinct, and only 9 votes out of 900 when turnout is high.^[The alternative source of a negative coefficient, in which the party’s vote-share in the low-turnout precinct is highly inflated, is not mathematically possible. In the running example, assuming that the party wins forty percent of votes in the high-turnout precinct, it would have to win 390 votes in the low-turnout precinct (where only 100 votes are cast) in order to produce a small negative turnout coefficient.] 
+Second, election falsification is estimated by measuring the degree to which the ones-digit across a party's vote totals deviate from the expected uniform distribution, by region and year [@Skovoroda2017]. Whereas the analysis of the Russian case presented in Chapter 4 used a stricter measure---deviance in last-digit zero only---the analysis of Ukraine uses deviance across all digits. This is a more sensitive measure, intended to pose a tougher test of the implication that falsification in Ukraine will be rare and non-systematic. As an additional robustness check, I also use Beber and Scacco's [-@beber2012] binary indicator of severe manipulation, which takes a value of 1 if last-digit deviance is statistically significant at the p < .05 in a chi-square test.
 
 
 
-
-
-
+```{r}
+ggplot(merged.data, aes(g_statistic_east)) + geom_histogram()
+```
 
 
 
@@ -117,9 +115,15 @@ A party’s absolute vote-share per precinct is the number of votes it receives 
 
 
 
-In sum, Ukraine is a case where many of the conditions are in place for widespread electoral manipulation to occur. Patronage systems are embedded in society, especially in eastern regions of the country. Presidential influence over governors potentially unites the state apparatus in a network that can mobilize patronage resources to deliver votes for the incumbent. There are deep links between the state and business interests [@kudelia_sources_2012]. Nevertheless, the actual level of manipulation has varied considerably between elections and across regions, according to international monitors and experts [@Hale2010;@Herron2010;@Herron2011;@Herron2014;@Katchanovski2008]. This variation can be explained largely by shifts in patronage consolidation. Patronage is substantially less consolidated than in Russia; there is no ruling party akin to United Russia and oligarchic clans compete to influence election results. The constitution has at times fostered competition between patronage networks affiliated with the president and those affiliated with the prime minister. Local constraints are generally higher where pro-Western parties prevail than in pro-Eastern regions, but were elevated generally by the electoral reforms that were in force from the third round of the 2004 presidential election through the 2010 presidential election.
 
-Of the three cases considered here, Ukraine is in several ways the most difficult in which to test the consolidation and constraint model of electoral manipulation. Parties in Ukraine, especially those with roots in its western regions, have tended to be personalized and short-lived, making it more difficult to track their electoral performance over time. Additionally, over the time period for which electoral data are available (2002 to 2014), Ukraine were beset by multiple political crises. The two most significant of these include the 2004 Orange Revolution and the 2014 Euromaidan revolution and subsequent military conflict in the east. These are by no means the only crises to befall the country, however, and it is telling that the so-called Cassette Tape or Kuchma-gate scandal—which implicated President Kuchma in a variety of high-level misdeeds including the abduction and murder of a critical journalist—is considered a lesser incident in recent Ukrainian political history. While these patterns make it more difficult to analyze patterns of electoral manipulation than in Russia, for example, where a single ruling party predominates, it also offers opportunities to test the theory in the context of large shifts in patronage consolidation.
+
+
+
+
+
+<!--In sum, Ukraine is a case where many of the conditions are in place for widespread electoral manipulation to occur. Patronage systems are embedded in society, especially in eastern regions of the country. Presidential influence over governors potentially unites the state apparatus in a network that can mobilize patronage resources to deliver votes for the incumbent. There are deep links between the state and business interests [@kudelia_sources_2012]. Nevertheless, the actual level of manipulation has varied considerably between elections and across regions, according to international monitors and experts [@Hale2010;@Herron2010;@Herron2011;@Herron2014;@Katchanovski2008]. This variation can be explained largely by shifts in patronage consolidation. Patronage is substantially less consolidated than in Russia; there is no ruling party akin to United Russia and oligarchic clans compete to influence election results. The constitution has at times fostered competition between patronage networks affiliated with the president and those affiliated with the prime minister. Local constraints are generally higher where pro-Western parties prevail than in pro-Eastern regions, but were elevated generally by the electoral reforms that were in force from the third round of the 2004 presidential election through the 2010 presidential election.
+
+Of the three cases considered here, Ukraine is in several ways the most difficult in which to test the consolidation and constraint model of electoral manipulation. Parties in Ukraine, especially those with roots in its western regions, have tended to be personalized and short-lived, making it more difficult to track their electoral performance over time. Additionally, over the time period for which electoral data are available (2002 to 2014), Ukraine were beset by multiple political crises. The two most significant of these include the 2004 Orange Revolution and the 2014 Euromaidan revolution and subsequent military conflict in the east. These are by no means the only crises to befall the country, however, and it is telling that the so-called Cassette Tape or Kuchma-gate scandal—which implicated President Kuchma in a variety of high-level misdeeds including the abduction and murder of a critical journalist—is considered a lesser incident in recent Ukrainian political history. While these patterns make it more difficult to analyze patterns of electoral manipulation than in Russia, for example, where a single ruling party predominates, it also offers opportunities to test the theory in the context of large shifts in patronage consolidation.-->
 
 ```{r}
 library(here)
@@ -262,7 +266,7 @@ ukraine_oligarchs <- ukraine_oligarchs %>% mutate(year = as.factor(year))
 merged.data <- merged.data %>% left_join(ukraine_oligarchs, by = c("regionid", "year"))
 ```
 
-
+<!--
 In particular, the Ukrainian case provides a useful test against the hypotheses of the local-information model of electoral manipulation [@rundlett2016deliver].^[Ukraine is less effective as a test of the signaling model of manipulation, since it does not meet Simpser’s requirements for excessive manipulation to occur: an unconstrained government and a dominant ruling party.] The local-information model claims that when election-manipulating agents perceive their patron’s popularity to be low locally, they extrapolate from this information that their patron is likely to be unpopular nationally and begin to doubt that she will win the election. As a result, they become less likely to engage in electoral manipulation, fearing that patronage rewards will be revoked and the risk of punishment will increase. This theory produces two testable hypotheses that compete with those of the consolidation and constraint model. First, it expects that agents in local strongholds will continue to engage in manipulation on behalf of the locally dominant party, even if national political conditions worsen for that party. As will be shown below, this pattern does not emerge in Ukraine, where manipulation efforts against the pro-eastern Party of Regions decline dramatically—even in pro-western regions—during a period of high patronage consolidation. Second, the local-information model predicts that agents in areas where a party is unpopular will refrain from manipulation on behalf of that party, even if that leader is dominant at the national level; instead, evidence of manipulation in favor of pro-western parties can be seen even in highly pro-eastern regions in the aftermath of the Maidan protests.  
 
 In both cases, the results of election-forensic analysis of data from Ukraine support the consolidation and constraint model, and do not uphold the local information approach. I test these two hypotheses using precinct-level election results for Ukraine’s major pro-eastern party in each election year from 2002 to 2014.^[In most cases this party is the Party of Regions; however in 2002 it the Communist Party of Ukraine, and in 2014 the Opposition Bloc (essentially the rump Party of Regions following the Maidan crisis).] Analysis of the east-party data is more likely to be useful for testing the theory than the pro-western parties. First, the eastern parties—based in the more industrial part of the country—are more strongly rooted in patronage politics than the major pro-western parties. And it is the pro-eastern Party of Regions that provides the only instance during the time period studied where a party gains unambiguously consolidated control over state and para-state patronage resources—the 2012 legislative election during which the Party of Regions holds the presidency and control over the legislature. This control over patronage networks then rapidly deteriorates in the wake of the 2014 Euromaidan protest movement, annexation of Crimea, and prolonged conflict in the Donbass region. This trajectory makes it possible to test the effect of patronage consolidation on east-party results. The pro-western parties do not achieve high levels of patronage consolidation, due to splits between the major pro-western leaders, constitutional reforms, and a societal base of support less dependent on patronage resources.
@@ -271,7 +275,7 @@ Lastly, the Ukrainian case also offers an opportunity to test the theory on a di
 
 In sum, this chapter shows that deflationary manipulation is characteristic of elections in Ukraine, and that the local information model does not accurately predict those patterns of electoral manipulation. Using two election-forensic techniques, it demonstrates that deflationary techniques deployed against pro-eastern parties and candidates are less likely in regions with higher local constraints against such manipulation, and respond as predicted to shifts in patronage consolidation. That is, during the Yanukovych presidency when patronage resources were highly consolidated around the Party of Regions, evidence of deflationary manipulation against that party drops dramatically, even in highly pro-western regions. In turn, in elections after the Euromaidan crisis, evidence of deflationary manipulation against pro-eastern candidates increases, especially in pro-eastern regions. These results contradict the expectations of the local information model, and support the theory articulated here.
 
-
+-->
 
 
 
@@ -313,27 +317,15 @@ In sum, Ukraine is a case where many of the conditions are in place for widespre
 ## Data and methods
 
 
-Negative turnout coefficients for Ukraine’s major parties are not small, as Figure \ref{fig:proeast_coef_hist} illustrates. Large numbers of precincts show turnout coefficients that are not only negative, but substantially so. Such an outcome is highly unlikely to occur in a clean election, as discussed above, but a small positive turnout coefficient cannot be easily regarded as suspicious—a party might simply have a very low latent level of support in a region. As a conservative indicator of possible deflationary manipulation, then, I code a dummy variable that takes on a value of one for regions with a negative turnout coefficient. This binary variable, deflationary manipulation, is used as a dependent variable in logit models.
+```{r hist-east, echo=FALSE, fig.cap="Histogram of turnout coefficients for major pro-East parties (2002-2014)", out.width = '80%'}
+ggplot(merged.data, aes(coefs.east)) + geom_histogram(binwidth = .02) + theme_bw() + labs(x = "Turnout coefficients (pro-Eastern)", y = "Count")
+```
 
-
-```{r hist-east, echo=FALSE, fig.cap="Histogram of turnout coefficients for major pro-east parties (2002-2014)", out.width = '80%'}
-knitr::include_graphics(here::here("Ukraine_forensics", "ukraine_proeast_turnout_coefficients.png"))
+```{r hist-west, echo=FALSE, fig.cap="Histogram of turnout coefficients for major pro-West parties (2002-2014)", out.width = '80%'}
+ggplot(merged.data, aes(coefs.west)) + geom_histogram(binwidth = .02) + theme_bw() + labs(x = "Turnout coefficients (pro-Western)", y = "Count")
 ```
 
 
-
-The vote-share test, used for the second dependent variable, is conducted as follows. For each election year, the precinct-level results are broken down by region. Within each region-year, the results are broken out by party. I examine the results for the primary pro-eastern party for the election year. The Rozenas test is then conducted on the results for each party, by region, according the method described below.
-
-In brief, when the distribution of a party’s vote-shares by precinct is plotted, the distribution will exhibit random peaks that represent a clustering of precincts around particular vote-share values (see Figure \ref{fig:kharkiv_density}). By random chance, for example, a large number of precincts might report vote-shares of 32 percent for the party, resulting in a peak at that value. In an election without falsification, these peaks should be randomly distributed based on voters’ stochastic decisions to turn out and cast their ballots one way or another. However, a particular kind of falsification will distort these random patterns and produce statistically unlikely vote-share clusters (possibly, but not necessarily, at values divisible by 5—55\%, 60\%, and so on). The test compares the ‘spikes’ in the actual vote distribution to those produced randomly through bootstrapped samples of the observed precincts. By comparing the real distribution with the hypothetical distributions, it is possible to estimate the number of precincts per region where fraud is suspected.
-
-```{r kharkiv-por, echo=FALSE, fig.cap="Vote-share density for the Party of Regions", out.width = '80%'}
-knitr::include_graphics(here::here("Ukraine_forensics", "kharkivska_density_por_voteshare.png"))
-```
-
-
-
-
-Such non-random clusters can result from falsification due to human propensity to target whole numbers when making up figures, but are more likely to reflect agents’ fulfillment of direct specifications from their principals [@Rozenas2017]. Consequently, while this election forensic technique is only an indicator of falsification, it is especially well-suited to answering the question at hand since it allows for a test of how much agents engage in the kinds of behavior that can signal loyalty to particular patrons. The measure is used to produce a count of suspicious precincts, which is used as the dependent variable in Poisson models.
 
 ### Explanatory variables
 
@@ -387,33 +379,32 @@ There may be something here: When there is a pro-east president, pro-east region
 merged.data <- merged.data %>% mutate(coef_ratio = coefs.east / (coefs.east + coefs.west))
 merged.data <- merged.data %>% mutate(over.sixty_pct = over.sixty / (population*1000))
 
-model.vs_margin_coef <- lm(east.party.margin2 ~ coefs.east + coefs.west + pres.approval + party.margin + gov.employ + over.sixty_pct  + urban.pct + population, data = merged.data)
+model.vs_margin_coef <- lm(east.party.margin2 ~ coefs.east + coefs.west  + pres.approval + party.margin + gov.employ + over.sixty_pct  + urban.pct + population + ukr.lang.pct, data = merged.data)
 summary(model.vs_margin_coef)
 
-model.vs_margin_coef2 <- lm(east.party.margin2 ~ coefs.east + pres.approval + party.margin + gov.employ + over.sixty_pct  + urban.pct + population, data = merged.data)
+model.vs_margin_coef2 <- lm(east.party.margin2 ~ coefs.east + pres.approval + party.margin + gov.employ + over.sixty_pct  + urban.pct + population + ukr.lang.pct, data = merged.data)
 summary(model.vs_margin_coef2)
 
 model.coef_margin_pres <- lm(coefs.east ~ party.margin + pres.approval + party.margin*east.president + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
 summary(model.coef_margin_pres)
 sjPlot::plot_model(model.coef_margin_pres, type = "int")
 
-model.coef_rcl <- lm(coefs.east ~ rcl.proeast + pres.approval + east.president  + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+model.coef_rcl <- lm(coefs.east ~ rcl.proeast + pres.approval + east.president  + gov.employ + over.sixty_pct + average.wage + population + ukr.lang.pct, data = merged.data)
 summary(model.coef_rcl)
 
-model.coef_region <- lm(coefs.east ~ prewar.west + pres.approval + east.president +  gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+model.coef_region <- lm(coefs.east ~ prewar.region + pres.approval + east.president +  gov.employ + over.sixty_pct + average.wage + population + ukr.lang.pct, data = merged.data)
 summary(model.coef_region)
 
-model.coef_elex <- lm(coefs.east ~ electionid + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+model.coef_elex <- lm(coefs.east ~ electionid + gov.employ + over.sixty_pct + average.wage + population + ukr.lang.pct, data = merged.data)
 summary(model.coef_elex)
 
-model.coef_elex_east <- lm(coefs.east ~ electionid + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
-summary(model.coef_elex_east)
 
-model.coef_elex_west <- lm(coefs.west ~ electionid + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+
+model.coef_elex_west <- lm(coefs.west ~ electionid + gov.employ + over.sixty_pct + average.wage + population + ukr.lang.pct, data = merged.data)
 summary(model.coef_elex_west)
 
 
-model.coef_olig <- lm(coefs.east ~ east_oligcount*urban.pct + pres.approval + east.president + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+model.coef_olig <- lm(coefs.east ~ east_oligcount*urban.pct + pres.approval + east.president +  over.sixty_pct + average.wage + population + ukr.lang.pct, data = merged.data)
 summary(model.coef_olig)
 sjPlot::plot_model(model.coef_olig, type = "pred", terms = c("urban.pct", "east_oligcount [0, 2]"))
 
@@ -422,38 +413,38 @@ sjPlot::plot_model(model.coef_olig, type = "pred", terms = c("urban.pct", "east_
 
 ```{r}
 
-model.vs_gs <- lm(east.party.margin2 ~ g_statistic_east + pres.approval + party.margin + gov.employ + over.sixty_pct  + population + urban.pct +  sample_size_east, data = merged.data)
+model.vs_gs <- lm(east.party.margin2 ~ g_statistic_east + pres.approval + party.margin + gov.employ + over.sixty_pct  + population + urban.pct + ukr.lang.pct +  sample_size_east, data = merged.data)
 summary(model.vs_gs)
 
-model.gs_margin_int <- lm(g_statistic_east ~ party.margin + pres.approval + party.margin*east.president + gov.employ + over.sixty_pct + population + average.wage + sample_size_east, data = merged.data)
+model.gs_margin_int <- lm(g_statistic_east ~ party.margin + pres.approval + party.margin*east.president + gov.employ + over.sixty_pct + population + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
 summary(model.gs_margin_int)
 sjPlot::plot_model(model.gs_margin_int, type = "int")
 
-model.gs_margin_int2 <- lm(dev_1_9_east ~ party.margin + pres.approval + party.margin*east.president + gov.employ + over.sixty_pct + population + average.wage + sample_size_east, data = merged.data)
+model.gs_margin_int2 <- lm(dev_1_9_east ~ party.margin + pres.approval + party.margin*east.president + gov.employ + over.sixty_pct + population + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
 summary(model.gs_margin_int2)
 sjPlot::plot_model(model.gs_margin_int2, type = "int")
 
 
-model.gs_margin <- lm(g_statistic_east ~ party.margin + pres.approval + party.margin + gov.employ + over.sixty_pct + population + average.wage + sample_size_east, data = merged.data)
-summary(model.vs_margin)
+model.gs_margin <- lm(g_statistic_east ~ party.margin + pres.approval + party.margin + gov.employ + over.sixty_pct + population + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
+summary(model.gs_margin)
 
 
-model.gs_rcl <- lm(g_statistic_east ~ rcl.proeast + pres.approval + east.president  + gov.employ + over.sixty_pct + population + average.wage + sample_size_east, data = merged.data)
+model.gs_rcl <- lm(g_statistic_east ~ rcl.proeast + pres.approval + east.president  + gov.employ + over.sixty_pct + population + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
 summary(model.gs_rcl)
 
-model.gs_region <- lm(g_statistic_east ~ prewar.west + pres.approval + east.president +  gov.employ + over.sixty_pct + population + average.wage + sample_size_east, data = merged.data)
+model.gs_region <- lm(g_statistic_east ~ prewar.west + pres.approval + east.president +  gov.employ + over.sixty_pct + population + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
 summary(model.gs_region)
 
-model.gs_elex <- lm(g_statistic_east ~ electionid + gov.employ + over.sixty_pct + population + average.wage + sample_size_east, data = merged.data)
+model.gs_elex <- lm(g_statistic_east ~ electionid + gov.employ + over.sixty_pct + population + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
 summary(model.gs_elex)
 
-model.gs_elex_east <- lm(g_statistic_east ~ electionid + gov.employ + over.sixty_pct + average.wage + sample_size_east, data = merged.data)
+model.gs_elex_east <- lm(g_statistic_east ~ electionid + gov.employ + over.sixty_pct + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
 summary(model.gs_elex_east)
 
-model.gs_elex_west <- lm(g_statistic_west ~ electionid + gov.employ + over.sixty_pct + average.wage + sample_size_west, data = merged.data)
+model.gs_elex_west <- lm(g_statistic_west ~ electionid + gov.employ + over.sixty_pct + average.wage + ukr.lang.pct + sample_size_west, data = merged.data)
 summary(model.gs_elex_west)
 
-model.gs_olig <- lm(g_statistic_east ~ east_oligcount + pres.approval + east.president + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+model.gs_olig <- lm(g_statistic_east ~ east_oligcount*urban.pct + pres.approval + east.president + gov.employ + over.sixty_pct + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
 summary(model.gs_olig)
 ```
 
