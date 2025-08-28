@@ -105,9 +105,6 @@ Second, election falsification is estimated by measuring the degree to which the
 
 
 
-```{r}
-ggplot(merged.data, aes(g_statistic_east)) + geom_histogram()
-```
 
 
 
@@ -326,10 +323,19 @@ ggplot(merged.data, aes(coefs.west)) + geom_histogram(binwidth = .02) + theme_bw
 ```
 
 
+```{r}
+ggplot(merged.data, aes(g_statistic_east)) + geom_histogram()
+```
 
 ### Explanatory variables
 
-In order to test the theory, explanatory variable must capture patronage constraints and local constraints against illegal electoral manipulation. Local constraints are operationalized, following Harvey [-@harvey_manipulation_2016], using the regional legislative margin of victory between the largest parties in regional legislative elections and their largest political rival. This measure is lagged, so that it precedes the national elections that produce estimates of manipulation that serve as dependent variables. Despite Ukraine’s unitary system, elected regional legislatures do provide an opportunity for out-parties to place constraints on the governing party [@Romanova2013]. Margins of victory in regional elections are also indicative of the underlying degree of contestation, which is undergirded by civil society activism, media coverage, oligarchic influence, and other elements of local constraint. 
+Risk to agents is conditional on the degree to which the party they support dominates local politics and civil society. In places where pro-Western parties have thin networks and few supporters, it will be easier for pro-Eastern agents to operate without threat of exposure, and vice versa. Echoing the approach from Chapter 4, and of prior work [@harvey_manipulation_2016]], I operationalize this risk in part by using the regional legislative margin of victory between the largest parties in regional legislative elections and their largest political rival. This measure is lagged, so that it precedes the national elections that produce estimates of manipulation that serve as dependent variables. Despite Ukraine’s unitary system, elected regional legislatures do provide an opportunity for out-parties to place constraints on the governing party [@Romanova2013]. Margins of victory in regional elections are also indicative of the underlying degree of contestation, which is undergirded by civil society activism, media coverage, oligarchic influence, and other elements of local risk to agents. The variable *Regional pro-East margin* is measured by subtracting the largest pro-Western party's vote-share from the largest pro-Eastern party's vote-share. Larger, positive numbers indicate a more dominant pro-Eastern party, while larger negative values indicate more dominant Western parties.
+
+I also measure local risk to agents using dummy variables that capture the historical differences in Ukraine's regional political cultures. Several oblasts in western Ukraine experienced decades or centuries of Austro-Hungarian rule, which deliberately fostered a different political culture and Ukrainian identity than that developed in areas of Ukraine which remained under Russian imperial rule prior to the Revolution of 1917. These include the historical regions of Galicia, Bukovina, Volhynia. In addition to their Austro-Hungarian legacies, these regions were also not included in Soviet Ukraine until 1939 or later, sparing them from Stalin-era repressions in the 1930s. These *pre-war Western* regions include: Chernivitska, Ivano-Frankivska, Lvivska, Rivnenska, Ternopilska, Volinska, and Zakarpatska oblasts. It is expected that it will be especially difficult for falsification or pro-Eastern manipulation to occur in these regions.
+
+Since Ukraine's judical system is centralized, it is also expected that the risks to pro-Western agents will be higher under a pro-Eastern president, while risks to pro-Eastern agents will be reduced. Each Ukrainian president during the time period covered is coded as pro-Western (Yuschenko, Poroshenko) or pro-Eastern (Kuchma, Yanukovych).^[The period after Yanukovych's ouster in 2014 is coded as zero, given the pro-Western orientation of the acting presidential administration.]
+
+
 
 The Ukraine case, with its dramatic political history, provides one unambiguous case of elevated patronage consolidation during the period covered here: the 2012 legislative election, which takes place during the Yanukovych presidency but prior to the Euromaidan crisis. This is the only instance in which the political institutions of the country align with unified government under a patronage-based party machine, the Party of Regions, and without a major political crisis. Following Yanukovych’s victory in 2010, the pro-presidential Ukrainian constitution was restored, replacing the post-Orange constitution that vested greater power in the parliament. Under the pro-parliament constitution, Ukraine was more fully semi-presidential, with the president and prime minister controlling distinct patronage pyramids. This division was especially acute after the 2006 legislative election, which ushered in divided government under President Yushchenko and Prime Minister Yanukovych. The 2004 election, of course, takes place during the Orange Revolution and the attendant collapse of the patronage networks organized around President Kuchma, a collapse which had its roots in the earlier Kuchma-gate crisis. The 2012 election represents the height of patronage consolidation in Ukraine, as well, since the in 2014 the Euromaidan revolution and subsequent conflict results in the complete dissolution of the Party of Regions and a more fragmented political scene. A more detailed description of these dynamics is provided by Hale (2014). This period is captured with a dummy variable **Yanukovych**, which takes on a value of 1 for the 2012 legislative election.
 
