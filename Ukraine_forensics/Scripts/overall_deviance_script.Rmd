@@ -1,0 +1,615 @@
+---
+title: "Scripts for total deviance measure (not just last-digit zero)"
+output: html_notebook
+---
+
+
+```{r setup}
+library(tidyverse)
+library(here)
+library(stringi)
+
+
+
+```
+
+
+```{r}
+read_all_csvs_list <- function(folder_path, pattern = "\\.csv$", ignore_case = TRUE) {
+  
+  # Get all CSV files in the folder
+  csv_files <- list.files(path = folder_path, 
+                         pattern = pattern, 
+                         ignore.case = ignore_case,
+                         full.names = TRUE)
+  
+  if (length(csv_files) == 0) {
+    warning("No CSV files found in the specified folder: ", folder_path)
+    return(list())
+  }
+  
+  cat("Found", length(csv_files), "CSV files:\n")
+  print(basename(csv_files))
+  cat("\n")
+  
+  # Read each CSV file
+  csv_list <- list()
+  
+  for (i in seq_along(csv_files)) {
+    file_path <- csv_files[i]
+    file_name <- tools::file_path_sans_ext(basename(file_path))
+    
+    cat("Reading:", basename(file_path), "...")
+    
+    tryCatch({
+      # Using readr::read_csv (recommended)
+      csv_list[[file_name]] <- read_csv(file_path, show_col_types = FALSE)
+      cat(" ✓\n")
+    }, error = function(e) {
+      cat(" ✗ Error:", e$message, "\n")
+      csv_list[[file_name]] <<- NULL
+    })
+  }
+  
+  cat("\nSuccessfully loaded", length(csv_list), "files.\n\n")
+  return(csv_list)
+}
+
+```
+
+```{r}
+# G-test for Last Digit Distribution Analysis
+# Tests whether the distribution of last digits deviates from uniform (10% each)
+
+# Function to perform G-test on last digits
+g_test_last_digits <- function(data, variable_name = "variable") {
+  
+  # Extract last digits
+  last_digits <- abs(data) %% 10
+  
+  # Count frequency of each digit (0-9)
+  observed <- table(factor(last_digits, levels = 0:9))
+  
+  # Expected frequencies (uniform distribution: 10% each)
+  n <- length(data)
+  expected <- rep(n/10, 10)
+  
+  # Calculate G-test statistic
+  # G = 2 * sum(observed * ln(observed/expected))
+  # Only include cells where observed > 0 to avoid ln(0)
+  g_statistic <- 2 * sum(observed[observed > 0] * log(observed[observed > 0] / expected[observed > 0]))
+  
+  # Degrees of freedom (number of categories - 1)
+  df <- 9
+  
+  # Calculate p-value using chi-square distribution
+  p_value <- 1 - pchisq(g_statistic, df)
+  
+  # Create results data frame
+  results_df <- data.frame(
+    Digit = 0:9,
+    Observed = as.numeric(observed),
+    Expected = expected,
+    Observed_Prop = as.numeric(observed) / n,
+    Expected_Prop = rep(0.1, 10),
+    Deviation = as.numeric(observed) - expected
+  )
+  
+  # Print summary
+  cat("G-test for Last Digit Distribution\n")
+  cat("==================================\n")
+  cat("Variable:", variable_name, "\n")
+  cat("Sample size:", n, "\n")
+  cat("G-statistic:", round(g_statistic, 4), "\n")
+  cat("Degrees of freedom:", df, "\n")
+  cat("P-value:", ifelse(p_value < 0.001, "< 0.001", round(p_value, 4)), "\n")
+  cat("\nInterpretation:\n")
+  if (p_value < 0.001) {
+    cat("Very strong evidence against uniform distribution (p < 0.001)\n")
+  } else if (p_value < 0.01) {
+    cat("Strong evidence against uniform distribution (p < 0.01)\n")
+  } else if (p_value < 0.05) {
+    cat("Moderate evidence against uniform distribution (p < 0.05)\n")
+  } else {
+    cat("No strong evidence against uniform distribution (p >= 0.05)\n")
+  }
+  
+  cat("\nFrequency Table:\n")
+  print(results_df, row.names = FALSE)
+  
+  # Return results invisibly
+  invisible(list(
+    g_statistic = g_statistic,
+    df = df,
+    p_value = p_value,
+    observed = observed,
+    expected = expected,
+    results_table = results_df
+  ))
+}
+
+# Function to create visualization
+plot_last_digits <- function(data, variable_name = "variable") {
+  
+  # Extract last digits
+  last_digits <- abs(data) %% 10
+  observed <- table(factor(last_digits, levels = 0:9))
+  n <- length(data)
+  
+  # Create plotting data
+  plot_data <- data.frame(
+    Digit = 0:9,
+    Observed = as.numeric(observed),
+    Expected = rep(n/10, 10),
+    Observed_Prop = as.numeric(observed) / n
+  )
+  
+  # Base R plot
+  par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+  
+  # Bar plot of counts
+  barplot(plot_data$Observed, 
+          names.arg = 0:9,
+          main = paste("Last Digit Distribution -", variable_name),
+          xlab = "Last Digit", 
+          ylab = "Frequency",
+          col = "lightblue",
+          border = "black")
+  abline(h = n/10, col = "red", lwd = 2, lty = 2)
+  legend("topright", legend = "Expected (uniform)", col = "red", lty = 2, lwd = 2)
+  
+  # Bar plot of proportions
+  barplot(plot_data$Observed_Prop, 
+          names.arg = 0:9,
+          main = paste("Last Digit Proportions -", variable_name),
+          xlab = "Last Digit", 
+          ylab = "Proportion",
+          col = "lightgreen",
+          border = "black",
+          ylim = c(0, max(plot_data$Observed_Prop) * 1.1))
+  abline(h = 0.1, col = "red", lwd = 2, lty = 2)
+  legend("topright", legend = "Expected (0.1)", col = "red", lty = 2, lwd = 2)
+  
+  par(mfrow = c(1, 1))
+}
+
+# Example usage with simulated data
+set.seed(123)
+
+# Example 1: Random normal data (should be approximately uniform in last digits)
+normal_data <- rnorm(1000, mean = 100, sd = 15)
+cat("EXAMPLE 1: Normal Distribution Data\n")
+cat("===================================\n")
+result1 <- g_test_last_digits(normal_data, "Normal Data")
+plot_last_digits(normal_data, "Normal Data")
+
+cat("\n\n")
+
+# Example 2: Data with potential bias (e.g., rounded values)
+# Simulate data that might be rounded to nearest 5 or 10
+biased_data <- c(
+  rnorm(400, 50, 10),  # Some normal data
+  rep(c(50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100), each = 20),  # Rounded values
+  rnorm(380, 75, 8)    # More normal data
+)
+
+cat("EXAMPLE 2: Data with Potential Rounding Bias\n")
+cat("===========================================\n")
+result2 <- g_test_last_digits(biased_data, "Potentially Biased Data")
+plot_last_digits(biased_data, "Potentially Biased Data")
+
+# To use with your own data, simply call:
+# my_result <- g_test_last_digits(your_data_vector, "Your Variable Name")
+# plot_last_digits(your_data_vector, "Your Variable Name")
+```
+
+```{r}
+csv_data <- read_all_csvs_list(here::here("Ukraine_forensics", "Data", "Precinct election results"))
+```
+
+```{r}
+# Batch G-test Analysis Across CSV Files and Groups
+# Runs G-test on subsets of data and compiles results
+
+# Required libraries
+library(readr)
+library(dplyr)
+
+# Modified G-test function that returns results silently
+g_test_last_digits_silent <- function(data, min_sample_size = 30) {
+  
+  # Check if we have enough data
+  if (length(data) < min_sample_size) {
+    return(list(
+      g_statistic = NA,
+      df = 9,
+      p_value = NA,
+      sample_size = length(data),
+      warning = paste("Sample size too small:", nrow(data), "< minimum", min_sample_size)
+    ))
+  }
+  
+  # Remove any non-finite values
+  data <- data[is.finite(data)]
+  
+  if (length(data) < min_sample_size) {
+    return(list(
+      g_statistic = NA,
+      df = 9,
+      p_value = NA,
+      sample_size = length(data),
+      warning = "Too many non-finite values after cleaning"
+    ))
+  }
+  
+  # Extract last digits
+  last_digits <- abs(data) %% 10
+  
+  # Count frequency of each digit (0-9)
+  observed <- table(factor(last_digits, levels = 0:9))
+  
+  # Expected frequencies (uniform distribution: 10% each)
+  n <- length(data)
+  expected <- rep(n/10, 10)
+  
+  # Calculate G-test statistic
+  # Only include cells where observed > 0 to avoid ln(0)
+  g_statistic <- AMR::g.test(observed, p = rep(.1, 10))
+  g_statistic <- g_statistic$statistic
+  #g_statistic <- 2 * sum(observed[observed > 0] * log(observed[observed > 0] / expected[observed > 0]))
+  
+  # Degrees of freedom
+  df <- 9
+  
+  # Calculate p-value
+  p_value <- 1 - pchisq(g_statistic, df)
+  
+  return(list(
+    g_statistic = g_statistic,
+    df = df,
+    p_value = p_value,
+    sample_size = length(data),
+    warning = NA
+  ))
+}
+
+# Main function to run batch G-test analysis
+run_batch_g_test <- function(folder_path, 
+                            numeric_column, 
+                            group_column = NULL,
+                            year_from_filename = TRUE,
+                            year_pattern = "\\d{4}",
+                            min_sample_size = 30,
+                            pattern = "\\.csv$",
+                            min_value_threshold = 100) {
+  
+  cat("BATCH G-TEST ANALYSIS\n")
+  cat("====================\n")
+  cat("Folder:", folder_path, "\n")
+  cat("Numeric column:", numeric_column, "\n")
+  cat("Group column:", ifelse(is.null(group_column), "None (whole dataset)", group_column), "\n")
+  cat("Minimum sample size:", min_sample_size, "\n")
+  cat("Minimum value threshold:", min_value_threshold, "\n\n")
+  
+  # Get all CSV files
+  csv_files <- list.files(path = folder_path, 
+                         pattern = pattern, 
+                         ignore.case = TRUE,
+                         full.names = TRUE)
+  
+  if (length(csv_files) == 0) {
+    stop("No CSV files found in folder: ", folder_path)
+  }
+  
+  cat("Found", length(csv_files), "CSV files\n\n")
+  
+  # Initialize results dataframe
+  results_df <- data.frame(
+    year = character(0),
+    dataset = character(0),
+    group = character(0),
+    g_statistic = numeric(0),
+    p_value = numeric(0),
+    sample_size = integer(0),
+    total_rows = integer(0),
+    excluded_below_threshold = integer(0),
+    warning = character(0),
+    stringsAsFactors = FALSE
+  )
+  
+  # Process each CSV file
+  for (i in seq_along(csv_files)) {
+    file_path <- csv_files[i]
+    file_name <- tools::file_path_sans_ext(basename(file_path))
+    
+    cat("Processing file", i, "of", length(csv_files), ":", basename(file_path), "\n")
+    
+    # Extract year from filename if requested
+    if (year_from_filename) {
+      year_match <- regmatches(file_name, regexpr(year_pattern, file_name))
+      year <- ifelse(length(year_match) > 0, year_match[1], file_name)
+    } else {
+      year <- file_name
+    }
+    
+    tryCatch({
+      # Read the CSV file
+      data <- read_csv(file_path, show_col_types = FALSE)
+      
+      # Check if required columns exist
+      if (!numeric_column %in% names(data)) {
+        cat("  ✗ Column '", numeric_column, "' not found. Available columns: ", 
+            paste(names(data), collapse = ", "), "\n")
+        next
+      }
+      
+      if (!is.null(group_column) && !group_column %in% names(data)) {
+        cat("  ✗ Group column '", group_column, "' not found. Available columns: ", 
+            paste(names(data), collapse = ", "), "\n")
+        next
+      }
+      
+      # Filter out rows with missing values in key columns
+      if (is.null(group_column)) {
+        data_clean <- data[!is.na(data[[numeric_column]]), ]
+      } else {
+        data_clean <- data[!is.na(data[[numeric_column]]) & !is.na(data[[group_column]]), ]
+      }
+      
+      if (nrow(data_clean) == 0) {
+        cat("  ✗ No valid data after removing missing values\n")
+        next
+      }
+      
+      # Run G-test by group or for entire dataset
+      if (is.null(group_column)) {
+        # Analyze entire dataset
+        total_rows <- nrow(data_clean)
+        
+        # Apply minimum value threshold
+        data_for_analysis <- data_clean[data_clean[[numeric_column]] >= min_value_threshold, ]
+        excluded_count <- total_rows - nrow(data_for_analysis)
+        
+        cat("  → Analyzing entire dataset (", total_rows, "total rows, ", 
+            excluded_count, " excluded below ", min_value_threshold, ", ", 
+            nrow(data_for_analysis), " for analysis)...")
+        
+        result <- g_test_last_digits_silent(data_for_analysis[[numeric_column]], min_sample_size)
+        
+        # Add to results
+        results_df <- rbind(results_df, data.frame(
+          year = year,
+          dataset = file_name,
+          group = "ALL",
+          g_statistic = result$g_statistic,
+          p_value = result$p_value,
+          sample_size = result$sample_size,
+          total_rows = total_rows,
+          excluded_below_threshold = excluded_count,
+          warning = ifelse(is.na(result$warning), "", result$warning),
+          stringsAsFactors = FALSE
+        ))
+        
+        if (is.na(result$g_statistic)) {
+          cat(" ⚠ Warning:", result$warning, "\n")
+        } else {
+          cat(" ✓ G =", round(result$g_statistic, 3), "\n")
+        }
+        
+      } else {
+        # Analyze by groups
+        groups <- unique(data_clean[[group_column]])
+        groups <- groups[!is.na(groups)]  # Remove any remaining NAs
+        
+        cat("  → Found", length(groups), "groups in column '", group_column, "'\n")
+        
+        for (group_val in groups) {
+          group_data <- data_clean[data_clean[[group_column]] == group_val, ]
+          total_rows_group <- nrow(group_data)
+          
+          # Apply minimum value threshold to group
+          group_data_for_analysis <- group_data[group_data[[numeric_column]] >= min_value_threshold, ]
+          excluded_count_group <- total_rows_group - nrow(group_data_for_analysis)
+          group_values <- group_data_for_analysis[[numeric_column]]
+          
+          cat("    Group '", group_val, "' (", total_rows_group, "total, ", 
+              excluded_count_group, " excluded, ", length(group_values), " for analysis)...")
+          
+          result <- g_test_last_digits_silent(group_values, min_sample_size)
+          
+          # Add to results
+          results_df <- rbind(results_df, data.frame(
+            year = year,
+            dataset = file_name,
+            group = as.character(group_val),
+            g_statistic = result$g_statistic,
+            p_value = result$p_value,
+            sample_size = result$sample_size,
+            total_rows = total_rows_group,
+            excluded_below_threshold = excluded_count_group,
+            warning = ifelse(is.na(result$warning), "", result$warning),
+            stringsAsFactors = FALSE
+          ))
+          
+          if (is.na(result$g_statistic)) {
+            cat(" ⚠ Warning:", result$warning, "\n")
+          } else {
+            cat(" ✓ G =", round(result$g_statistic, 3), "\n")
+          }
+        }
+      }
+      
+    }, error = function(e) {
+      cat("  ✗ Error reading file:", e$message, "\n")
+    })
+    
+    cat("\n")
+  }
+  
+  # Summary
+  cat("ANALYSIS COMPLETE\n")
+  cat("================\n")
+  cat("Total tests performed:", nrow(results_df), "\n")
+  cat("Successful tests:", sum(!is.na(results_df$g_statistic)), "\n")
+  cat("Failed tests:", sum(is.na(results_df$g_statistic)), "\n")
+  
+  if (sum(!is.na(results_df$g_statistic)) > 0) {
+    valid_results <- results_df[!is.na(results_df$g_statistic), ]
+    cat("G-statistic range:", round(min(valid_results$g_statistic), 3), 
+        "to", round(max(valid_results$g_statistic), 3), "\n")
+    cat("Significant results (p < 0.05):", sum(valid_results$p_value < 0.05), "\n")
+  }
+  
+  return(results_df)
+}
+
+# Function to summarize and visualize results
+summarize_g_test_results <- function(results_df) {
+  
+  cat("\nSUMMARY OF G-TEST RESULTS\n")
+  cat("=========================\n")
+  
+  # Remove failed tests for summary
+  valid_results <- results_df[!is.na(results_df$g_statistic), ]
+  
+  if (nrow(valid_results) == 0) {
+    cat("No valid results to summarize.\n")
+    return(invisible(NULL))
+  }
+  
+  # Summary by year
+  cat("Results by Year:\n")
+  year_summary <- valid_results %>%
+    group_by(year) %>%
+    summarise(
+      n_tests = n(),
+      mean_g = round(mean(g_statistic), 3),
+      median_g = round(median(g_statistic), 3),
+      max_g = round(max(g_statistic), 3),
+      n_significant = sum(p_value < 0.05),
+      .groups = 'drop'
+    )
+  print(year_summary)
+  
+  # Summary by group (if multiple groups)
+  if (length(unique(valid_results$group)) > 1 && !"ALL" %in% valid_results$group) {
+    cat("\nResults by Group:\n")
+    group_summary <- valid_results %>%
+      group_by(group) %>%
+      summarise(
+        n_tests = n(),
+        mean_g = round(mean(g_statistic), 3),
+        median_g = round(median(g_statistic), 3),
+        n_significant = sum(p_value < 0.05),
+        .groups = 'drop'
+      )
+    print(group_summary)
+  }
+  
+  # Simple visualization
+  if (nrow(valid_results) > 1) {
+    cat("\nCreating visualization...\n")
+    
+    par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+    
+    # Histogram of G-statistics
+    hist(valid_results$g_statistic, 
+         main = "Distribution of G-statistics",
+         xlab = "G-statistic", 
+         col = "lightblue",
+         breaks = 20)
+    abline(v = qchisq(0.95, 9), col = "red", lty = 2, lwd = 2)
+    legend("topright", "p = 0.05 threshold", col = "red", lty = 2)
+    
+    # Box plot by year
+    if (length(unique(valid_results$year)) > 1) {
+      boxplot(g_statistic ~ year, data = valid_results,
+              main = "G-statistics by Year",
+              xlab = "Year", 
+              ylab = "G-statistic",
+              col = "lightgreen")
+      abline(h = qchisq(0.95, 9), col = "red", lty = 2, lwd = 2)
+    } else {
+      # If only one year, show by group instead
+      if (length(unique(valid_results$group)) > 1) {
+        boxplot(g_statistic ~ group, data = valid_results,
+                main = "G-statistics by Group",
+                xlab = "Group", 
+                ylab = "G-statistic",
+                col = "lightgreen")
+        abline(h = qchisq(0.95, 9), col = "red", lty = 2, lwd = 2)
+      }
+    }
+    
+    par(mfrow = c(1, 1))
+  }
+  
+  return(year_summary)
+}
+
+# EXAMPLE USAGE
+cat("EXAMPLE USAGE:\n")
+cat("==============\n\n")
+
+cat("# Basic usage - analyze entire datasets:\n")
+cat('results <- run_batch_g_test(\n')
+cat('  folder_path = "path/to/your/csv/files",\n')
+cat('  numeric_column = "your_numeric_column"\n')
+cat(')\n\n')
+
+cat("# Analyze by groups within each dataset:\n")
+cat('results <- run_batch_g_test(\n')
+cat('  folder_path = "path/to/your/csv/files",\n')
+cat('  numeric_column = "your_numeric_column",\n')
+cat('  group_column = "your_group_column"\n')
+cat(')\n\n')
+
+cat("# With custom settings and value threshold:\n")
+cat('results <- run_batch_g_test(\n')
+cat('  folder_path = "path/to/your/csv/files",\n')
+cat('  numeric_column = "revenue",\n')
+cat('  group_column = "department",\n')
+cat('  min_sample_size = 50,  # Require at least 50 observations\n')
+cat('  min_value_threshold = 250,  # Exclude values below 250\n')
+cat('  year_pattern = "20\\\\d{2}"  # Extract 4-digit year starting with 20\n')
+cat(')\n\n')
+
+cat("# Analyze and summarize results:\n")
+cat('summary <- summarize_g_test_results(results)\n\n')
+
+cat("# Export results:\n")
+cat('write.csv(results, "g_test_results.csv", row.names = FALSE)\n\n')
+
+cat("# View exclusion summary:\n")
+cat('exclusion_summary <- results[!is.na(results$g_statistic), c("year", "group", "total_rows", "excluded_below_threshold", "sample_size")]\n')
+cat('exclusion_summary$exclusion_rate <- round(exclusion_summary$excluded_below_threshold / exclusion_summary$total_rows * 100, 1)\n')
+cat('print(exclusion_summary)\n\n')
+
+cat("# Filter for significant results:\n")
+cat('significant_results <- results[!is.na(results$p_value) & results$p_value < 0.05, ]\n')
+cat('print(significant_results)\n')
+```
+```{r}
+results <- run_batch_g_test(
+  folder_path = here::here("Ukraine_forensics", "Data", "Precinct election results"),
+  numeric_column = "main_west",
+  group_column = "region",
+  min_sample_size = 50,  # Require at least 50 observations
+  min_value_threshold = 100,
+  year_pattern = "20\\d{2}"  # Extract 4-digit year starting with 20
+)
+
+
+```
+
+```{r}
+results_west <- results
+```
+
+
+```{r}
+write.csv(results_west, here::here("Ukraine_forensics", "Data", "ukraine_full_deviance_west.csv"))
+```
+
+
+
