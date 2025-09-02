@@ -122,7 +122,7 @@ Second, election falsification is estimated by measuring the degree to which the
 
 Of the three cases considered here, Ukraine is in several ways the most difficult in which to test the consolidation and constraint model of electoral manipulation. Parties in Ukraine, especially those with roots in its western regions, have tended to be personalized and short-lived, making it more difficult to track their electoral performance over time. Additionally, over the time period for which electoral data are available (2002 to 2014), Ukraine were beset by multiple political crises. The two most significant of these include the 2004 Orange Revolution and the 2014 Euromaidan revolution and subsequent military conflict in the east. These are by no means the only crises to befall the country, however, and it is telling that the so-called Cassette Tape or Kuchma-gate scandal—which implicated President Kuchma in a variety of high-level misdeeds including the abduction and murder of a critical journalist—is considered a lesser incident in recent Ukrainian political history. While these patterns make it more difficult to analyze patterns of electoral manipulation than in Russia, for example, where a single ruling party predominates, it also offers opportunities to test the theory in the context of large shifts in patronage consolidation.-->
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(here)
 library(tidyverse)
 
@@ -209,7 +209,7 @@ merged.data <- merged.data %>% mutate(electionid = as.factor(electionid))
 
 ```
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 #Adding in total deviance (not just last digit zero deviance)
 
 
@@ -244,7 +244,7 @@ merged.data <- merged.data %>% mutate(year = as.factor(year))
 ```
 
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 ## Adding in oligarch count data
 
 ukraine_oligarchs <- read.csv(here::here("Ukraine_forensics", "Data", "ukraine_oligarch_count.csv"))
@@ -263,7 +263,7 @@ ukraine_oligarchs <- ukraine_oligarchs %>% mutate(year = as.factor(year))
 merged.data <- merged.data %>% left_join(ukraine_oligarchs, by = c("regionid", "year"))
 ```
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 ## Rada Herfindahl index
 
 merged.data <- merged.data %>% mutate(rada_hh_proeast = ifelse(east.president == 1 & propres.pm.lagged == 1, rada_hh, ifelse(east.president == 0 & propres.pm.lagged == 0, rada_hh, (-1 * rada_hh))))
@@ -337,7 +337,7 @@ ggplot(merged.data, aes(coefs.west)) + geom_histogram(binwidth = .02) + theme_bw
 ```
 
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(merged.data, aes(g_statistic_east)) + geom_histogram()
 ```
 
@@ -349,7 +349,7 @@ I also measure local risk to agents using dummy variables that capture the histo
 
 Since Ukraine's judicial system is centralized, it is also expected that the risks to pro-Western agents will be higher under a pro-Eastern president, while risks to pro-Eastern agents will be reduced. Each Ukrainian president during the time period covered is coded as pro-Western (Yuschenko, Poroshenko) or pro-Eastern (Kuchma, Yanukovych).^[The period after Yanukovych's ouster in 2014 is coded as zero, given the pro-Western orientation of the acting presidential administration.] This is a nationwide, year-level measure.
 
-Finally, since vote-buying and voter-pressure (and to a lesser extent, ballot-stuffing) are costly and prone to agency loss, requiring the distribution of resources to agents and voters who are difficult to monitor, such efforts are likely to intensify when one party has more consolidated control over patronage resources. These consolidation is measured in two ways, one regional and one nationwide. At the national level, patronage consolidation is measured using an indicator of the degree to which pro-Western or pro-Eastern coalitions predominate in the national legislature, the Verkhovna Rada. I develop this indicator by first building a a Herfindahl–Hirschman index of the parties in the current legislature for each election year.^[The formula for this index is $ HH = \sum_{1}^{x}s_i^2 $, where $s_i$ is the size of the *i*-th party as a percentage of the total number of seats in the legislature (expressed as a decimal).] This is common measure of market concentration in economics and policy, and is a component of the better-known (to political scientists) measure of effective number of parties [@golosovEffectiveNumberParties2010]. I utilize the Herfindahl index itself, rather than ENP, because I am interested not in how many major parties are present in the legislature, but how concentrated voting blocs are. I then modify the H-H index to capture the political orientation of the governing coalition. If the prime minister comes from a pro-Eastern party, the H-H index is multiplied by 1; if the prime minister hails from a pro-Western party, the H-H index is multiplied by -1. The resulting variable, *Pro-eastern Rada concentration*, takes on larger positive values when a pro-Eastern majority controls a larger number of seats. It takes on larger, negative values when there is a larger pro-Western majority.
+Finally, since vote-buying and voter-pressure (and to a lesser extent, ballot-stuffing) are costly and prone to agency loss, requiring the distribution of resources to agents and voters who are difficult to monitor, such efforts are likely to intensify when one party has more consolidated control over patronage resources. These consolidation is measured in two ways, one regional and one nationwide. At the national level, patronage consolidation is measured using an indicator of the degree to which pro-Western or pro-Eastern coalitions predominate in the national legislature, the Verkhovna Rada. I develop this indicator by first building a a Herfindahl–Hirschman index of the parties in the current legislature for each election year.^[The formula for this index is $HH = \sum_{1}^{x}s_i^2$, where $s_i$ is the size of the *i*-th party as a percentage of the total number of seats in the legislature (expressed as a decimal).] This is common measure of market concentration in economics and policy, and is a component of the better-known (to political scientists) measure of effective number of parties [@golosovEffectiveNumberParties2010]. I utilize the Herfindahl index itself, rather than ENP, because I am interested not in how many major parties are present in the legislature, but how concentrated voting blocs are. I then modify the H-H index to capture the political orientation of the governing coalition. If the prime minister comes from a pro-Eastern party, the H-H index is multiplied by 1; if the prime minister hails from a pro-Western party, the H-H index is multiplied by -1. The resulting variable, *Pro-eastern Rada concentration*, takes on larger positive values when a pro-Eastern majority controls a larger number of seats. It takes on larger, negative values when there is a larger pro-Western majority.
 
 Lastly, I construct a region-level measure of oligarchs' influence, by combining two prior datasets. First, Lankina and Libman [-@lankinaSovietLegaciesEconomic2019] provide information on a set of Ukrainian oligarchs and the regions where their assets are concentrated. This dataset is used to calculate the total number of oligarchs with significant assets in each region. I combine this with Pleines' dataset on oligarchs [-@pleines_oligarchs_2020] to identify each oligarch's political orientation (pro-Eastern or pro-Western) per election year. The variable *pro-East oligarchs* is a count variable indicating the total number of oligarchs in each region-year who are supportive of the major pro-Eastern party. This is, admittedly, a somewhat coarse measure; it cannot capture the intensity of an oligarch's political efforts, for instance. However, it does provide an indicator of the degree to which each region is susceptible to patronage-driven efforts to mobilize voters.
 	
@@ -362,41 +362,9 @@ A set of control variables are included to help account for other possible expla
 
 ## Results
 
-The results of this analysis are supportive of the consolidation-constraint model, and challenge the local-information model of electoral manipulation. Table \ref{tab:turnout} reports the results of the turnout coefficient models. The local-constraint model holds that regional party margin-east should have a negative effect on deflationary manipulation against pro-eastern parties. The results in Table \ref{tab:turnout} show that this is the case during the non-Yanukovych years (Models 2) and non-Maidan years (Model 3), while Figures \ref{fig:negcoef_yanukovych} and \ref{fig:negcoef_maidan} show the interaction effects. As predicted, the interaction of regional party margin-east and Yanukovych shows that by 2012, the Party of Regions and its allies were able to reduce the incidence of deflationary manipulation against their party nearly across the board. Only in the regions of very highest levels of pro-Western support were they unable to reduce deflationary manipulation, suggesting that agents in those areas still were willing to throw in their lots with pro-western patronage networks.
-
-Figure \ref{fig:negcoef_yanukovych} shows that the reverse is also true. During the period of post-Maidan elections, when pro-eastern patronage networks were suddenly fragmented by cascading crises, deflationary manipulation against pro-eastern candidates becomes more likely in regions with pro-eastern regional legislatures, but not in pro-western regions. This result can be interpreted as a shift by agents away from pro-eastern patronage networks and toward pro-western ones as the relative appeal of the two options shifts. Where high risks for pro-western manipulation had previously made western patronage offers less appealing than their eastern counterparts, the sudden de-consolidation of eastern networks makes the competing offer more appealing. In pro-western regions, this effect is muted since anti-eastern deflationary manipulation was already in practice in these regions due to low local risks for such agents. 
 
 
-These results suggest that patronage networks and local risks both influence levels of election manipulation, but how attributable are they to principal-agent dynamics? The next set of models, using the number of possibly fraudulent precincts per region as the dependent variable, offers additional support for the theoretical framework. Since the dependent variable is based on apparently non-random clustering of precincts around specific vote-shares, it offers an indicator of agent behavior—the fulfillment of vote-share targets set by principals. Given that the overall indicator of manipulation provided by the turnout test almost universally detects deflationary rather than inflationary manipulation, I assume that the fraudulent precincts detected by the vote-share test are generally indicators of deflationary manipulation as well.
-
-As in the prior set of models, increasing local risks for pro-western agents results in reduced evidence of falsification against pro-eastern parties, both during the Yanukovych presidency (Model 5) and after the Maidan crisis (Model 6). The marginal effects of those shifts in patronage consolidation are presented in Figures \ref{fig:roz_yanukovych} and \ref{fig:roz_maidan}. Figure \ref{fig:roz_yanukovych} shows that the effect of Yanukovych is negative at all values of regional party margin, implying that the high consolidation of the pro-eastern patronage network during that period strongly reduced the incentive for pro-western agents to engage in deflationary manipulation. This effect is smallest in pro-eastern regions, where high local constraints on pro-western agents made such manipulation difficult to achieve even during the pre-Yanukovych period. The largest shifts occur in pro-western regions, where the apparent national dominance of the Party of Regions machine removes an incentive for pro-western behavior by agents. Finally, Figure \ref{fig:roz_maidan} shows the effect of the breakdown of that nationwide pro-eastern patronage network: an increase in evidence of fraud affecting pro-eastern parties, which is especially sharp in pro-eastern regions. In pro-western regions the effect of this shift in patronage consolidation is minimal, since such regions are already more closely aligned with pro-western parties, making anti-eastern manipulation easier in the pre-crisis period. The effect is largest in pro-eastern regions where the sudden absence of a consolidated pro-eastern network makes participation in pro-western efforts much more appealing. It is important to note here, however, that this analysis excludes election results from several of the most solidly pro-eastern regions—Donetsk, Luhansk, Crimea, and Sevastopol\textemdash where the Party of Regions network might have been expected to survive in the absence of war and annexation.
-
-Lastly, Figures \ref{fig:pp_roz_yan} and \ref{fig:pp_roz_maidan} show the predicted number of suspect precincts per region, by regional party margin—east and the variables that capture patronage consolidation, to illustrate substantive significance. To produce the predicted counts, continuous control variables are held constant at their mean values. The categorical controls presidential election and Orange Revolution were held constant at zero. Figure \ref{fig:pp_roz_yan} shows the near complete absence of suspicious precincts in heavily pro-eastern regions, with little change when Yanukovych is president. By contrast, the predicted number of suspicious precincts in a pro-western region is between twenty and forty in the non-Yanukovych years, but falls to eastern levels during his presidency.  Figure \ref{fig:pp_roz_maidan} shows that the Maidan crisis led to a large jump in the predicted number of suspicious precincts across the board; while the absolute increase is largest in pro-western regions (from about 10 to about 50), the relative increase is larger in pro-eastern regions (from near zero to about 20).
-
-A quick back-of-the-envelope example demonstrates the number of votes at stake is substantively significant, though not of overweening importance. In the 2007 Ukrainian legislative election, 450 seats in the Verkhovna Rada were allocated by proportional representation to parties winning more than three percent of the national vote-share. Collectively these parties won approximately twenty-one million votes, meaning that each seat in the Rada was worth about 46,000 votes. Given that each precinct includes about 1,000 registered voters on average, the presence of thirty suspicious precincts in a region might reflect deflationary manipulation that deprived a party of a few thousand votes. Magnified across Ukraine’s regions, this kind of manipulation could conceivably adjust the balance of power in the Rada by a handful of seats. And of course, falsification of this kind represents only one technique available to parties.
-
-## Discussion and conclusion
-
-Despite the difficulties of the case, Ukraine presents an important opportunity to test the implications of the model, especially in comparison with Russia. Russia shares many institutional and historical features with Ukraine (particularly in eastern parts of the country) as a result of a shared imperial and Soviet experience. However, patterns of patronage consolidation and local constraints vary considerably between the two states. Patronage consolidation has consistently been much lower in Ukraine than in Russia during the period of analysis. A single party of power largely dominates in Russia, while the party system in Ukraine is much more fragmented and fluid. Oligarchic interests were largely tamed during the early years of the first Putin administration; rival oligarchic clans continue to clash behind the scenes in Ukraine. The period in which Ukraine’s parliamentary-presidential constitution was in force helped establish a two-pyramid structure of patronage, in Hale’s (2014) terminology, while Russia continues to operate within a more consolidated vertical of power.
-
-As a result, we should expect to see different patterns of manipulation occur in the two cases. First, while the direct comparison is not statistically tested here, widespread falsification does appear to be considerably less common in Ukraine than in Russia. In the Russian case, suspicious results were captured by the digits test in 24 percent of region-years, whereas in Ukraine the same figure is approximately five percent—roughly what would be expected due to random chance alone.^[Note that the digits test results differ from those of the vote-share test presented here; the mean number of suspicious precincts per region using the vote-share test is approximately 10 percent.] Furthermore, while inflationary manipulation is common in Russia, to the benefit of the ruling party, suspicious turnout coefficients tend to be negative in Ukraine. This apparent emphasis on deflationary techniques may be due to the lower levels of patronage consolidation in the country. Since widespread voter mobilization and voter pressure campaigns can only be deployed by parties that control substantial patronage resources, cheaper deflationary tactics may easier to pull off for parties operating in a more fragmented patronage environment. This is a question that may be usefully addressed in further work.
-
-However, the main benefit of the case in the present study is derived from the rapid fluctuation in patronage consolidation over time. Unlike the Mexican case (where patronage networks are deconsolidating during the period of study) or the Russian case (where they remain highly consolidated), Ukraine shifts from a fragmented patronage system after the Orange Revolution, to one with considerable consolidation around the Party of Regions under President Yanukovych, and subsequently back to a fragmented system after the 2014 crisis. The results shown here indicate that the consolidation and constraint model is better suited to explaining electoral manipulation in this kind of setting than is the local-information model; that is, while local conditions certainly matter for explaining electoral manipulation, those conditions are also informed by the overall distribution of patronage resources backing one party or another.
-
-In particular, the election-forensic analysis conducted here shows that overall deflationary manipulation targeting the Party of Regions became less severe during the Yanukovych presidency, but only in regions where constraints on pro-western agents were high. It also found a corresponding increase in deflationary manipulation in pro-eastern regions when the Party of Regions patronage network collapsed. Analysis of the models using the vote-share test results as a dependent variable, while only measuring one type of manipulation, provide further support for the principal-agent model based on patronage and risk. In those models, higher patronage consolidation around the Party of Regions led to a steep reduction in the number of suspicious precincts in pro-western regions; the subsequent breakdown resulted in increased fraud across the board (with especially steep increases in the east).
-
-In sum, election-forensic analysis shows that overall electoral manipulation and specific signatures of fraud both respond to shifts in local risks and national patronage consolidation in ways predicted by the model. Where the Mexican case allowed for an investigation of the effects of shifting local competition while holding patronage consolidation constant, the Ukrainian case allows for analysis of shifting levels of patronage consolidation. Both cases demonstrate that the two factors can move independently, and interactive effect the level of election manipulation that parties can achieve. 
-
-
-## Results
-
-Trying again with a clean setup
-
-Party margin is regional legislative vote-share in prior election
-
-There may be something here: When there is a pro-east president, pro-east regions are free to run up the score using dispersed methods. Infusion of state resources too. But we see that dev_1_9_east is higher in east regions regardless of president. This seems to go against expectations. Total deviance (g_statistic_east) doesn't change across regions or with presidents. G-statistic appears strongly correlated with over-sixty percent, which could have something to do with falsification of older people's ballots?
-
-```{r}
+```{r coefmodels, echo=FALSE, include=FALSE, warning=FALSE, message=FALSE}
 merged.data <- merged.data %>% mutate(coef_ratio = coefs.east / (coefs.east + coefs.west))
 merged.data <- merged.data %>% mutate(over.sixty_pct = over.sixty / (population*1000))
 merged.data <- merged.data %>% mutate(govemploy_pct = gov.employ / population)
@@ -408,14 +376,14 @@ summary(model.vs_margin_coef)
 model.vs_margin_coef2 <- lm(east.party.margin2 ~ coefs.east + pres.approval + party.margin + govemploy_pct + over.sixty_pct  + urban.pct + logpop + ukr.lang.pct, data = merged.data)
 summary(model.vs_margin_coef2)
 
-model.coef_margin_pres <- lm(coefs.east ~ party.margin + pres.approval + party.margin*east.president + govemploy_pct + over.sixty_pct + average.wage + logpop, data = merged.data)
+model.coef_margin_pres <- lm(coefs.east ~ party.margin + pres.approval + party.margin*east.president + govemploy_pct + over.sixty_pct + average.wage + logpop + ukr.lang.pct, data = merged.data)
 summary(model.coef_margin_pres)
 sjPlot::plot_model(model.coef_margin_pres, type = "int")
 
 model.coef_rhh <- lm(coefs.east ~ rada_hh_proeast + pres.approval + east.president  + govemploy_pct + over.sixty_pct + average.wage + logpop + ukr.lang.pct, data = merged.data)
 summary(model.coef_rhh)
 
-model.coef_region <- lm(coefs.east ~ prewar.region + pres.approval + east.president +  govemploy_pct + over.sixty_pct + average.wage + logpop + ukr.lang.pct, data = merged.data)
+model.coef_region <- lm(coefs.east ~ prewar.west + pres.approval + east.president +  govemploy_pct + over.sixty_pct + average.wage + logpop + ukr.lang.pct, data = merged.data)
 summary(model.coef_region)
 
 model.coef_elex <- lm(coefs.east ~ electionid + govemploy_pct + over.sixty_pct + average.wage + logpop + ukr.lang.pct, data = merged.data)
@@ -434,7 +402,10 @@ sjPlot::plot_model(model.coef_olig, type = "pred", terms = c("urban.pct", "east_
 
 ```
 
-```{r}
+
+
+
+```{r gmodels, echo=FALSE, include=FALSE, warning=FALSE, message=FALSE}
 
 model.vs_gs <- lm(east.party.margin2 ~ g_statistic_east + pres.approval + party.margin + govemploy_pct + over.sixty_pct  + logpop + urban.pct + ukr.lang.pct +  sample_size_east, data = merged.data)
 summary(model.vs_gs)
@@ -469,19 +440,32 @@ summary(model.gs_elex_west)
 
 model.gs_olig <- lm(g_statistic_east ~ east_oligcount*urban.pct + pres.approval + east.president + govemploy_pct + over.sixty_pct + average.wage + ukr.lang.pct + sample_size_east + logpop, data = merged.data)
 summary(model.gs_olig)
+
+
+merged.data <- merged.data %>% mutate(g_statistic_east_binary = ifelse(p_value_east <= .05, 1, 0))
+model_gs_binary <- lm(east.party.margin2 ~ g_statistic_east_binary + pres.approval + party.margin + govemploy_pct + over.sixty_pct  + logpop + urban.pct + ukr.lang.pct +  sample_size_east, data = merged.data)
 ```
+
+
 
 
 Table \@ref(tab:vsmodels) shows the expected relationship between the pro-Eastern turnout coefficients, and pro-Eastern vote-share. Model 1, which does not control for pro-Western parties' turnout coefficients, shows a positive and statistically significant effect. The effect remains more or less constant once pro-Western turnout coefficient is included as a control in Model 2. In either case, the effect size is substantial: a one standard deviance increase in pro-Eastern turnout coefficient is associated with a 6-point increase in the pro-Eastern party's margin of victory. In an otherwise tied election, in other words, increasing the pro-Eastern party's turnout coefficient by one standard deviation would change the outcome of the election to 53 - 47 in their favor. 
 
-Model 3 shows that there is no significant effect for deviance from the uniform distribution of last-digits for pro-East parties. This suggestions that outright falsification of the type captured by this measure is rare in Ukraine across the elections covered in the dataset, at least for major pro-Eastern parties. There is one caveat to this conclusion; following best practice [@beber2012], I excluded precincts from the deviance calculations where fewer than 100 votes were counted in that party's favor. A high proportion of precincts with double-digit vote totals will increase the deviance from the uniform distribution naturally, even if the votes are fair. This proportion is extremely high in some of Ukraine's more western regions. For instance, in the 2002 election in Ivano-Frankivska oblast', all but 24 out of 958 precincts are excluded for having fewer than 100 votes for the pro-Eastern party. In 2014, all 914 precincts in Ivano-Frankivska are dropped, as are all precincts in L'vivska, Ternopilska, Vinnitska, Ternopilska, and Cherkaska oblasts. This highlights the difficulty of conducting this sort of analysis conclusively in Ukraine's highly polarized and frequently crisis-driven politics under the period of study.   
+Model 3 shows that there is no significant effect for deviance from the uniform distribution of last-digits for pro-East parties. This suggestions that outright falsification of the type captured by this measure is rare in Ukraine across the elections covered in the dataset, at least for major pro-Eastern parties. There is one caveat to this conclusion; following best practice [@beber2012], I excluded precincts from the deviance calculations where fewer than 100 votes were counted in that party's favor. A high proportion of precincts with double-digit vote totals will increase the deviance from the uniform distribution naturally, even if the votes are fair. This proportion is extremely high in some of Ukraine's more western regions. For instance, in the 2002 election in Ivano-Frankivska oblast', all but 24 out of 958 precincts are excluded for having fewer than 100 votes for the pro-Eastern party. In 2014, all 914 precincts in Ivano-Frankivska are dropped, as are all precincts in L'vivska, Ternopilska, Vinnitska, Ternopilska, and Cherkaska oblasts. This highlights the difficulty of conducting this sort of analysis conclusively in Ukraine's highly polarized and frequently crisis-driven politics under the period of study. 
 
-```{r vsmodels}
+As an additional check, I also identify regions where the g-statistic indicator of fraud is statistically significant, with results presented in Model 4. The results show that a statistically significant pro-Eastern g-statistic is unrelated to pro-Eastern vote-share. This suggests that deviation from the uniform distribution is largely random, a possibility which is bolstered by the fact that deviations are statistically significant at the five percent level in only `r sum(merged.data$g_statistic_east_binary, na.rm = T)` of `r nrow(merged.data)` cases---in other words, in roughly five percent of cases.
+
+
+
+
+```{r vsmodels, echo=FALSE, message=FALSE, warning=FALSE}
 library(modelsummary)
 models <- list()
 models[['Model 1']] <- model.vs_margin_coef2
 models[['Model 2']] <- model.vs_margin_coef
 models[['Model 3']] <- model.vs_gs
+models[['Model 4']] <- model_gs_binary
+
 
 
 library(kableExtra)
@@ -490,12 +474,15 @@ reg_table_vs <- modelsummary(models, output = "kableExtra",  stars = T, title = 
              "coefs.east" = "Pro-Eastern turnout coefficient",
              "coefs.west" = "Pro-Western turnout coefficient",
              "g_statistic_east" = "Pro-East party last-digit deviance",
+             "g_statistic_east_binary" = "Pro-East last-digit deviance (binary)",
+
              "pres.approval" = "Presidential approval rating",
              "party.margin" = "Pro-Eastern margin in regional election",
-             "gov.employ" = "Gov. employees",
+             "govemploy_pct" = "Gov. employees",
              "over.sixty_pct" = "Over-sixty pop. share",
              "average.wage" = "Average wage",
-             "population" = "Population",
+             "logpop" = "Population",
+             "ukr.lang.pct" = "Pct. Ukrainian language",
              "sample_size_east" = "N. precincts > 99 pro-East votes"))
 
 reg_table_vs
@@ -506,28 +493,40 @@ reg_table_vs
 
 ```
 
-Table \@ref(tab:manip-models) shows the results of models that take pro-Eastern turnout coefficients or last-digit deviance for pro-Eastern parties as dependent variables.
+Table \@ref(tab:manip-models) shows the results of models that take pro-Eastern turnout coefficients (Models 5 through 7) or last-digit deviance (Models 8 through 10) for pro-Eastern parties as dependent variables. Models 5 and 8 test the interaction of region-level partisan control and the presence of a pro-Eastern president on the two dependent variables. As the table and Figures \@ref(fig:coef-fig) and \@ref(fig:gs-fig) show, there is a statistically significant interaction for overall manipulation but not for falsification. This is in line with expectations---it is in the most heavily pro-Eastern regions where patronage networks are most fully developed, owing to the region's Soviet heritage and post-Soviet accumulation of politically active oligarchs. When a pro-Eastern candidate occupies the presidential Mariinskyi Palace, the resources of the central state can be used to kick regional networks into higher gear. However---as expected if there are persistent risks of discovery and punishment even in pro-Eastern regions---the same resources do not lead to a systematic increase in falsification. 
 
 
-```{r manip-models}
+```{r manip-models, echo=FALSE, message=FALSE, warning=FALSE}
 models <- list() 
-models[['Model 1']] <- model.coef_margin_pres
-models[['Model 2']] <- model.coef_rhh
-models[['Model 3']] <- model.coef_region
-models[['Model 4']] <- model.gs_margin_int
-models[['Model 5']] <- model.gs_rhh
-models[['Model 6']] <- model.gs_region
+models[['Model 5']] <- model.coef_margin_pres
+models[['Model 6']] <- model.coef_rhh
+models[['Model 7']] <- model.coef_region
+models[['Model 8']] <- model.gs_margin_int
+models[['Model 9']] <- model.gs_rhh
+models[['Model 10']] <- model.gs_region
 
 
 table1 <- modelsummary(
   models,
   output = "kableExtra",
   title = "Regression Results",
-#  coef_map = c("x1" = "Variable 1",
-#               "x2" = "Variable 2", 
-#               "x3" = "Variable 3",
-#               "(Intercept)" = "Constant"),
-#  gof_map = c("nobs", "r.squared", "adj.r.squared"),
+coef_map = c("(Intercept)" = "(Intercept)",
+             
+             "pres.approval" = "Presidential approval rating",
+             
+             "govemploy_pct" = "Gov. employees",
+             "over.sixty_pct" = "Over-sixty pop. share",
+             "average.wage" = "Average wage",
+             "logpop" = "Population",
+             "ukr.lang.pct" = "Pct. Ukrainian language",
+             "sample_size_east" = "N. precincts > 99 pro-East votes",
+             "party.margin" = "Pro-Eastern margin in regional election",
+             "rada_hh_proeast" = "Pro-East Rada consolidation",
+             "prewar.west1" = "Pre-war West",
+             "east.president" = "Pro-East president",
+             "party.margin:east.president" = "Regional margin : Pro-East pres."
+             ),
+  gof_map = c("nobs", "r.squared", "adj.r.squared"),
   stars = c('*' = .1, '**' = .05, '***' = .01)
 ) %>%
   # Add model numbers as column names
@@ -538,12 +537,66 @@ table1 <- modelsummary(
 table1
 ```
 
-Can looks at Rozenas scores as an appendix / RC type deal. Bottom line is that we see huge effects in places where Eastern parties get no votes (driven by zeroes)
+
+```{r coef-fig, echo=FALSE, message=FALSE, warning=FALSE}
+intplot_coefs <- sjPlot::plot_model(model.coef_margin_pres, type = "pred", terms = c("party.margin", "east.president")) + labs(x = "Region-level pro-East party margin", y = "Pro-East turnout coefficient", title = "Predicted values", color = "Pro-East president")
+
+intplot_coefs
+```
+
+```{r gs-fig, echo=FALSE, message=FALSE, warning=FALSE}
+intplot_gs <- sjPlot::plot_model(model.gs_margin_int, type = "pred", terms = c("party.margin", "east.president")) + labs(x = "Region-level pro-East party margin", y = "Pro-East g-statistic", title = "Predicted values", color = "Pro-East president")
+
+intplot_gs
+```
+
+The same pattern is observed for pro-Eastern consolidation of the legislature (Models 6 and 9) and for the pre-war West dummy variable (Models 7 and 10). Pro-Eastern consolidation in the Rada is associated with increased turnout coefficients in subsequent elections, but not incrased falsification. Likewise, regions in the pre-War west show reduced turnout coefficients for Eastern parties---as is expected in the absence of local patronage networks---but do not exhibit any differences in evidence of falsification.
 
 
-Lastly, Table \@ref(tab:yearmodels) shows how turnoutcoefficients and last-digit deviance for the major pro-Eastern party in each election year varies over time. Since this model includes election-year fixed effects, other annual control variables (e.g. *presidential election* or *pro-Eastern Rada consolidation*) must be excluded. As expected, the results show that evidence of overall election manipulation varies over time, while evidence of falsification remains essentially constant.
+```{r olig-models, echo=FALSE, message=FALSE, warning=FALSE}
+models <- list() 
+models[['Model 11']] <- model.coef_olig
+models[['Model 12']] <- model.gs_olig
 
-```{r yearmodels}
+
+
+table3 <- modelsummary(
+  models,
+  output = "kableExtra",
+  title = "Regression Results",
+coef_map = c("(Intercept)" = "(Intercept)",
+             
+             "pres.approval" = "Presidential approval rating",
+             
+             "govemploy_pct" = "Gov. employees",
+             "over.sixty_pct" = "Over-sixty pop. share",
+             "average.wage" = "Average wage",
+             "logpop" = "Population",
+             "ukr.lang.pct" = "Pct. Ukrainian language",
+             "sample_size_east" = "N. precincts > 99 pro-East votes",
+             "urban.pct" = "Urban pop. share",
+             "east_oligcount" = "Pro-Eastern oligarch count",
+             "east_oligcount:urban.pct" = "Pro-East oligarchs : Urban pct."
+             ),
+  gof_map = c("nobs", "r.squared", "adj.r.squared"),
+  stars = c('*' = .1, '**' = .05, '***' = .01))
+
+
+table3
+```
+
+Next, Table \@ref(tab:olig-models) reports the results of models that include measures of oligarchic influence.
+
+
+```{r olig-fig, echo=FALSE, message=FALSE, warning=FALSE}
+plot_oligs_coef <- sjPlot::plot_model(model.coef_olig, type = "pred", terms = c("urban.pct", "east_oligcount [0, 3]")) + labs(x = "Urban pop. share", y = "Pro-East turnout coefficient", title = "Predicted values", color = "Pro-Eastern oligarchs \n(region-level)")
+plot_oligs_coef
+```
+
+
+Lastly, Table \@ref(tab:yearmodels) shows how turnout coefficients and last-digit deviance for the major pro-Eastern party in each election year varies over time. Since this model includes election-year fixed effects, other annual control variables (e.g. *presidential election* or *pro-Eastern Rada consolidation*) must be excluded. As expected, the results show that evidence of overall election manipulation varies over time, while evidence of falsification remains essentially constant.
+
+```{r yearmodels, echo=FALSE, message=FALSE, warning=FALSE}
 models <- list()
 models[['Model 1']] <- model.coef_elex
 models[['Model 2']] <- model.gs_elex
@@ -564,6 +617,7 @@ reg_table_year <- modelsummary(models, output = "kableExtra",  stars = T, title 
              "over.sixty_pct" = "Over-sixty pop. share",
              "average.wage" = "Average wage",
              "population" = "Population",
+                         "ukr.lang.pct" = "Pct. Ukrainian language",
              "sample_size_east" = "N. precincts > 99 pro-East votes"
              ))
 
@@ -575,75 +629,24 @@ reg_table_year
 
 
 
-### There are dragons below here:
-Voteshare patterns
-```{r error=FALSE, message=FALSE, warning=FALSE}
-merged.data <- merged.data %>% mutate(dev_ratio = deviance_region_east / (deviance_region_east + deviance_region_west))
-merged.data <- merged.data %>% mutate(dev_diff = deviance_region_east - deviance_region_west)
-merged.data <- merged.data %>% mutate(dev_sum = deviance_region_east + deviance_region_west)
-
-merged.data <- merged.data %>% mutate(rozpct_diff_east = east.roz.percent - west.roz.percent)
-merged.data <- merged.data %>% mutate(log_dev_east = log(deviance_region_east))
-merged.data <- merged.data %>% mutate(log_dev_west = log(deviance_region_west))
-merged.data <- merged.data %>% mutate(log_dev_diff = log_dev_east - log_dev_west)
 
 
+## Discussion and conclusion
 
-model.vs <- lm(east.party.voteshare ~ prewar.region*rcl.proeast, data = merged.data)
-sjPlot::plot_model(model.vs, type = "int")
+Despite the difficulties of the case, Ukraine presents an important opportunity to test the implications of the model, especially in comparison with Russia. Russia shares many institutional and historical features with Ukraine (particularly in eastern parts of the country) as a result of a shared imperial and Soviet experience. However, patterns of patronage consolidation and local constraints vary considerably between the two states. Patronage consolidation has consistently been much lower in Ukraine than in Russia during the period of analysis. A single party of power largely dominates in Russia, while the party system in Ukraine is much more fragmented and fluid. Oligarchic interests were largely tamed during the early years of the first Putin administration; rival oligarchic clans continue to clash behind the scenes in Ukraine. The period in which Ukraine’s parliamentary-presidential constitution was in force helped establish a two-pyramid structure of patronage, in Hale’s (2014) terminology, while Russia continues to operate within a more consolidated vertical of power.
 
-model.vs <- lm(east.party.voteshare ~ coef_ratio, data = merged.data)
-summary(model.vs)
+As a result, we should expect to see different patterns of manipulation occur in the two cases. First, while the direct comparison is not statistically tested here, widespread falsification does appear to be considerably less common in Ukraine than in Russia. In the Russian case, suspicious results were captured by the digits test in 24 percent of region-years, whereas in Ukraine the same figure is approximately five percent—roughly what would be expected due to random chance alone.^[Note that the digits test results differ from those of the vote-share test presented here; the mean number of suspicious precincts per region using the vote-share test is approximately 10 percent.] Furthermore, while inflationary manipulation is common in Russia, to the benefit of the ruling party, suspicious turnout coefficients tend to be negative in Ukraine. This apparent emphasis on deflationary techniques may be due to the lower levels of patronage consolidation in the country. Since widespread voter mobilization and voter pressure campaigns can only be deployed by parties that control substantial patronage resources, cheaper deflationary tactics may easier to pull off for parties operating in a more fragmented patronage environment. This is a question that may be usefully addressed in further work.
 
-model.vs <- lm(east.party.voteshare ~ g_statistic_east + g_statistic_west + n.precincts, data = merged.data)
-summary(model.vs)
+However, the main benefit of the case in the present study is derived from the rapid fluctuation in patronage consolidation over time. Unlike the Mexican case (where patronage networks are deconsolidating during the period of study) or the Russian case (where they remain highly consolidated), Ukraine shifts from a fragmented patronage system after the Orange Revolution, to one with considerable consolidation around the Party of Regions under President Yanukovych, and subsequently back to a fragmented system after the 2014 crisis. The results shown here indicate that the consolidation and constraint model is better suited to explaining electoral manipulation in this kind of setting than is the local-information model; that is, while local conditions certainly matter for explaining electoral manipulation, those conditions are also informed by the overall distribution of patronage resources backing one party or another.
 
-model.vs <- lm(west.party.voteshare ~ prewar.region*log_dev_diff + n.precincts + presidential, data = merged.data %>% filter(log_dev_east != -Inf))
-summary(model.vs)
-sjPlot::plot_model(model.vs, type = "pred", terms = c("prewar.region", "log_dev_diff"))
-sjPlot::plot_model(model.vs, type = "pred", terms = c("log_dev_diff", "prewar.region"))
+In particular, the election-forensic analysis conducted here shows that overall deflationary manipulation targeting the Party of Regions became less severe during the Yanukovych presidency, but only in regions where constraints on pro-western agents were high. It also found a corresponding increase in deflationary manipulation in pro-eastern regions when the Party of Regions patronage network collapsed. Analysis of the models using the vote-share test results as a dependent variable, while only measuring one type of manipulation, provide further support for the principal-agent model based on patronage and risk. In those models, higher patronage consolidation around the Party of Regions led to a steep reduction in the number of suspicious precincts in pro-western regions; the subsequent breakdown resulted in increased fraud across the board (with especially steep increases in the east).
 
-
-model.vs <- lm(east.party.voteshare ~ prewar.region*rozpct_diff_east + presidential, data = merged.data)
-summary(model.vs)
-sjPlot::plot_model(model.vs, type = "pred", terms = c("prewar.region", "rozpct_diff_east"))
-
-
-### Overall coef ratio
-
-model.coef <- lm(coef_ratio ~ prewar.region*rcl.proeast +   logpop + income.percap  
-                            + highered 
-                            + presidential, data = merged.data)
-summary(model.coef)
-sjPlot::plot_model(model.coef, type = "int")
+In sum, election-forensic analysis shows that overall electoral manipulation and specific signatures of fraud both respond to shifts in local risks and national patronage consolidation in ways predicted by the model. Where the Mexican case allowed for an investigation of the effects of shifting local competition while holding patronage consolidation constant, the Ukrainian case allows for analysis of shifting levels of patronage consolidation. Both cases demonstrate that the two factors can move independently, and interactive effect the level of election manipulation that parties can achieve. 
 
 
 
-### Rozenas
-model.rozdiff <- lm(east.roz.percent ~ prewar.region*rcl.proeast   +  logpop + income.percap +
-                           n.precincts + highered 
-                            + presidential, data = merged.data)
-summary(model.rozdiff)
-sjPlot::plot_model(model.rozdiff, type = "pred", terms = c("prewar.region [Central, West, East]", "rcl.proeast"))
-sjPlot::plot_model(model.rozdiff, type = "pred", terms = c("rcl.proeast", "prewar.region [Central, West, East]"))
 
-model.count.roz <- MASS::glm.nb(w.roz.count.total ~ prewar.region*rcl.proeast   +  logpop + income.percap +
-                           n.precincts + highered 
-                            + presidential, data = merged.data )
-summary(model.count.roz)
-sjPlot::plot_model(model.count.roz, type = "pred", terms = c("prewar.region [Central, West, East]", "rcl.proeast"))
-sjPlot::plot_model(model.count.roz, type = "pred", terms = c("rcl.proeast", "prewar.region [Central, West, East]"))
-
-
-
-model.vs.manip <- MASS::glm.nb(e.roz.count.total ~ prewar.region*rcl.proeast   +  logpop + income.percap  + n.precincts
-                            + highered 
-                            + presidential, data = merged.data )
-summary(model.vs.manip)
-sjPlot::plot_model(model.vs.manip, type = "pred", terms = c("prewar.region", "rcl.proeast"))
-sjPlot::plot_model(model.vs.manip, type = "pred", terms = c("rcl.proeast", "prewar.region [Central, West, East]"))
-```
-
+---
 Current thoughts:
 
 1) There is not a lot of extreme falsification in Ukraine. Rozenas spike score at the 90th percentile in Ukraine is 1.2%. In Russia it's 2.5%. Deviance is pretty similar to Russia though...at least for east parties.  Non-extreme distributions are pretty similar.
