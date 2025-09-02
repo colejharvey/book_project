@@ -278,6 +278,14 @@ Lastly, the Ukrainian case also offers an opportunity to test the theory on a di
 
 In sum, this chapter shows that deflationary manipulation is characteristic of elections in Ukraine, and that the local information model does not accurately predict those patterns of electoral manipulation. Using two election-forensic techniques, it demonstrates that deflationary techniques deployed against pro-eastern parties and candidates are less likely in regions with higher local constraints against such manipulation, and respond as predicted to shifts in patronage consolidation. That is, during the Yanukovych presidency when patronage resources were highly consolidated around the Party of Regions, evidence of deflationary manipulation against that party drops dramatically, even in highly pro-western regions. In turn, in elections after the Euromaidan crisis, evidence of deflationary manipulation against pro-eastern candidates increases, especially in pro-eastern regions. These results contradict the expectations of the local information model, and support the theory articulated here.
 
+
+
+
+
+The Ukraine case, with its dramatic political history, provides one unambiguous case of elevated patronage consolidation during the period covered here: the 2012 legislative election, which takes place during the Yanukovych presidency but prior to the Euromaidan crisis. This is the only instance in which the political institutions of the country align with unified government under a patronage-based party machine, the Party of Regions, and without a major political crisis. Following Yanukovych’s victory in 2010, the pro-presidential Ukrainian constitution was restored, replacing the post-Orange constitution that vested greater power in the parliament. Under the pro-parliament constitution, Ukraine was more fully semi-presidential, with the president and prime minister controlling distinct patronage pyramids. This division was especially acute after the 2006 legislative election, which ushered in divided government under President Yushchenko and Prime Minister Yanukovych. The 2004 election, of course, takes place during the Orange Revolution and the attendant collapse of the patronage networks organized around President Kuchma, a collapse which had its roots in the earlier Kuchma-gate crisis. The 2012 election represents the height of patronage consolidation in Ukraine, as well, since the in 2014 the Euromaidan revolution and subsequent conflict results in the complete dissolution of the Party of Regions and a more fragmented political scene. A more detailed description of these dynamics is provided by Hale (2014). This period is captured with a dummy variable **Yanukovych**, which takes on a value of 1 for the 2012 legislative election.
+
+The history sketched above also suggests that the two 2014 elections, which took place after Yanukovych fled the country and in the midst of the collapse of the Party of Regions as a political force, represent the nadir of patronage consolidation from the perspective of pro-eastern candidates. Since this crisis was sparked by the mass pro-Europe protests and anti-Yanukovych demonstrates at Kyiv’s Independence Square (**Maidan Nezalezhnosti**), a dummy variable labelled **Post-maidan** takes on a value of 1 for these two elections. 
+
 -->
 
 
@@ -343,16 +351,14 @@ Since Ukraine's judicial system is centralized, it is also expected that the ris
 
 Finally, since vote-buying and voter-pressure (and to a lesser extent, ballot-stuffing) are costly and prone to agency loss, requiring the distribution of resources to agents and voters who are difficult to monitor, such efforts are likely to intensify when one party has more consolidated control over patronage resources. These consolidation is measured in two ways, one regional and one nationwide. At the national level, patronage consolidation is measured using an indicator of the degree to which pro-Western or pro-Eastern coalitions predominate in the national legislature, the Verkhovna Rada. I develop this indicator by first building a a Herfindahl–Hirschman index of the parties in the current legislature for each election year.^[The formula for this index is $ HH = \sum_{1}^{x}s_i^2 $, where $s_i$ is the size of the *i*-th party as a percentage of the total number of seats in the legislature (expressed as a decimal).] This is common measure of market concentration in economics and policy, and is a component of the better-known (to political scientists) measure of effective number of parties [@golosovEffectiveNumberParties2010]. I utilize the Herfindahl index itself, rather than ENP, because I am interested not in how many major parties are present in the legislature, but how concentrated voting blocs are. I then modify the H-H index to capture the political orientation of the governing coalition. If the prime minister comes from a pro-Eastern party, the H-H index is multiplied by 1; if the prime minister hails from a pro-Western party, the H-H index is multiplied by -1. The resulting variable, *Pro-eastern Rada concentration*, takes on larger positive values when a pro-Eastern majority controls a larger number of seats. It takes on larger, negative values when there is a larger pro-Western majority.
 
-
-
-
-The Ukraine case, with its dramatic political history, provides one unambiguous case of elevated patronage consolidation during the period covered here: the 2012 legislative election, which takes place during the Yanukovych presidency but prior to the Euromaidan crisis. This is the only instance in which the political institutions of the country align with unified government under a patronage-based party machine, the Party of Regions, and without a major political crisis. Following Yanukovych’s victory in 2010, the pro-presidential Ukrainian constitution was restored, replacing the post-Orange constitution that vested greater power in the parliament. Under the pro-parliament constitution, Ukraine was more fully semi-presidential, with the president and prime minister controlling distinct patronage pyramids. This division was especially acute after the 2006 legislative election, which ushered in divided government under President Yushchenko and Prime Minister Yanukovych. The 2004 election, of course, takes place during the Orange Revolution and the attendant collapse of the patronage networks organized around President Kuchma, a collapse which had its roots in the earlier Kuchma-gate crisis. The 2012 election represents the height of patronage consolidation in Ukraine, as well, since the in 2014 the Euromaidan revolution and subsequent conflict results in the complete dissolution of the Party of Regions and a more fragmented political scene. A more detailed description of these dynamics is provided by Hale (2014). This period is captured with a dummy variable **Yanukovych**, which takes on a value of 1 for the 2012 legislative election.
-
-The history sketched above also suggests that the two 2014 elections, which took place after Yanukovych fled the country and in the midst of the collapse of the Party of Regions as a political force, represent the nadir of patronage consolidation from the perspective of pro-eastern candidates. Since this crisis was sparked by the mass pro-Europe protests and anti-Yanukovych demonstrates at Kyiv’s Independence Square (**Maidan Nezalezhnosti**), a dummy variable labelled **Post-maidan** takes on a value of 1 for these two elections. 	
+Lastly, I construct a region-level measure of oligarchs' influence, by combining two prior datasets. First, Lankina and Libman [-@lankinaSovietLegaciesEconomic2019] provide information on a set of Ukrainian oligarchs and the regions where their assets are concentrated. This dataset is used to calculate the total number of oligarchs with significant assets in each region. I combine this with Pleines' dataset on oligarchs [-@pleines_oligarchs_2020] to identify each oligarch's political orientation (pro-Eastern or pro-Western) per election year. The variable *pro-East oligarchs* is a count variable indicating the total number of oligarchs in each region-year who are supportive of the major pro-Eastern party. This is, admittedly, a somewhat coarse measure; it cannot capture the intensity of an oligarch's political efforts, for instance. However, it does provide an indicator of the degree to which each region is susceptible to patronage-driven efforts to mobilize voters.
+	
 
 ### Control variables
 
-A set of control variables are included to help account for other possible explanations for manipulation, or for innocent voting patterns that could appear suspicious using the election forensic tools described above. One of these is an election-year variable: an indicator for \textit{presidential elections}, which may be more intense drivers of electoral manipulation [@simpser2013}. The remaining controls are socioeconomic variables at the regional level, taken from Ukrainian government statistics. Since greater education levels and economic development are thought to help deter electoral manipulation, I include a measure of \textit{higher education} as well as \textit{per capita income}. The first of these measures the number of people with post-secondary education in a region, per capita.^[Unfortunately, this variable is only available from the 2001 Ukrainian census.} The second is each region’s gross regional product divided by its population. \textit{Population size} is also included, since manipulation may be more difficult to implement in larger polities. The \textit{urban} share of the population is included, because cities may be more vulnerable to forms of manipulation like vote-buying. As \textit{government employees} may be particular susceptible to political pressure and the use of administrative resources, the number of government workers logged is used. Similarly, older Ukrainians are more likely to be dependent on the state for regular pension dispersal and other services, and more liable to administrative pressure. A measure of the number of citizens \textit{over sixty} in each region, logged, is included. For overviews of the political and socioeconomic correlates of electoral manipulation, see [@lehoucq2003;@kitschelt2007;@stokes2013brokers;@schedler2002]. 
+A set of control variables are included to help account for other possible explanations for manipulation, or for innocent voting patterns that could appear suspicious using the election forensic tools described above. Several of these are region-level controls. They include the percentage of the population in *government employment*, the percentage of the population *over sixty* years of age, the *average wage* in the region, the *population size (log)*, and the percentage of the population claiming *Ukrainian language* as their primary language. All of these variables are taken from the Ukrainian State Statistical Service. In addition, the models also control for the election-year variable *presidential approval rating*, taken as the three-month average approval rating prior to the election. This variable is collected from data published by the Ukrainian survey firm Rating Group. Finally, specific models include election fixed effects.
+
+
 
 ## Results
 
@@ -393,73 +399,75 @@ There may be something here: When there is a pro-east president, pro-east region
 ```{r}
 merged.data <- merged.data %>% mutate(coef_ratio = coefs.east / (coefs.east + coefs.west))
 merged.data <- merged.data %>% mutate(over.sixty_pct = over.sixty / (population*1000))
+merged.data <- merged.data %>% mutate(govemploy_pct = gov.employ / population)
 
-model.vs_margin_coef <- lm(east.party.margin2 ~ coefs.east + coefs.west  + pres.approval + party.margin + gov.employ + over.sixty_pct  + urban.pct + population + ukr.lang.pct, data = merged.data)
+
+model.vs_margin_coef <- lm(east.party.margin2 ~ coefs.east + coefs.west  + pres.approval + party.margin + govemploy_pct + over.sixty_pct  + urban.pct + logpop + ukr.lang.pct, data = merged.data)
 summary(model.vs_margin_coef)
 
-model.vs_margin_coef2 <- lm(east.party.margin2 ~ coefs.east + pres.approval + party.margin + gov.employ + over.sixty_pct  + urban.pct + population + ukr.lang.pct, data = merged.data)
+model.vs_margin_coef2 <- lm(east.party.margin2 ~ coefs.east + pres.approval + party.margin + govemploy_pct + over.sixty_pct  + urban.pct + logpop + ukr.lang.pct, data = merged.data)
 summary(model.vs_margin_coef2)
 
-model.coef_margin_pres <- lm(coefs.east ~ party.margin + pres.approval + party.margin*east.president + gov.employ + over.sixty_pct + average.wage + population, data = merged.data)
+model.coef_margin_pres <- lm(coefs.east ~ party.margin + pres.approval + party.margin*east.president + govemploy_pct + over.sixty_pct + average.wage + logpop, data = merged.data)
 summary(model.coef_margin_pres)
 sjPlot::plot_model(model.coef_margin_pres, type = "int")
 
-model.coef_rhh <- lm(coefs.east ~ rada_hh_proeast + pres.approval + east.president  + gov.employ + over.sixty_pct + average.wage + population + ukr.lang.pct, data = merged.data)
+model.coef_rhh <- lm(coefs.east ~ rada_hh_proeast + pres.approval + east.president  + govemploy_pct + over.sixty_pct + average.wage + logpop + ukr.lang.pct, data = merged.data)
 summary(model.coef_rhh)
 
-model.coef_region <- lm(coefs.east ~ prewar.region + pres.approval + east.president +  gov.employ + over.sixty_pct + average.wage + population + ukr.lang.pct, data = merged.data)
+model.coef_region <- lm(coefs.east ~ prewar.region + pres.approval + east.president +  govemploy_pct + over.sixty_pct + average.wage + logpop + ukr.lang.pct, data = merged.data)
 summary(model.coef_region)
 
-model.coef_elex <- lm(coefs.east ~ electionid + gov.employ + over.sixty_pct + average.wage + population + ukr.lang.pct, data = merged.data)
+model.coef_elex <- lm(coefs.east ~ electionid + govemploy_pct + over.sixty_pct + average.wage + logpop + ukr.lang.pct, data = merged.data)
 summary(model.coef_elex)
 
 
 
-model.coef_elex_west <- lm(coefs.west ~ electionid + gov.employ + over.sixty_pct + average.wage + population + ukr.lang.pct, data = merged.data)
+model.coef_elex_west <- lm(coefs.west ~ electionid + govemploy_pct + over.sixty_pct + average.wage + logpop + ukr.lang.pct, data = merged.data)
 summary(model.coef_elex_west)
 
 
-model.coef_olig <- lm(coefs.east ~ east_oligcount*urban.pct + pres.approval + east.president +  over.sixty_pct + average.wage + population + ukr.lang.pct, data = merged.data)
+model.coef_olig <- lm(coefs.east ~ east_oligcount*urban.pct + pres.approval + east.president + govemploy_pct+  over.sixty_pct + average.wage + logpop + ukr.lang.pct, data = merged.data)
 summary(model.coef_olig)
-sjPlot::plot_model(model.coef_olig, type = "pred", terms = c("urban.pct", "east_oligcount [0, 2]"))
+sjPlot::plot_model(model.coef_olig, type = "pred", terms = c("urban.pct", "east_oligcount [0, 3]"))
 
 
 ```
 
 ```{r}
 
-model.vs_gs <- lm(east.party.margin2 ~ g_statistic_east + pres.approval + party.margin + gov.employ + over.sixty_pct  + population + urban.pct + ukr.lang.pct +  sample_size_east, data = merged.data)
+model.vs_gs <- lm(east.party.margin2 ~ g_statistic_east + pres.approval + party.margin + govemploy_pct + over.sixty_pct  + logpop + urban.pct + ukr.lang.pct +  sample_size_east, data = merged.data)
 summary(model.vs_gs)
 
-model.gs_margin_int <- lm(g_statistic_east ~ party.margin + pres.approval + party.margin*east.president + gov.employ + over.sixty_pct + population + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
+model.gs_margin_int <- lm(g_statistic_east ~ party.margin + pres.approval + party.margin*east.president + govemploy_pct + over.sixty_pct + logpop + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
 summary(model.gs_margin_int)
 sjPlot::plot_model(model.gs_margin_int, type = "int")
 
-model.gs_margin_int2 <- lm(dev_1_9_east ~ party.margin + pres.approval + party.margin*east.president + gov.employ + over.sixty_pct + population + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
+model.gs_margin_int2 <- lm(dev_1_9_east ~ party.margin + pres.approval + party.margin*east.president + govemploy_pct + over.sixty_pct + logpop + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
 summary(model.gs_margin_int2)
 sjPlot::plot_model(model.gs_margin_int2, type = "int")
 
 
-model.gs_margin <- lm(g_statistic_east ~ party.margin + pres.approval + party.margin + gov.employ + over.sixty_pct + population + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
+model.gs_margin <- lm(g_statistic_east ~ party.margin + pres.approval + party.margin + govemploy_pct + over.sixty_pct + logpop + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
 summary(model.gs_margin)
 
 
-model.gs_rhh <- lm(g_statistic_east ~ rada_hh_proeast + pres.approval + east.president  + gov.employ + over.sixty_pct + population + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
+model.gs_rhh <- lm(g_statistic_east ~ rada_hh_proeast + pres.approval + east.president  + govemploy_pct + over.sixty_pct + logpop + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
 summary(model.gs_rhh)
 
-model.gs_region <- lm(g_statistic_east ~ prewar.west + pres.approval + east.president +  gov.employ + over.sixty_pct + population + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
+model.gs_region <- lm(g_statistic_east ~ prewar.west + pres.approval + east.president +  govemploy_pct + over.sixty_pct + logpop + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
 summary(model.gs_region)
 
-model.gs_elex <- lm(g_statistic_east ~ electionid + gov.employ + over.sixty_pct + population + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
+model.gs_elex <- lm(g_statistic_east ~ electionid + govemploy_pct + over.sixty_pct + logpop + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
 summary(model.gs_elex)
 
-model.gs_elex_east <- lm(g_statistic_east ~ electionid + gov.employ + over.sixty_pct + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
+model.gs_elex_east <- lm(g_statistic_east ~ electionid + govemploy_pct + over.sixty_pct + average.wage + ukr.lang.pct + sample_size_east + logpop, data = merged.data)
 summary(model.gs_elex_east)
 
-model.gs_elex_west <- lm(g_statistic_west ~ electionid + gov.employ + over.sixty_pct + average.wage + ukr.lang.pct + sample_size_west, data = merged.data)
+model.gs_elex_west <- lm(g_statistic_west ~ electionid + govemploy_pct + over.sixty_pct + average.wage + ukr.lang.pct + sample_size_west + logpop, data = merged.data)
 summary(model.gs_elex_west)
 
-model.gs_olig <- lm(g_statistic_east ~ east_oligcount*urban.pct + pres.approval + east.president + gov.employ + over.sixty_pct + average.wage + ukr.lang.pct + sample_size_east, data = merged.data)
+model.gs_olig <- lm(g_statistic_east ~ east_oligcount*urban.pct + pres.approval + east.president + govemploy_pct + over.sixty_pct + average.wage + ukr.lang.pct + sample_size_east + logpop, data = merged.data)
 summary(model.gs_olig)
 ```
 
