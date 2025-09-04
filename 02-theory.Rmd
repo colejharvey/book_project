@@ -96,7 +96,8 @@ However, front-line agents do indeed have agency, and are not indifferent among 
 ```{=latex}
 % Please add the following required packages to your document preamble:
 % \usepackage{booktabs}
-\begin{table}[]
+\begin{sidewaystable}
+\centering
 \begin{tabular}{@{}lllll@{}}
 \toprule
 \textbf{Manipulation tactic} & \textbf{Perpetrators known} & \textbf{Location known} & \textbf{Time known} & \textbf{Attributability} \\ \midrule
@@ -106,10 +107,12 @@ Vote-buying / voter pressure & Rarely (Various)               & No       & No   
 \end{tabular}
 \caption{Variation in how attributable election manipulation tactics are to perpetrators}
 \label{tab:attribution}
-\end{table}
+\end{sidewaystable}
 ```
 
 
+Falsification of the vote count is the electoral crime most easily attributable to its perpetrators. Only the election officials, who are typically publicly named individuals, can count, tabulate, and record the election results; the individuals responsible for any discrepancies are thus easily identifiable. Moreover, counting the votes takes place at a known location (the polling place), as does tabulation (higher level election commissions); these activities also take place at known times (after the close of polling). Election monitors, unsurprisingly, take advantage of these facts to detect attempted manipulations.The OSCE Election Monitoring Handbook, for instance, notes that observers "should select one of their assigned polling stations at which to
+observe the closing procedures, and then remain there for the entire vote count"; it goes on to list detailed descriptions of the kinds of activities that monitors should be alert to [@officefordemocraticinstitutionsandhumanrightsElectionObservationHandbook2010, p. 79]. Similar instructions are provided for monitoring tabulation. An election monitoring guidebook from the National Democratic Institute states that "Monitors should take note of who is present inside the voting station.... Election officials are responsible for administering the voting process.... [monitors] should observe and record the conduct of election officials in order to deter fraud, to help correct inadvertent mistakes, as well as detect and record actual irregularities" [@nationaldemocraticinstituteHowDomesticOrganizations1995, p. 71]. Due to their power, and the fixed time and location of their efforts, election officials are obvious targets of attention for those who seek to monitor and expose election fraud. This makes committing fraud an exercise in considerable risk for such officials, if they are operating in a context where monitoring by NGOs, parties, or citizens is vigorous.
     
 
 
