@@ -8,24 +8,7 @@
   - See also Simpser 2011 p. 35 on three goals of his definition, and what tactics he includes
     - In particular, he notes the analytic importance of choice (someone is making a deliberate choice to manipulate)
     
-```{=latex}
-% Please add the following required packages to your document preamble:
-% \usepackage{booktabs}
-\begin{table}[]
-\begin{tabular}{@{}lllll@{}}
-\toprule
-\textbf{Manipulation tactic} & \textbf{Perpetrators known} & \textbf{Location known} & \textbf{Time known} & \textbf{Attributability} \\ \midrule
-Falsification                & Yes (Officials)                & Yes      & Yes       & High     \\
-Ballot-stuffing              & Possibly (Officials or voters) & Possibly & Partially & Moderate \\
-Vote-buying / voter pressure & Rarely (Various)               & No       & No        & Low      \\ \bottomrule
-\end{tabular}
-\caption{Variation in how attributable election manipulation tactics are to perpetrators}
-\label{tab:my-table}
-\end{table}
-```
 
-
-    
     
 This book has two principal aims. First, it aims to demonstrate that protest risk is insufficient to restrain election manipulation, a proposition that goes against a substantial body of prior work and has normatively pessimistic implications for democratization. Second, it articulates an alternative theory of electoral manipulation and protest, which explains how manipulation efforts are constructed and how they can be dismantled. To put this discussion on firm footing, it is necessary to define how the concept of electoral manipulation will be used.
 
@@ -97,19 +80,37 @@ Second, because election manipulation of the type studied here is by definition 
 
 In cases where a dominant party machine exercises control over regional courts, opposition party figures are less likely to pursue complaints in regional courts [@popova2006], reducing the risk to agents of engaging in manipulation. However, even the most authoritarian regimes may allow lower courts to remain somewhat independent, in order to reduce corruption, increase investment, and enhance regime legitimacy [@Moustafa2008]. In turn, these courts sometimes act to redress low-level electoral violations. For example, Popova [-@popova2012politicized] finds that district courts in Russia were more likely to hear election-related cases in competitive districts, and that pro-government candidates were not systematically more likely to win than pro-opposition candidates (pp. 94-95). Courts often hear charges against election officials for election tampering, but they can also adjudicate cases against ordinary individuals accused of other types of manipulation:  vote-buying, voter pressure, voter impersonation, and multiple voting [@Orozco-Henriquez2010]. Since authoritarian rulers have incentives to create a court system that does, on occasion, rule against the regime's supporters [@ginsburg_rule_2008;@popova2012politicized;@hendleyEverydayLawRussia2017;@Harvey2022], this can create acute risks for front-line agents in cases where exposure is more likely. In 1999, for example, Russian courts ruled against election commissioners accused of electoral malfeasance (including fraud allegations) in about half of cases [@Solomon2004]. A report on the punishment of election commissioners for violations of the election law from 2009 to 2015 in Russia found that, while most infractions are punished by small fines, significant punishments could be brought in cases with sufficient local political pressure [@golos__2015]. In some cases recorded by the monitoring group, election commissioners were found guilty of criminal offenses and faced stiff penalties, including fines of over half an average annual salary. Chapter 6, in this volume, shows further evidence of such risks in modern, more authoritarian Russia.
 
-
-
-
-
-By increasing risks to agents, local constraints affect the relative value of a principal’s offer of patronage; a particular patronage offer may be sufficient to convince an agent to engage in manipulation in a local setting where constraints are low, but insufficient in cases where constraints are higher. As a result, the interaction of patronage and constraints affects the level of manipulation observed. 
- 
-Qualitative evidence indicates that this effect is not purely driven by leaders’ fear of losing legitimacy. Exposed agents can face punishment, even in relatively uncompetitive regimes in which incumbent leaders retain power. 
-
 Finally, the incumbent must be able to convince his subordinates that he will remain in power through the election and beyond; that is, that his ability to mete out rewards and punishments will be lasting [@hale_patronal_2014;@gehlbach2015electoral;@simpser2013]. If the principal appears less likely to control access to patronage due to electoral defeat or intraparty rivalry, her offer of post-election patronage will appear less viable to agents, reducing their incentive to work on her behalf [@hale_democracy_2006]. When one patronage network controls a large share of resources, agents have a strong incentive to support the principal: access to rents and resources outside that network is limited, competing offers of patronage by opposition figures are necessarily discounted, and punishment of defectors by exclusion from the network seems assured [@hale_patronal_2014]. In a society characterized by multiple patronage networks, by contrast, the credibility of an individual principal’s offer is contingent on the likelihood that the principal will win the election or leadership struggle. As a result, clients ‘hedge their bets or pin their hopes on different networks in an uncoordinated fashion’ [@hale_patronal_2014, p. 72]. Consequently, agents are more strongly incentivized to participate in electoral manipulation efforts when patronage networks are more consolidated. 
 
 The same dynamic is at work when it comes to protection of front-line agents from consequences....
 
 
+Finally, manipulation on a national scale can be very expensive, and principals’ resources are not limitless. Even relatively cost-effective tactics like co-opting employers to pressure voters requires monitoring efforts and rewards for compliant businesses [@frye2014, p. 207]. Agents and brokers engaged in falsification or other types of manipulation must still be organized and compensated [@Langston2009mexico]. Vote-buying, however, is especially costly [@lehoucq2002;@wang2007], and such efforts become increasingly expensive as competitiveness increases [@corstange2018clientelism]. As a result, incumbents are likely to prefer centralized forms of manipulation in low risk areas, due to their cost-effectiveness. This pattern has been documented both domestically in Russia [@harvey_manipulation_2016] and cross-nationally [@vanham2015sticks]. Consequently, if higher local constraints make agents less willing to tamper with elections in administrative ways, principals may find agents both more expensive to hire (as they turn toward vote-buying and similar tactics) and more likely to shirk their duties on election day (as they become harder to monitor). This limits the ability of principals to compensate for higher competitiveness by boosting payments for agents. 
+
+### Manipulation type and agent preferences
+
+While ballot-stuffing, voter pressure, and falsification can all add to the incumbent's tally in the election, considerable scholarship has been invested in understanding why incumbents may prefer one strategy or another. Incumbents may prefer a certain mix of strategies in order to evade observation [@asunka2017electoral] and loss of legitimacy [@vanham2015sticks], due to resource constraints [@greene_why_2007] or availability [@Frye2018], to avoid appearing weak [@Harvey2020] or to evade the strictures of modern electoral procedure [@kuo_teorell_2017]. With few exceptions [@rundlett2016deliver;@Harvey2019], front-line agents' cooperation with incumbents' preferences is often assumed.
+
+However, front-line agents do indeed have agency, and are not indifferent among the choices on the menu of manipulation. In particular, different illegal election manipulation tactics can be traced back to their individual perpetrators with varying degrees of difficulty. This affects the degree of personal risk to which the agent is exposed. Table \@ref(tab:attribution) summarizes these differences.
+
+```{=latex}
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+\begin{table}[]
+\begin{tabular}{@{}lllll@{}}
+\toprule
+\textbf{Manipulation tactic} & \textbf{Perpetrators known} & \textbf{Location known} & \textbf{Time known} & \textbf{Attributability} \\ \midrule
+Falsification                & Yes (Officials)                & Yes      & Yes       & High     \\
+Ballot-stuffing              & Possibly (Officials or voters) & Possibly & Partially & Moderate \\
+Vote-buying / voter pressure & Rarely (Various)               & No       & No        & Low      \\ \bottomrule
+\end{tabular}
+\caption{Variation in how attributable election manipulation tactics are to perpetrators}
+\label{tab:attribution}
+\end{table}
+```
+
+
+    
 
 
 
@@ -247,7 +248,7 @@ In sum, a greater local risk of exposure and punishment can make participating i
 
 An objection might be raised: do agents in competitive circumstances have an incentive to work especially hard for their principals, in order to deliver as many votes as possible and possibly keep the boss in office? This could be true in exceptional circumstances, but in most cases the number of votes that any individual agent can influence has a negligible effect on the overall result. This creates the coordination problem identified by Rundlett and Svolik [-@rundlett2016deliver]. As the election becomes more competitive, the efforts of more agents are necessary to secure victory; at the same time, the diminishing prospect of success makes it less likely that so many agents will in fact cooperate.
 
-Finally, manipulation on a national scale can be very expensive, and principals’ resources are not limitless. Even relatively cost-effective tactics like co-opting employers to pressure voters requires monitoring efforts and rewards for compliant businesses [@frye2014, p. 207]. Agents and brokers engaged in falsification or other types of manipulation must still be organized and compensated [@Langston2009mexico]. Vote-buying, however, is especially costly [@lehoucq2002;@wang2007], and such efforts become increasingly expensive as competitiveness increases [@corstange2018clientelism]. As a result, incumbents are likely to prefer centralized forms of manipulation in low risk areas, due to their cost-effectiveness. This pattern has been documented both domestically in Russia [@harvey_manipulation_2016] and cross-nationally [@vanham2015sticks]. Consequently, if higher local constraints make agents less willing to tamper with elections in administrative ways, principals may find agents both more expensive to hire (as they turn toward vote-buying and similar tactics) and more likely to shirk their duties on election day (as they become harder to monitor). This limits the ability of principals to compensate for higher competitiveness by boosting payments for agents. 
+
 
 In summary, national patronage consolidation attracts election-manipulating agents, but this attraction must be weighed against risks created by local political conditions.  Agents are more willing to tamper with elections when incumbent’s control of patronage appears more secure. However, where local constraints are high, agents engage in harder-to-trace manipulation in order to insulate themselves from the risks of exposure. Since cost-efficient manipulation by election administrators does little to protect agents from exposure, they are more willing to perform activities like falsification in places where local risks are already low. Two testable hypotheses can be drawn from this theory.  A third hypothesis tests the corresponding prediction from the incumbent popularity model. 
 
