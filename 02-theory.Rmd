@@ -27,9 +27,21 @@ First, it is this kind of manipulation---falsification, ballot-stuffing, vote-bu
 
 [Note: Expand and fill in cites] Why these? They are substantively important for specific elections (used to backstop formal manipulation). They are theoretically important as the kind of manipulation that can be dialed up or down for each election as needed, and as the kind that is most likely to spark protest (due to procedural injustice and revealed information about incumbent), *and* as the most likely to be called out by observers. For the purpose of my theory here, they are the kinds of behaviors that a person can choose to engage in or not; unlike the choice of electoral system which (once imposed) carries out its logic impersonally.
 
+## Leader-oriented theories of manipulation
+
+Until relatively recently, most scholarship on election manipulation focused on the costs and benefits that accrue to the leaders who order it. Most fundamentally, of course, political leaders can manipulate elections in order to ensure victory. Simpser [-@simpser2013, p. 61] calls this the 'first conventional wisdom' of research on election manipulation: that its main goal is to ensure that a particular party or candidate wins the election at hand. The competitiveness of the election and stakes of losing power are the main drivers of manipulation in this tradition. Incumbents have more to gain from election rigging when they are likely to narrowly lose the election without it [@nybladeWhoCheatsWho2008;@lehoucq2002;@kamSecretBallotMarket2017;@Birch2007;@Fukumoto2011], and when the prospect of losing carries significant costs [@ziblatt2009;@baturoDemocracyDictatorshipTerm2014;@acemoglu2005economic;@Schedler2013;@horzElectoralManipulationPolarized2021]. Subsequent research has identified broader benefits of rigged elections for leaders; by communicating information about the strength and durability of the regime, manipulation can lead other actors in society to comply with the incumbent [@simpser2013;@gehlbach2015electoral].
+
+Against these benefits, political leaders are expected to weigh the costs of manipulating elections. Rigging an election has unavoidable material and organizational costs; front-line actors must be recruited and compensated for their efforts to influence the result. More significant to leader-oriented theories, however, is the notion of legitimacy costs [@birch2011]. Scholars often understand legitimacy as individuals' subjective sense that authorities have the right to rule, even if the individual may object to authorities' decisions. In Lipset’s words, legitimate authorities and institutions are those that are “the most appropriate...for the society” [@Lipset1960, p. 77]. Legitimacy, in turn, makes it more likely that individuals will comply with authorities' demands [@Levi_Sacks2009]. The legitimacy cost of electoral manipulation, then, has two components: a reduction in individuals’ subjective
+evaluation that elected authorities have the right to govern, and second, an associated behavioral shift in willingness to obey the government [@Schedler2013]. Birch [-@birch2011] cites protest risk to the cost of manipulation explicitly, saying legitimacy costs "...can be understood in terms of the proportion of the population that can be expected to acquiesce to having their contribution to public choice taken from them or distorted. As a result, she writes, "The capacity for popular mobilization and protest ought to be negatively correlated with electoral malpractice" (p. 58). Schedler [-@Schedler2013] has further usefully defined legitimacy costs as a function of the severity and visiblity of the manipulation employed (p. 274).
+
+This understanding of the cost of electoral manipulation---as a reduction in legitimacy and associated increase in the risk of mass protest---has been widespread in the literature. It has been especially foundational to formal models of electoral manipulation, where loss of support and/or protest risk often stand as the main downside for incumbents [@Little2015;@littleFraudMonitoringNoncompetitive2015;@chernykh2015third]. For instance, Magaloni [-@magaloni2010] writes that, "The legitimacy loss of fraud can be conceived as the costs to the autocrat of damaging its reputation before its own supporters and/or before the international community. The model thus assumes that if fraud is known, it will invariably be costly for the incumbent [in loss of public support]."
+
+Protest risk as the cost of manipulation also figures in less formal theory. It is central to the literature on election monitoring [@hyde_2012_marinov;@kelley2012] Manipulated elections can serve as a focal point for citizens' diverse grievances, raising the likelihood of protest [@tucker2007;@higashijimaDictatorsDilemmaBallot2022]. And, by the same token, election fraud figures prominently in general theories of electoral protest.
 
 
-## An agent-risk, rather than principal-risk, model of electoral manipulation
+
+
+## An agent-risk model of electoral manipulation
 
 - What does extensive manipulation require? Solving a principal-agent problem
 - P-A nature of election manipulation
@@ -166,11 +178,13 @@ This book draws on all of these sources of information about election integrity,
 - This first approach is what I call the 'regime weakness' model of electoral manipulation. It rests on two assumptions
   - 1) Election manipulation carries significant 'legitimacy costs' for the incumbent
   - 2) Electoral manipulation conveys little information about incumbent resilience, at best, and evidence of incumbent weakness at worst.
-  
+
+<!--
 - Regime weakness model shows up most clearly in formal models (due to the necessity of clarity in such models), but is also implicit in informal theory
   - Little, Tucker, and LaGatta (2015):  "Just as stronger election results for the incumbent lead to less protest because they indicate that she is popular, reports of more fraud lead to more protest because they indicate that the incumbent is, for a given election result, less popular."
   - In Little (2015), an incumbent chooses an amount of fraud that decreases in the effectiveness of election monitoring--the "audience" offers less support to an unpopular incumbent, and undetected fraud reduces the audience's certainty around the level of popularity. So weak incumbents manipulate more than strong ones, but this effect declines in the degree of monitoring.
   - Magaloni 2010: "The legitimacy loss of fraud can be conceived as the costs to the autocrat of damaging its reputation before its own supporters and/or before the international community.4 The model thus assumes that if fraud is known, it will invariably be costly for the incumbent." (This loss is modeled as the loss of some of the incumbent's present supporters).
+-->
     - Note that probability of winning post-election conflict is modeled as distinct from popularity
     - One way that 'weakness' can be conceptualized in this model is the cohesiveness of the incumbent coalition. If few members would defect after fraud, then ever-riskier gambles on fraud become rational. See page 758, column 1 for utility equation
     
