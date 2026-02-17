@@ -1,4 +1,4 @@
-# Cross-national patterns of manipulation and protest
+# Survival of the fraudulent: Cross-national patterns of manipulation and protest outcome
 
 Setup:
 
@@ -19,7 +19,7 @@ library(lubridate)
 library(summarytools)
 library(stargazer)
 library(ggeffects)
-library(glmmTMB)
+#library(glmmTMB)
 library(modelsummary)
 library(huxtable)
 library(simPH)
