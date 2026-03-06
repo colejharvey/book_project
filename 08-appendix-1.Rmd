@@ -1,4 +1,6 @@
-# Appendix 1: Measuring electoral manipulation
+# Appendix I: Measuring electoral manipulation
+
+\chaptermark{Appendix I}
 
 
 

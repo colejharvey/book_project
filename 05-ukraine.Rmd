@@ -1,5 +1,8 @@
 # Election fraud and agent risk in Ukraine
 
+\chaptermark{Election manipulation in Ukraine}
+
+
 
 The previous chapter shows how the machinery of manipulation has become increasingly effective in Russian elections. The story in that case follows the logic of the regime-strength model of manipulation. In brief: in an effort to forestall challenges by opposition parties and regional elites, President Putin and his allies steadily increased their control over patronage resources, the repressive apparatus, the media, and the judiciary. In turn, even when facing protest risk, the Kremlin was able to recruit agents to falsify election results in places where risk of exposure was low, and to engage in extra-legal vote mobilization in places where that risk was high. It is a case of the vicious cycle of electoral manipulation.
 

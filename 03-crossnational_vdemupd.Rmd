@@ -1,4 +1,6 @@
 # Survival of the fraudulent: Cross-national patterns of manipulation and protest outcome
+\chaptermark{Survival of the fraudulent}
+
 
 Setup:
 

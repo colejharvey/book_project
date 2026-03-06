@@ -1,4 +1,6 @@
-# Theory: The regime-strength model of electoral manipulation in non-democracies
+# Theory: A regime-strength model of electoral manipulation
+
+\chaptermark{Theory}
 
 ## Two theories of election manipulation
 <!--
