@@ -189,6 +189,8 @@ In combination, this pattern is consistent with a world in which extensive elect
 
 ## Theory: Developing the regime-strength model of electoral manipulation
 
+\sectionmark{Theory}
+
 Under what circumstances should protest movements be expected to last longer in authoritarian regimes? Authoritarian incumbents have strong incentives to keep protests small and short-lived. Generally speaking, by definition, authoritarian regimes have a smaller winning coalition and selectorate than democracies do, and allocate more private and club goods to elites as a result [@BuenodeMesquita2005]. Despite this, they can appear superficially popular, with most citizens falsifying their preferences and demonstrating support for the regime, tacitly or otherwise. The appearance of even a moderate number of protesters publicly signalling their disapproval of the government can trigger a cascade of dissent in short order, as other citizens stop falsifying their preferences as well [@Kuran1991]. Given time, persistent protests can lead elites and the security services to update their prior beliefs about the strength of the incumbent, prompting defections [@svolik_politics_2012;@Chenoweth_Stephan2011]. Protest movements can also challenge the regime's legitimacy [@keremouglu2022thin], eroding individual compliance in other areas. To prevent all these negative outcomes, incumbents try to prevent mass protest from occurring, and to quickly quell those protest movements that do arise.
 
 Assuming the incumbent remains in office, stronger protest movements will tend to last longer than weaker ones. Ordinary protesters are more likely to remain engaged when they are more aggrieved [@gurrWhyMenRebel2015], when they are angrier, and when they observe many other people expressing their discontent; extensive public grievance can thus be a source of durability for protest movements. The longer-lasting and larger protest movements are, the more protesters may become socially networked, enabling easier subsequent mobilization [@schussmanProcessProtestAccounting2005;@sheldonIdentityCompetitionKey2000], increasing organizational resilience and capacity . When group goals appear more achievable---in part because the protest movement is large, well-organized, and well-resourced, and the incumbent appears off balance---individuals we will be more willing to participate in protest [@Klandermans1997] and to become regulars [@saundersExplainingDifferentialProtest2012].  Strategic protest entrepreneurs, who are using protest as a form of costly bargaining against the incumbent, will aim to demonstrate the resilience and popularity of their movements in order to present a stronger negotiating position [@robertson_protest_2010;@Beaulieu2014a]. As a result, they often seek to maintain high levels of mobilization even in the face of repression and ordinary citizens' waning interest over time [@tillyContentiousPolitics2015]. On average, then, I expect that authoritarian and proto-authoritarian incumbents will seek to demobilize protest, and protest movement leaders will seek to maintain (or even increase) high levels of mobilization. Which side prevails, and how quickly, depends on the relative strength of each.
@@ -275,7 +277,7 @@ plot.combined.hist
 
 
 
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE, eval=FALSE}
 ggplot(nelda2.sub, aes(x = v2elirreg.inv, fill = as.factor(v2x_regime))) +
   geom_histogram(alpha = 0.6, position = "identity", bins = 80) +
   scale_fill_manual(values = c("1" = "#FF6B6B", 
@@ -635,6 +637,7 @@ plot_binary_margin_typ_n
 
 
 ## Additional analysis: structural and protest-based correlates of fraud
+\sectionmark{Protest risk and fraud}
 
 The final section of this chapter tests the implication that incumbent should respond to greater protest risk by *increasing* the level of electoral manipulation (conditional on their structural ability to do so). Testing for this possibility simultaneously helps confirm the theory that strong incumbents are not fearful of mass protest, and helps rule out selection effects that might undermine the general findings above.^[The classic regime-weakness models predict that some incumbents who will voluntarily avoid electoral manipulation and accept a possible loss at the ballot box, to avoid costly protest. If this is the case, it could introduce selection bias into the sample for the duration analyses, by sorting only the strongest incumbents into the sample that faces protest.] Here, I use a similar approach to take two different cuts at the data. First, I model the likelihood of post-election protest in each case, using only pre-election variables. I then use this propensity score for protest to model the level of electoral manipulation that in fact occurs. In the second approach, I model the predicted average level of manipulation in each case, and use the residuals from that model as a measure of over- or under-production of manipulation relative to baseline. I then model those residuals as a function of pre-election predictors of protest. In both approaches, the outcome is the same: a greater risk of protest is associated with a *higher* production of manipulation, not lower.
 
@@ -744,7 +747,7 @@ The effectiveness of this propensity score approach hinges on the success of the
 The results of the first stage model are presented in Table \@ref(tab:stage1-model). 
 
 
-```{r, include = F}
+```{r, include = F, echo=FALSE}
 ### Calculate propensity scores for protest, but use lagged electoral fairness as variable
 
 complete_cases <- complete.cases(nelda2.sub[, c("any_protest", "lji.lag" , "legcon.1lag" , "gdpgrowth.1lag" , "altinf.1lag"  , "frefair.1lag"  , "osorg.1lag"   ,   "presidential" , "inc.termlimit.num"  ,  "physinteg.1lag" , "physintlag.sq" , "urban.pct" , "n.events.pre" , "unscheduled_election" , "regional_success_lag")])
@@ -788,7 +791,7 @@ modelsummary::modelsummary(models4, gof_omit = "BIC|Log", longtable=F, stars = T
                  ))
 ```
 
-```{r include=FALSE}
+```{r include=FALSE, echo=FALSE}
 # Create propensity score quartiles or tertiles for stratification to account for bias in the propensity scores
 #https://onlinelibrary.wiley.com/doi/full/10.1002/sim.5884?casa_token=f64GrFUJvEcAAAAA%3A8a3hmyjFqZMEmT7-sqebxcxa2EvN1QPzP59iThEx_jZEc4x5PgI8OM-vNPOaNU8i3livvOzAyTGpNg
 nelda2.sub$ps_quartile[complete_cases] <- cut(propensity_scores, 
@@ -810,7 +813,7 @@ model.fraud.covars <- lm(v2elirreg.inv ~ lji.lag + legcon.1lag + gdpgrowth.1lag 
 #summary(model.fraud.covars)
 
 model.fraud.all <- lm(v2elirreg.inv ~ lji.lag + legcon.1lag + gdpgrowth.1lag + altinf.1lag  +  + osorg.1lag     + presidential + inc.termlimit.num  +  physinteg.1lag + physintlag.sq + urban.pct + n.events.pre + unscheduled_election + regional_success_lag + propensity_score, data = nelda2.sub)
-summary(model.fraud.all)
+#summary(model.fraud.all)
 
 
 
@@ -878,9 +881,6 @@ dev.off()
 
 ## Conclusion
 
-Here are the rewritten paragraphs:
-
----
 
 Scholars disagree about how election fraud relates to post-election protest. One family of models — which I have called the regime-weakness model — predicts that incumbents may opt for cleaner elections when the risk of post-election protest is higher. A competing family of models holds that election fraud can itself be a signal of incumbent strength. Building on the principal-agent literature on election fraud, I argue that large-scale fraud draws on the same resources that make incumbents resilient to protest, even when low popularity is reflected in weak vote-shares. Fraud is easier to carry out when incumbents control patronage resources and can shield front-line agents from legal consequences — and those same capacities help incumbents defuse mass protest. Resolving this debate has significant implications for our understanding of both election fraud and authoritarian stability.
 
