@@ -57,7 +57,8 @@ In addition to the shifting consolidation of state-based patronage, analysts of 
 
 When Yanukovych assumed the presidency in 2010, the fractiousness of the opposition coalition of oligarchs gave way once again to a more united patronage pyramid around the presidency and the Donetsk clan. In turn, this informal patronage network collapsed as a result of the Euromaidan and subsequent civil war, generally reconstituting itself around oligarch Petro Poroshenko after his 2014 presidential victory [@Pleine2016]. Poroshenko, though his own election was largely clean, used patronage resources to good effect (especially in the East, where networks still remained largely intact) in the subsequent legislative elections [@Fedorenko2016].
 
-^ *Dissertation text here*; Edit to expand on oligarchs' role in producing manipulation (specifically, they can pay for stuff but can't promise legal impunity)
+Oligarchs' influence on elections in Ukraine differs from their counterparts' role in Russia. Where Russia's oligarchs have largely been subordinated to the Kremlin, and business-related political disputes largely play out *within* the ruling party, Ukraine's oligarchs are more politically fractured. Some oligarchs control industrial conglomerates and associated patronage networks [@puglisiRiseUkrainianOligarchs2003;@lankinaSovietLegaciesEconomic2019]; others control mass media outlets [@wilsonSurvivalRichestHow2016]; many use their wealth to prop up 'spoiler parties' and 'clone candidates' to draw votes away from opposition parties [@wilsonSurvivalRichestHow2016]. Oligarchs in Ukraine are a potential source of patronage resources, but cannot on their own promise impunity for electoral crimes. Their ability to protect themselves and their agents from legal punishment hinges on their relationship with the state authorities, which can shift over time and with election outcomes [@zubytskaRiseEstablishmentOligarchs2018].  
+
 
 ### Risks of manipulation exposure
 
@@ -106,6 +107,12 @@ In sum, Ukraine is a case where many of the conditions are in place for widespre
 ^ *The above is dissertation text*
 
 Will also need to add details on election monitoring by the orange coalition (OPORA?) and evidence of legal cases, and how the judiciary works in Ukraine (i.e. vulnerable to outside pressure)
+
+Risks to election-manipulating agents are heightened by the presence of partisan and non-partisan election observers. In Ukraine's more competitive environment, parties can dispatch election monitors to try to catch their opponents' agents in the act. Observers' role in documenting the abuses that preceded the Orange Revolution is well documented [@Bunce2006;@mcfaulUkraineImportsDemocracy2007]; their importance in increasing risk to agents is less so. The youth organization *Pora* (It's Time!) was instrumental in documenting and publicizing electoral misdeeds in Ukraine's 2004 election; its primary early activities were raising public awareness of such abuses and to serve as protest entrepreneurs [@kuzioCivilSocietyYouth2006]. In part, this protest-centric strategy is sensible in the criminal-legal environment of the time, in which a dominant executive patronage network was able to exercise considerable influence over the judiciary [@trochevPatronalPoliticsJudicial2018]---though, as Chapter 6 will show, agents are still at risk of punishment even in highly closed environments. Nevertheless, as Ukraine has become more democratic, civil society has invested more resources in the criminal-legal aspect of election monitoring. Beginning in 2014, the civil society group OPORA, the post-Orange descendant of Pora, increasingly worked to bring electoral crimes to the attention of the courts. This effort grew to include nationwide police trainings (ultimately reaching over 70,000 officers), and a full training course for officers at Lviv University of Internal Affairs. Highlighting this shift at the inauguration of the university training course, the OPORA chair Olga Aivazovska said:
+
+> I would like to remind you that between 1991 and 2015 there was not a single conviction against persons who participated in or organized voter bribery. And I can say that those indictments that were handed over after 2015, those court decisions that imposed sanctions either in the form of restriction of liberty or imprisonment, or in the form of a fine...are a progressive consequence of this work [@ОПОРАСпільноЛьвівським].
+
+
 
 
 ## Hypotheses and other empirical tests
