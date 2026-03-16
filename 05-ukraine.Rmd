@@ -1,4 +1,4 @@
-# Election fraud and agent risk in Ukraine
+# Election manipulation, patronage, and agent risk in Ukraine
 
 \chaptermark{Election manipulation in Ukraine}
 
@@ -96,7 +96,7 @@ Instead, I expect that other forms of manipulation will predominate, as principa
 
 > H1a: Overall manipulation pro-Eastern manipulation will increase when a pro-Eastern president is in office.
 
-> H1a: Overall manipulation pro-Eastern manipulation will increase when pro-Eastern parties have greater representation in the Verkhovna Rada.
+> H1b: Overall manipulation pro-Eastern manipulation will increase when pro-Eastern parties have greater representation in the Verkhovna Rada.
 
 This expectation also yields hypotheses at the regional level, where it is possible to take into account the existence and orientation of oligarchic political machines. Where oligarchic political machines are well-established, pro-Eastern manipulation should increase when those oligarchs are supportive of the pro-Eastern party or candidate. In the Ukrainian context, these political machines are most well-developed in the areas of the country where Soviet industrial policy favored heavy industry and industrialization [@lankinaSovietLegaciesEconomic2019]. This produces the following hypotheses:
 
@@ -121,9 +121,9 @@ To test these hypotheses, I draw on precinct-level results from nine elections i
 
 ### Dependent variables
 
-Two dependent variables are estimated for each region in each election year, using precinct-level data. First, an estimate of overall manipulation is calculated by regressing the absolute-vote share for the largest pro-Western and pro-Eastern parties (per election) on precinct-level turnout [@myagkov_forensics_2009], using multilevel models with random slopes and intercepts.^[This allows for the turnout coefficient to vary freely by region, an accounts for varying 'baseline' support for each party in the region.] Such a test assumes that, in a clean election, a party’s absolute vote-share (the party’s number of votes divided by the number of registered voters) should increase consistently across precincts within a country, as precinct turnout increases. This approach assumes homogeneous precincts across the country, an assumption which is bolstered by testing precincts within regions or through the use of relevant socioeconomic control variables to weed out potentially confounding relationships [@deckert2013patterns]. I employ both approaches here. Figures \@ref(fig:hist-east) and \@ref(fig:hist-west) show the distribution of coefficients for the major parties.  
+Two dependent variables are estimated for each region in each election year, using precinct-level data. First, an estimate of overall manipulation is calculated by regressing the absolute-vote share for the largest pro-Western and pro-Eastern parties (per election) on precinct-level turnout [@myagkov_forensics_2009], using multilevel models with random slopes and intercepts.^[This allows for the turnout coefficient to vary freely by region, an accounts for varying 'baseline' support for each party in the region.] Such a test assumes that, in a clean election, a party’s absolute vote-share (the party’s number of votes divided by the number of registered voters) should increase consistently across precincts within a country, as precinct turnout increases. This approach assumes homogeneous precincts across the country, an assumption which is bolstered by testing precincts within regions or through the use of relevant socioeconomic control variables to weed out potentially confounding relationships [@deckert2013patterns]. I employ both approaches here. Figures \@ref(fig:hist-east) and \@ref(fig:hist-west) show the distribution of coefficients for the major parties. Higher coefficients are more suspicious. While both party groups show some evidence of manipulation, there appear to be more large coefficients overall on the pro-Eastern side.
 
-Second, election falsification is estimated by measuring the degree to which the ones-digit across a party's vote totals deviate from the expected uniform distribution, by region and year. For each region in each election, I calculate a G-statistic, a derivation of a log-likelihood ratio test [@Skovoroda2017]. Whereas the analysis of the Russian case presented in Chapter 4 used a stricter measure---deviance in last-digit zero only---the analysis of Ukraine uses deviance across all digits. This is a more sensitive measure, intended to pose a tougher test of the implication that falsification in Ukraine will be rare and non-systematic. Because a large number of single- or double-digit results for a party can mechanically produce larger deviations from the expected uniform distribution of last digits, for each party I exclude such precincts from the estimation. As an additional robustness check, I also use Beber and Scacco's [-@beber2012] binary indicator of severe manipulation, which takes a value of 1 if last-digit deviance is statistically significant at the p < .05 in a chi-square test.
+Second, election falsification is estimated by measuring the degree to which the ones-digit across a party's vote totals deviate from the expected uniform distribution, by region and year. For each region in each election, I calculate a G-statistic, a derivation of a log-likelihood ratio test [@Skovoroda2017]. Whereas the analysis of the Russian case presented in Chapter 4 used a stricter measure---deviance in last-digit zero only---the analysis of Ukraine uses deviance across all digits. This is a more sensitive measure, intended to pose a tougher test of the implication that falsification in Ukraine will be rare and non-systematic. Because a large number of single- or double-digit results for a party can mechanically produce larger deviations from the expected uniform distribution of last digits, for each party I exclude such precincts from the estimation. <!--As an additional robustness check, I also use Beber and Scacco's [-@beber2012] binary indicator of severe manipulation, which takes a value of 1 if last-digit deviance is statistically significant at the p < .05 in a chi-square test. -->
 
 
 
@@ -323,7 +323,7 @@ ggplot(merged.data, aes(coefs.west)) + geom_histogram(binwidth = .02) + theme_bw
 ```
 
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 ggplot(merged.data, aes(g_statistic_east)) + geom_histogram()
 ggplot(merged.data, aes(g_statistic_west)) + geom_histogram()
 
@@ -331,11 +331,11 @@ ggplot(merged.data, aes(g_statistic_west)) + geom_histogram()
 
 ### Explanatory variables
 
-Risk to agents is conditional on the degree to which the party they support dominates local politics and civil society. In places where pro-Western parties have thin networks and few supporters, it will be easier for pro-Eastern agents to operate without threat of exposure, and vice versa. Echoing the approach from Chapter 4, and of prior work [@harvey_manipulation_2016], I operationalize this risk in part by using the regional legislative margin of victory between the largest parties in regional legislative elections and their largest political rival. This measure is lagged, so that it precedes the national elections that produce estimates of manipulation that serve as dependent variables. Despite Ukraine’s unitary system, elected regional legislatures do provide an opportunity for out-parties to place constraints on the governing party [@Romanova2013]. Margins of victory in regional elections are also indicative of the underlying degree of contestation, which is undergirded by civil society activism, media coverage, oligarchic influence, and other elements of local risk to agents. The variable *Regional pro-East margin* is measured by subtracting the largest pro-Western party's vote-share from the largest pro-Eastern party's vote-share. Larger, positive numbers indicate a more dominant pro-Eastern party, while larger negative values indicate more dominant Western parties. This is a region-level measure.
+In places where pro-Western parties have thin networks and few supporters, it will be easier for pro-Eastern agents to operate without threat of exposure, and vice versa. Echoing the approach from Chapter 4, and of prior work [@harvey_manipulation_2016], I operationalize this risk in part by using the regional legislative margin of victory between the largest parties in regional legislative elections and their largest political rival. This measure is lagged, so that it precedes the national elections that produce estimates of manipulation that serve as dependent variables. Despite Ukraine’s unitary system, elected regional legislatures do provide an opportunity for out-parties to place constraints on the governing party [@Romanova2013]. Margins of victory in regional elections are also indicative of the underlying degree of contestation, which is undergirded by civil society activism, media coverage, oligarchic influence, and other elements of local risk to agents. The variable *Regional pro-East margin* is measured by subtracting the largest pro-Western party's vote-share from the largest pro-Eastern party's vote-share. Larger, positive numbers indicate a more dominant pro-Eastern party, while larger negative values indicate more dominant Western parties. This is a region-level measure.
 
 I also measure local risk to agents using dummy variables that capture the historical differences in Ukraine's regional political cultures. Several oblasts in western Ukraine experienced decades or centuries of Austro-Hungarian rule, which deliberately fostered a different political culture and Ukrainian identity than that developed in areas of Ukraine which remained under Russian imperial rule prior to the Revolution of 1917. These include the historical regions of Galicia, Bukovina, Volhynia. In addition to their Austro-Hungarian legacies, these regions were also not included in Soviet Ukraine until 1939 or later, sparing them from Stalin-era repressions in the 1930s. These *pre-war Western* regions include: Chernivitska, Ivano-Frankivska, Lvivska, Rivnenska, Ternopilska, Volinska, and Zakarpatska oblasts. It is expected that it will be especially difficult for falsification or pro-Eastern manipulation to occur in these regions.
 
-Each Ukrainian president during the time period covered is coded as pro-Western (Yuschenko, Poroshenko) or pro-Eastern (Kuchma, Yanukovych).^[The period after Yanukovych's ouster in 2014 is coded as zero, given the pro-Western orientation of the acting presidential administration.] This is a nationwide, year-level measure.
+Each Ukrainian president during the time period covered is coded as pro-Western (Yuschenko, Poroshenko) or *pro-Eastern* (Kuchma, Yanukovych).^[The period after Yanukovych's ouster in 2014 is coded as zero, given the pro-Western orientation of the acting presidential administration.] This is a nationwide, year-level measure.
 
 Finally, since vote-buying and voter-pressure (and to a lesser extent, ballot-stuffing) are costly and prone to agency loss, requiring the distribution of resources to agents and voters who are difficult to monitor, such efforts are likely to intensify when one party has more consolidated control over patronage resources. These consolidation is measured in two ways, one regional and one nationwide. At the national level, patronage consolidation is measured using an indicator of the degree to which pro-Western or pro-Eastern coalitions predominate in the national legislature, the Verkhovna Rada. I develop this indicator by first building a a Herfindahl–Hirschman index of the parties in the current legislature for each election year.^[The formula for this index is $HH = \sum_{1}^{x}s_i^2$, where $s_i$ is the size of the *i*-th party as a percentage of the total number of seats in the legislature (expressed as a decimal).] This is common measure of market concentration in economics and policy, and is a component of the better-known (to political scientists) measure of effective number of parties [@golosovEffectiveNumberParties2010]. I utilize the Herfindahl index itself, rather than ENP, because I am interested not in how many major parties are present in the legislature, but how concentrated voting blocs are. I then modify the H-H index to capture the political orientation of the governing coalition. If the prime minister comes from a pro-Eastern party, the H-H index is multiplied by 1; if the prime minister hails from a pro-Western party, the H-H index is multiplied by -1. The resulting variable, *Pro-eastern Rada concentration*, takes on larger positive values when a pro-Eastern majority controls a larger number of seats. It takes on larger, negative values when there is a larger pro-Western majority.
 
@@ -437,11 +437,11 @@ model_gs_binary <- lm(east.party.margin2 ~ g_statistic_east_binary + pres.approv
 
 
 
-Table \@ref(tab:vsmodels) shows the expected relationship between the pro-Eastern turnout coefficients, and pro-Eastern vote-share. Model 1, which does not control for pro-Western parties' turnout coefficients, shows a positive and statistically significant effect. The effect remains more or less constant once pro-Western turnout coefficient is included as a control in Model 2. In either case, the effect size is substantial: a one standard deviance increase in pro-Eastern turnout coefficient is associated with a 6-point increase in the pro-Eastern party's margin of victory. In an otherwise tied election, in other words, increasing the pro-Eastern party's turnout coefficient by one standard deviation would change the outcome of the election to 53 - 47 in their favor. 
+Table \@ref(tab:vsmodels) reports the results of the election-forensic models. It shows that the indicator of overall pro-Eastern manipulation is positively correlated with pro-Eastern vote-share (as expected). Model 1, which does not control for pro-Western parties' turnout coefficients, shows a positive and statistically significant effect. The effect remains more or less constant once pro-Western turnout coefficient is included as a control in Model 2. In either case, the effect size is substantial: a one standard deviance increase in pro-Eastern turnout coefficient is associated with a 6-point increase in the pro-Eastern party's margin of victory. In other words, in an otherwise tied election, increasing the pro-Eastern party's turnout coefficient by one standard deviation would change the outcome of the election to 53 - 47 in their favor. 
 
 Model 3 shows that there is no significant effect for deviance from the uniform distribution of last-digits for pro-East parties. This suggestions that outright falsification of the type captured by this measure is rare in Ukraine across the elections covered in the dataset, at least for major pro-Eastern parties. There is one caveat to this conclusion; following best practice [@beber2012], I excluded precincts from the deviance calculations where fewer than 100 votes were counted in that party's favor. A high proportion of precincts with double-digit vote totals will increase the deviance from the uniform distribution naturally, even if the votes are fair. This proportion is extremely high in some of Ukraine's more western regions. For instance, in the 2002 election in Ivano-Frankivska oblast', all but 24 out of 958 precincts are excluded for having fewer than 100 votes for the pro-Eastern party. In 2014, all 914 precincts in Ivano-Frankivska are dropped, as are all precincts in L'vivska, Ternopilska, Vinnitska, Ternopilska, and Cherkaska oblasts. When the total number of available precincts falls below 50 for the reason, I exclude the region from analsys. This results in a smaller number of observations for the G-statistic models, and highlights the difficulty of conducting this sort of analysis in Ukraine's highly polarized and frequently crisis-driven politics under the period of study. 
 
-As an additional check, I also identify regions where the g-statistic indicator of fraud is statistically significant, with results presented in Model 4. The results show that a statistically significant pro-Eastern G-statistic is unrelated to pro-Eastern vote-share. This suggests that deviation from the uniform distribution is largely random, a possibility which is bolstered by the fact that deviations are statistically significant at the five percent level in only `r sum(merged.data$g_statistic_east_binary, na.rm = T)` of `r nrow(merged.data)` cases---in other words, in roughly five percent of cases.
+As an additional check, I also utilize a dummy variable to indicate regions where the g-statistic indicator of fraud is statistically significant, with results presented in Model 4. The results show that a statistically significant pro-Eastern G-statistic is unrelated to pro-Eastern vote-share. This suggests that deviation from the uniform distribution is largely random, a possibility which is bolstered by the fact that deviations are statistically significant at the five percent level in only `r sum(merged.data$g_statistic_east_binary, na.rm = T)` of `r nrow(merged.data)` cases---in other words, in roughly five percent of cases. All told, this supports the expectation that falsificaiton is uncommon, and allows us to interpret the 'overall manipulation' turnout coefficient as primarily reflective of dispersed forms of election manipulation.
 
 
 
@@ -481,7 +481,7 @@ reg_table_vs
 
 ```
 
-Table \@ref(tab:manip-models) shows the results of models that take pro-Eastern turnout coefficients (Models 5 through 7) or last-digit deviance (Models 8 through 10) for pro-Eastern parties as dependent variables. Models 5 and 8 test the interaction of region-level partisan control and the presence of a pro-Eastern president on the two dependent variables. As the table and Figures \@ref(fig:coef-fig) and \@ref(fig:gs-fig) show, there is a statistically significant interaction for overall manipulation but not for falsification. This is in line with expectations---it is in the most heavily pro-Eastern regions where patronage networks are most fully developed, owing to the region's Soviet heritage and post-Soviet accumulation of politically active oligarchs. When a pro-Eastern candidate occupies the presidential Mariinskyi Palace, the resources of the central state can be used to kick regional networks into higher gear. However---as expected if there are persistent risks of discovery and punishment even in pro-Eastern regions---the same resources do not lead to a systematic increase in falsification. 
+Table \@ref(tab:manip-models) shows the results of models that take pro-Eastern turnout coefficients (Models 5 through 7) as the dependent variable. Model 5 tests the interaction of region-level partisan control and the presence of a pro-Eastern president. As the table and Figure \@ref(fig:coef-fig) show, there is a statistically significant interaction for overall manipulation. This is in line with expectations---it is in the most heavily pro-Eastern regions where patronage networks are most fully developed, owing to the region's Soviet heritage and post-Soviet accumulation of politically active oligarchs. When a pro-Eastern candidate occupies the presidency, the resources of the central state can be used to kick regional networks into higher gear. Where the risk of exposure is high, however, having a supportive president in office does not yield additional manipulation. This supports H3.
 
 
 ```{r manip-models, echo=FALSE, message=FALSE, warning=FALSE}
@@ -489,15 +489,15 @@ models <- list()
 models[['Model 5']] <- model.coef_margin_pres
 models[['Model 6']] <- model.coef_rhh
 models[['Model 7']] <- model.coef_region
-models[['Model 8']] <- model.gs_margin_int
-models[['Model 9']] <- model.gs_rhh
-models[['Model 10']] <- model.gs_region
+#models[['Model 8']] <- model.gs_margin_int
+#models[['Model 9']] <- model.gs_rhh
+#models[['Model 10']] <- model.gs_region
 
 
 table1 <- modelsummary(
   models,
   output = "kableExtra",
-  title = "Regression Results",
+  title = "Models of pro-Eastern election manipulation (turnout coefficient)",
 coef_map = c("(Intercept)" = "(Intercept)",
              
              "pres.approval" = "Presidential approval rating",
@@ -516,11 +516,7 @@ coef_map = c("(Intercept)" = "(Intercept)",
              ),
   gof_map = c("nobs", "r.squared", "adj.r.squared"),
   stars = c('*' = .1, '**' = .05, '***' = .01)
-) %>%
-  # Add model numbers as column names
-  #`colnames<-`(c("", "(1)", "(2)", "(3)", "(4)", "(5)", "(6)")) %>%
-  # Add grouped headers for dependent variables
-  add_header_above(c(" " = 1, "Pro-East turnout coef." = 3, "Last-digit deviance" = 3))
+) 
 
 table1
 ```
@@ -532,19 +528,19 @@ intplot_coefs <- sjPlot::plot_model(model.coef_margin_pres, type = "pred", terms
 intplot_coefs + theme_bw()
 ```
 
-```{r gs-fig, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Pro-eastern fraud and patronage consolidation"}
+```{r gs-fig, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Pro-eastern fraud and patronage consolidation", include=FALSE}
 intplot_gs <- sjPlot::plot_model(model.gs_margin_int, type = "pred", terms = c("party.margin", "east.president")) + labs(x = "Region-level pro-East party margin", y = "Pro-East g-statistic", title = "Predicted values", color = "Pro-East president")
 
 intplot_gs + theme_bw()
 ```
 
-The same pattern is observed for pro-Eastern consolidation of the legislature (Models 6 and 9) and for the pre-war West dummy variable (Models 7 and 10). Pro-Eastern consolidation in the Rada is associated with increased turnout coefficients in subsequent elections, but not increased falsification. Likewise, regions in the pre-War west show reduced turnout coefficients for Eastern parties---as is expected in the absence of local patronage networks---but do not exhibit any differences in evidence of falsification.
+The same pattern is observed for pro-Eastern consolidation of the legislature (Model 6) and for the pre-war West dummy variable (Models 7). Pro-Eastern consolidation in the Rada is associated with increased turnout coefficients in subsequent elections. Likewise, regions in the pre-War west show reduced turnout coefficients for Eastern parties. This supports H1b and H4. In all models, manipulation appears to increase when a pro-Eastern president is in office, supporting H1a.
 
 
 ```{r olig-models, echo=FALSE, message=FALSE, warning=FALSE}
 models <- list() 
-models[['Model 11']] <- model.coef_olig
-models[['Model 12']] <- model.gs_olig
+models[['Model 8']] <- model.coef_olig
+#models[['Model 9']] <- model.gs_olig
 
 
 
@@ -571,7 +567,7 @@ coef_map = c("(Intercept)" = "(Intercept)",
   # Add model numbers as column names
   #`colnames<-`(c("", "(1)", "(2)", "(3)", "(4)", "(5)", "(6)")) %>%
   # Add grouped headers for dependent variables
-  add_header_above(c(" " = 1, "Pro-East turnout coef." = 1, "Last-digit deviance" = 1))
+  add_header_above(c(" " = 1, "Pro-East turnout coef." = 1))
 
 
 table3
@@ -584,7 +580,7 @@ plot_oligs_coef <- sjPlot::plot_model(model.coef_olig, type = "pred", terms = c(
 plot_oligs_coef
 ```
 
-Next, Table \@ref(tab:olig-models) reports the results of models that include measures of oligarchic influence. Figure \@ref(fig:olig-fig) shows the interaction effect from Model 11. Consistent with the prior results, these models show that pro-Eastern overall manipulation is improved by patronage consolidation: when more oligarchs are supporting the pro-Eastern party in more urbanized regions, the party's turnout coefficient improves. As Figure \@ref(fig:olig-fig) shows, this effect is most substantial in regions with a high concentration of politically active oligarchs and a very high degree of urbanization. The effect size for such regions is large; turnout coefficients practically double in highly urban regions when oligarchs get involved. However, we see no such effect for evidence of falsification.
+Next, Table \@ref(tab:olig-models) reports the results of models that include measures of oligarchic influence. Figure \@ref(fig:olig-fig) shows the interaction effect from Model 8. Consistent with the prior results, these models show that pro-Eastern overall manipulation is improved by patronage consolidation: when more oligarchs are supporting the pro-Eastern party in more urbanized regions, the party's turnout coefficient improves. As Figure \@ref(fig:olig-fig) shows, this effect is most substantial in regions with a high concentration of politically active oligarchs and a very high degree of urbanization. The effect size for such regions is large; turnout coefficients practically double in highly urban regions when oligarchs get involved. The results support H2a and H2b.
 
 
 
