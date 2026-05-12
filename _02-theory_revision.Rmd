@@ -1,0 +1,27 @@
+# Theory: (SUBTITLE HERE)
+
+\chaptermark{Theory}
+
+This chapter summarizes the theoretical contribution of the book. In brief, the primary argument is this: that extensive electoral manipulation requires incumbents to solve considerable principal-agent problems, and that taking this proposition seriously requires us to reframe how we understand the relationship between electoral manipulation and post-election protest. Individuals tasked with illegal election manipulation undertake personal risk to do so, even in authoritarian regimes. Therefore, in order to recruit election-manipulating agents on the front line, incumbents must have command over considerable patronage resources (to reward agents) and be able to credibly assure law-breaking individuals will not face punishment. 
+
+Incumbents who successfully deploy extensive electoral manipulation, therefore have capacities that can be used directly to defeat protest movements that may arise after the election. Patronage resources can be used to demobilize opponents and mobilize clients, and to co-opt social groups, parties, or factions into siding with the regime. Politicized police, security forces, and courts can enable the repression of protesters via the judicial system. The legal impunity for regime agents that can flow from such control over the courts can also be used to intensify the cost of protest, for exam through extra-judicial detentions and violence.
+
+These are direct 'benefits' to incumbents of the capacities needed for extensive election manipulation. *Utilizing* those capacities by rigging the election also sends signals to elites that enhance the regime's durability during protest. Authoritarian leaders face protest risks, but also the risk of elite defection and coups. Indeed, one of the things that makes protest risky for incumbents is the possibility that significant, visible popular discontent will prompt an attempted coup. By rigging the election, the incumbent demonstrates to elites that it has the capacity to solve multi-layered principal-agent problems---signaling its deep pockets, control over the judicial apparatus, and ability to mobilize agents whose incentives do not align with those of the boss. All this makes the incumbent look more durable, which helps keep elites loyal during the protest. The lack of elite support for the protesters---and the provision of support to the incumbent---helps reduce the duration and severity of the post-election protest movement. 
+
+Bluntly put, if incumbents can successfully produce extensive electoral manipulation, they are simultaneously inoculating themselves against the cost of post-election protest. This perspective upends a common expectation in scholarly research and democracy promotion in practice. It is often held that, as electoral manipulation increases in severity, the risk to incumbents also rises in the form of protest risk. This chapter articulates why the opposite can be true: more manipulation can actually make incumbents safer. The remainder of the book then demonstrates empirical evidence in favor of this theory.
+
+This theory models behavior by incumbents, front-line agents, and (potential) regime opponents. In the next three sections, each of these actors' incentives and behaviors are described. The fourth section ties all three together, providing a synthesis and expected outcomes.
+
+## Part 1: What do authoritarian principals want?
+
+
+
+## Part 2: What do front-line agents want?
+
+
+
+## Part 3: Why do regime opponents protest?
+
+
+
+## Part 4: A regime-strength model of electoral manipulation
