@@ -201,9 +201,18 @@ As a short-hand, I refer to this as "control-based" strength---those sources of 
 
 ### Costly signals and elite solidarity
 
-Main idea: Electoral manipulation is a costly investment in reducing mass input in political decisions for the next term. The expenditure, first, is kept 'in house' by channeling resources through the manipulation network rather than through popular campaign promises. Second, the more extensive the manipulation the more the current selectorate has to lose if the election is annulled or the government overthrown.
+
 
 Protest movements not not only threaten the incumbent directly; they can also create the conditions for elite splits and coups d'etat. Elites in authoritarian regimes have resources they control. When incumbents offer elites a favorable distribution of resources, elites can use their resources to support the incumbent; if a challenger offers a better deal, they can rebel [@BuenodeMesquita2005;@svolik_politics_2012]. The emergence of electoral protest can expand splits in the elite, among hardliners who prefer the continuation or intensification of authoritarianism, and softliners who are willing to tolerate reforms [@odonnellTransitionsAuthoritarianRule2013;@Schedler2002]. Large-scale, nonviolent protest can induce defections among the incumbent's elite supporters, contributing to protest success [@Chenoweth_Stephan2011]. Extensive electoral manipulation acts as a costly signal of a) the incumbent's capacities (resources and agent impunity) b) his intention to continue a favorable distribution of resources to elites, and c) if enshrined in the electoral outcome, provides a commitment mechanism for that distribution.
+
+Main ideas to get across here: 
+
+- Electoral manipulation is a costly investment in reducing mass input in political decisions for the next term (selectorate theory in authoritarian regimes---cleaner elections increase the size of the selectorate / WC, meaning more public goods and less private goods. Manipulation prevents this. 
+- This commitment is credible: The expenditure, first, is kept 'in house' by channeling resources through the manipulation network rather than through popular campaign promises. Limited campaign promises  + costly effort to rig votes means commitment to elites more credible.
+- The election, if upheld, locks in that favorable bargain for the next term (4+ years). If election overturned, uncertainty and possible democratization--bad for elites.  
+- This works even when manipulation is not excessive; actually, especially when elections are close and manipulation is high.
+  - In this case, elites know they have the most to lose from re-drawing the bargain. If manipulation is high and margin of victory low, that means status quo is very unpopular. Cleaner election re-do will lead to bigger upset of the distribution of resources in favor of citizens. The more extensive the manipulation the more the current selectorate has to lose if the election is annulled or the government overthrown.
+- Blatant is also not necessary, as long as elites are plugged into the level of covert manipulation. This is plausible, but will need cites. Rundlett and svolik might help here.
 
 In addition, as Gehlbach and Simpser [-@gehlbach2015electoral] argue, effective electoral manipulation can induce regime agents to exert effort on behalf of the incumbent. Elite defections, which can presage real challenges for the incumbent during a crisis, are also rarer in less democratic regions, where election manipulation is likely more severe [@Reuter2019]. Just as election manipulation has been held to solve a coordination problem for regime opponents, it may also solve a coordination problem for regime agents: when successful, a campaign to manufacture votes signals to agents that other agents are likely to stick with the incumbent due to its revealed capacities [@hale_patronal_2014]. 
 
