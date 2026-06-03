@@ -92,7 +92,7 @@ This insight---that election-manipulating agents constrain their principals' opt
 
 These theories suggest distinct predictions at the national and local levels. On the one hand, in a close election, theories that hinge on legitimacy costs suggest that incumbents should prioritize fraud in less-competitive regions. This is because fraud is the most cost-effective election-day manipulation strategy, but it requires control of the local election administration in order to implement. In more competitive regions, such models would seem to predict a decline in manipulation across all strategies. The difficulty in controlling the election administration in contested regions makes fraud difficult, while vote-buying, voter pressure, and voter intimidation are all more visible strategies; being directly visible to voters, their potential legitimacy cost is high if such efforts are widespread [@Schedler2013;@birch2011]. A principal-focused theory of manipulation that emphasizes legitimacy costs should thus predict that all types of election-day manipulation will decrease with the risk of exposure, and that fraud should predominate where the risk of exposure is low.
 
-Different predictions emerge if, instead, the cost-effectiveness of a given strategy for incumbents is in large party conditioned by *agents'* incentive structures (rather than by legitimacy costs to principals). We should expect to see fraud decrease with local risk of exposure, as in the principal-focused approach. However, we should expect to see *less attributable*, though still visible forms of manipulation, *increase* with local risk of exposure. This outcome is expected because incumbents are not deterred from manipulating by legitimacy costs; indeed, they seek to demonstrate their power and impunity through the use of manipulation [@simpser2013]. However, as local risks of exposure increase, it becomes increasingly difficult to pressure election officials into engaging in attributable falsification. Instead, incumbents must rely on less attributable techniques like vote-buying and voter-pressure, despite their significantly greater cost and lower reliability. This effect should occur even when the likelihood of severe punishment is low, since being caught up in the machinery of criminal justice has a variety of formal and informal costs that can deter participation in attributable crime [@paternosterDeterrentEffectPerceived1986].
+Different predictions emerge if, instead, the cost-effectiveness of a given strategy for incumbents is in large party conditioned by *agents'* incentive structures (rather than by legitimacy costs to principals). We should expect to see fraud decrease with local risk of exposure, as in the principal-focused approach. However, we should expect to see *less attributable*, though still visible forms of manipulation, *increase* with local risk of exposure. This outcome is expected because incumbents are not deterred from manipulating by legitimacy costs; indeed, they seek to demonstrate their power and impunity through the use of manipulation [@simpser2013]. However, as local risks of exposure increase, it becomes increasingly difficult to pressure election officials into engaging in attributable falsification. Instead, incumbents must rely on less attributable techniques like vote-buying and voter-pressure, despite their significantly greater cost and lower reliability. This effect should occur even when the likelihood of severe punishment is low, since being caught up in the machinery of criminal justice has a variety of formal and informal costs that can deter participation in attributable crime [@paternosterDeterrentEffectPerceived1986]. "Official actions can set off societal reactions that may provide potential offenders with more reason to avoid conviction than the officially imposed unpleasantness of punishment" [@zimringDeterrenceLegalThreat1973, p. 174]. Among ordinary citizens contemplating tax evasion, willingness to take the risk declines as perceived risk of detection increases; an effect which is especially strong if perceived likelihood of criminal *prosecution* (not conviction) is greater than zero [@klepperTaxCompliancePerceptions1989]. This is similar to election manipulation as a non-violent crime, with individual benefits (patronage), carried out by people who are generally not career criminals. As with election manipulation, an increase in the state's ability to monitor individuals' formal income can reduce tax evasion in that sector, while incentivizing individuals to evade taxes on less-monitored income (e.g. 'moonlighting,' cash business, etc.) [@slemrodTaxComplianceEnforcement2019].
 
 <!-- [Think about using the terms principal-risk vs. agent-risk models of manipulation? Possibly in addition to 'regime strength model of manipulation and protest'] -->
 
@@ -161,7 +161,42 @@ full_data <- full_data %>% mutate(population_small = population / 1000)
 full_data <- full_data %>% mutate(year = as.factor(year))
 full_data$year <- relevel(factor(full_data$year), ref = "2011")
 
+## Violations (pre)
 
+violations <- read.xlsx(here::here("Russia_forensics", "Data", "violations_preelex.xlsx"))
+violations <- violations %>% rename(year = election_year)
+violations <- violations %>% rename(complaints_pre = count)
+
+violations <- violations %>% dplyr::select(year, master_id, complaints_pre)
+full_data <- full_data %>% left_join(violations, by = c("master_id", "year")) 
+
+#### Adjusting violations to adjust by n_precinct and for skew
+
+
+full_data <- full_data %>% mutate(complaints_pre_rel = (complaints_pre / n_precincts)*100)
+
+full_data <- full_data %>% mutate(complaints_pre_rel_ihs = ifelse(is.na(complaints_pre_rel)== T, NA, asinh(complaints_pre_rel)))   # IHS of full variable (asinh(0) = 0)
+
+full_data <- full_data %>% mutate(complaints_pre_ihs = ifelse(is.na(complaints_pre)== T, NA, asinh(complaints_pre)))   # IHS of full variable (asinh(0) = 0)
+
+
+## Violations (election-day)
+
+violations <- read.xlsx(here::here("Russia_forensics", "Data", "violations.xlsx"))
+violations <- violations %>% rename(year = election_year)
+violations <- violations %>% rename(complaints = violations_map_count)
+
+violations <- violations %>% dplyr::select(year, master_id, complaints)
+full_data <- full_data %>% left_join(violations, by = c("master_id", "year")) 
+
+#### Adjusting violations to adjust by n_precinct and for skew
+
+
+full_data <- full_data %>% mutate(complaints_rel = (complaints / n_precincts)*100)
+
+full_data <- full_data %>% mutate(complaints_rel_ihs = ifelse(is.na(complaints_rel)== T, NA, asinh(complaints_rel)))   # IHS of full variable (asinh(0) = 0)
+
+full_data <- full_data %>% mutate(complaints_ihs = ifelse(is.na(complaints)== T, NA, asinh(complaints)))   # IHS of full variable (asinh(0) = 0)
 
 ```
 
@@ -297,6 +332,12 @@ model_binary_pctrus <- glm(any_fraud ~  pct_russian_upd +  ur_gov_share + subnat
 model_binary_regcomp <- glm(any_fraud ~  regional_comp +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + n_precincts  , data = full_data,family = binomial(link="logit"))
 #summary(model_binary_regcomp)
 
+
+model_binary_complaints_pre <- glm(any_fraud ~  complaints_pre_ihs*n_precincts +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct +population  , data = full_data,family = binomial(link="logit"))
+summary(model_binary_complaints_pre)
+
+
+
 ```
 
 
@@ -317,6 +358,11 @@ model_dev_pctrus <- lm(deviance_region ~  pct_russian_upd +  ur_gov_share + subn
 model_dev_regcomp <- lm(deviance_region ~  regional_comp +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + n_precincts  , data = full_data)
 #summary(model_dev_regcomp)
 
+
+
+model_dev_violations <- lm(deviance_region ~  complaints_pre_ihs*n_precincts +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + n_precincts  , data = full_data)
+summary(model_dev_violations)
+sjPlot::plot_model(model_dev_violations, type = "pred", terms = c("complaints_pre_ihs", "n_precincts"))
 ```
 
 
@@ -335,6 +381,12 @@ model_spike_pctrus <- lm(spikes_est_adj ~  pct_russian_upd +  ur_gov_share + sub
 
 model_spike_regcomp <- lm(spikes_est_adj ~  regional_comp +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + population_small  , data = full_data)
 #summary(model_spike_regcomp)
+
+
+model_spike_violations <- lm(spikes_est_adj ~  complaints_pre_ihs*population_small +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  , data = full_data)
+summary(model_spike_violations)
+
+sjPlot::plot_model(model_spike_violations, type = "pred", terms = c("complaints_pre_ihs", "population_small"))
 
 ```
 
@@ -439,9 +491,12 @@ model_ns_regcomp <- lm(nonstandard_coef_ur ~  regional_comp  + ur_gov_share + su
 #summary(model_ns_regcomp)
 
 
-
-
+model_ns_violations <- lm(nonstandard_coef_ur ~  complaints_pre_ihs*n_precincts  + ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct   , data = full_data)
+summary(model_ns_violations)
+sjPlot::plot_model(model_ns_violations, type = "pred", terms = c("complaints_pre_ihs", "n_precincts [127, 2823]"))
 ```
+
+
 
 ```{r nstable, echo=FALSE, message=FALSE, warning=FALSE}
 models4 <- list()
