@@ -333,8 +333,8 @@ model_binary_regcomp <- glm(any_fraud ~  regional_comp +  ur_gov_share + subnati
 #summary(model_binary_regcomp)
 
 
-model_binary_complaints_pre <- glm(any_fraud ~  complaints_pre_ihs*n_precincts +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct +population  , data = full_data,family = binomial(link="logit"))
-summary(model_binary_complaints_pre)
+model_binary_complaints_pre <- glm(any_fraud ~  log(complaints_pre_rel) + n_precincts +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct +population  , data = full_data,family = binomial(link="logit"))
+#summary(model_binary_complaints_pre)
 
 
 
@@ -360,9 +360,8 @@ model_dev_regcomp <- lm(deviance_region ~  regional_comp +  ur_gov_share + subna
 
 
 
-model_dev_violations <- lm(deviance_region ~  complaints_pre_ihs*n_precincts +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + n_precincts  , data = full_data)
-summary(model_dev_violations)
-sjPlot::plot_model(model_dev_violations, type = "pred", terms = c("complaints_pre_ihs", "n_precincts"))
+model_dev_violations <- lm(deviance_region ~  log(complaints_pre_rel) +  n_precincts +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  + n_precincts  , data = full_data)
+#summary(model_dev_violations)
 ```
 
 
@@ -383,10 +382,9 @@ model_spike_regcomp <- lm(spikes_est_adj ~  regional_comp +  ur_gov_share + subn
 #summary(model_spike_regcomp)
 
 
-model_spike_violations <- lm(spikes_est_adj ~  complaints_pre_ihs*population_small +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  , data = full_data)
+model_spike_violations <- lm(spikes_est_adj ~  log(complaints_pre_rel) + n_precincts +  ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct  , data = full_data)
 summary(model_spike_violations)
 
-sjPlot::plot_model(model_spike_violations, type = "pred", terms = c("complaints_pre_ihs", "population_small"))
 
 ```
 
@@ -491,9 +489,18 @@ model_ns_regcomp <- lm(nonstandard_coef_ur ~  regional_comp  + ur_gov_share + su
 #summary(model_ns_regcomp)
 
 
-model_ns_violations <- lm(nonstandard_coef_ur ~  complaints_pre_ihs*n_precincts  + ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct   , data = full_data)
-summary(model_ns_violations)
-sjPlot::plot_model(model_ns_violations, type = "pred", terms = c("complaints_pre_ihs", "n_precincts [127, 2823]"))
+
+
+model_ns_violations <- lm(nonstandard_coef_ur ~  log(complaints_pre_rel) + population_small  + ur_gov_share + subnational_party_control    + presidential +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct   , data = full_data)
+#summary(model_ns_violations)
+
+full_data <- full_data %>% mutate(log_complaints_pre_rel = log(complaints_pre_rel))
+
+model_ns_violations_year <- lm(nonstandard_coef_ur ~  year*log_complaints_pre_rel + population_small +pensioners_per_1000 + grp_by_pop_small +  poverty + urban_pct   , data = full_data)
+#summary(model_ns_violations_year)
+
+#sjPlot::plot_model(model_ns_violations_year, type = "pred", terms = c("year", "log_complaints_pre_rel [-1.38, 2.13]"))
+
 ```
 
 
@@ -577,6 +584,61 @@ reg_table5 <- modelsummary(models5, output = "kableExtra",  stars = T, title = '
 
 reg_table5
 ```
+
+### Robustness check: Crowdsourced election complaints
+
+
+As a final robustness check, I also employ a more direct measure of agent risk as an explanatory variable---pre-election electoral complaints registered on the crowdsourced election monitoring project 'Map of Violations' (*Карта нарушений*) operated by the election-monitoring group Golos. I independently collected the total number of complaints per region for each election year. The Map of Violations was created in the run-up to the 2011 parliamentary election, and enabled citizens to post complaints about electoral malpractice to a public database either directly online or by calling a hotline. Users could upload photo or video evidence, in addition to their written description of the purported issue. Golos worked to forward complaints with evidence to the relevant election commissions, the media, and to law enforcement. The project was highly successful, accumulating over 42,000 complaints between 2011 and 2021 [@MapViolationsAbout]. It even generated a response from the Central Election Commission in 2016 in the form of a 'Map of Solutions' (*Карта решений*) which tracked election commission responses to crowdsourced complaints. 
+
+These crowdsourced complaints make for a very conceptually clear measure of risk to election-manipulating agents. Apart from the direct indicator of observation of the polling place, they also provide a proxy for overall popular engagement in election monitoring. Complaints cover a variety of election-day and pre-election concerns, including voter pressure. However, there are several practical concerns which lead me to utilize this data as a supplementary analysis. First, individual complaints are lodged at various levels: some are at the precinct level, while others are at higher levels of aggregation. Second, the project was only in operation from 2011 onward, so it cannot be utilized for the earlier elections in the dataset.^[The project, along with Golos itself, was permanently closed in July 2025 under significant legal pressure.] Third, and most importantly, complaints measure an uncertain mix of monitoring activity and manipulation. For instance, a low number of complaints could indicate a low level of monitoring activity and significant electoral manipulation, *or* a high level of monitoring activity and relatively clean elections. This makes it difficult to predict the relationship between increasing complaints and the type or level of manipulation.
+
+To maximize the relative benefits of this data, I consider *pre-election complaints* only. This should be a strong indicator of the level of civil-society activism, as it requires monitoring effort before election day, when election monitoring is lower salience. Pre-election monitoring requires additional voluntary effort on an individual's part; an election-day violation can be reported by a voter already at the polling place. Citizens who report pre-election violations are more likely to be engaged, motivated, and plugged in to local opposition-oriented networks. Pre-election violations are also likely to be lower-risk to agents, and thus more commonplace across regions.^[Typical pre-election violations include things like campaign posters located too close to the polling place, or the use of administrative resources to advertise for a campaign.] Complaints about pre-election manipulation are therefore assumed to be a more accurate measure of monitoring activity than election-day complaints (which are a more ambiguous mix of monitoring effort and manipulation level). The time constraint on the data also has a benefit here, in that it captures a period when United Russia's patronage network is highly consolidated.
+
+I adjust the region-year count of electoral complaints in two ways. First, I standardize the number of complaints by the number of precincts in the region, to account for the fact that larger regions will mechanically generate more complaints at the same level of civil activism. Second, to account for considerable skewness in the variable (low counts are much more common than high counts), I take the log of the variable.^[There is no region-year in the dataset with zero pre-election complaints.] The resulting variable is called *pre-election complaints (log)*. I expect that, as an indicator of the risk of agent exposure, *pre-election complaints* will be negatively associated with falsification and positively associated with dispersed forms of manipulation.
+
+```{r complainttable, echo=FALSE, message=FALSE, warning=FALSE}
+
+models6 <- list()
+models6[['Model 17']] <- model_binary_complaints_pre
+models6[['Model 18']] <- model_dev_violations
+models6[['Model 19']] <- model_spike_violations
+models6[['Model 20']] <- model_ns_violations
+models6[['Model 21']] <- model_ns_violations_year
+
+
+library(kableExtra)
+
+reg_table6 <- modelsummary(models6, output = "kableExtra",  stars = T, title = 'Table 6: Regression models of manipulation using pre-election complaints', gof_omit = c("Log|RMSE"), coef_map = c("(Intercept)" = "(Intercept)",
+             "ethnic_statusNon-minority Republic" = "Non-minority ethnic region",
+             "ethnic_statusOblast" = "Oblast'",
+             "pct_russian_upd" = "Ethnic Russian percent", 
+             "regional_comp" = "Regional competitiveness",
+             "subnational_party_control" = "Subnational party control",
+"presidential" = "Presidential election",                                                                 "pensioners_per_1000" = "Pensioners per 1000 pop.",                                                                 "grp_by_pop_small" = "GRP per capita",                                                                   "poverty" = "Poverty rate", 
+                 "urban_pct" = "Urban share of pop.",
+                 
+                 "ur_gov_share" = "UR governors share", 
+                 "urban.pct" = "Urbanization", 
+                 "population_small" = "Population size", 
+                 "n_precincts"= "N. precincts",
+"log(complaints_pre_rel)" = "N. pre-election complaints (log)",
+"log_complaints_pre_rel" = "N. pre-election complaints (log)",
+"year2012" = "2012",
+"year2016" = "2016",
+"year2018" = "2018",
+"year2021" = "2021",
+
+"year2012:log_complaints_pre_rel" = "Complaints:2012",
+"year2016:log_complaints_pre_rel" = "Complaints:2016",
+"year2018:log_complaints_pre_rel" = "Complaints:2018",
+"year2021:log_complaints_pre_rel" = "Complaints:2021")) %>%  add_header_above(c(" " = 1, "Any fraud" = 1, "Deviance" = 1, "RKD", "Nonstandard", "Nonstandard"))
+
+reg_table6
+```
+
+Table \@ref(tab:complainttable) reports the results for models of each of the four dependent variavbles (three measures of falsification and one of dispersed manipulation). Despite the limitations of the measure, the results are consistent with those of the main analysis. Most importantly, Models 18 and 19 show that pre-election complaints are associated with reductions in the most sensitive measures of falsification. Model 17 likewise shows a negative coefficient for *pre-election complaints*, though it is not statistically significant. This is perhaps not surprising, given that the binary fraud indicator is region-wide and relatively coarse---pre-election complaints could plausibly reduce falsification in some parts of a region, while other precincts in less risky areas falsify more to compensate [@Ichino2012]. 
+
+Finally, Model 20 shows that complaints are positively associated with dispersed manipulation, though again the relationship is not significant. It is possible that this null result is a reflection of the limited time period of the complaints dataset (2011 to 2021). As discussed earlier in this chapter, election administration in Russia evolved considerably after the 2011 protest movement, to prevent independent election monitoring and to facilitate different types of manipulation. For instance, beginning with the 2018 election, the traditional paper absentee certificate was replaced with an electronic 'mobile voter' system. While duplicate voting is still possible under the new system, its opacity means that such tampering may not show up in the forensic data [@meduzaBeforePresidential]. Likewise, the Golos network came under increasingly heavy legal repression over time, hindering its ability to operate and communicate with citizens. This is reflected in the complaint data; the average number of pre-election complaints per precinct per region was 5.3 in 2011, but only 1.4 in 2021. Over time these changes---which made dispersed manipulation harder to expose and punish---should make complaints a weaker indicator of risk to agents engaging in such tasks. We see some evidence of this interpretation in Model 21, which interacts *pre-election complaints* with election year. In this specification, the log number of complaints is positively and significantly associated with dispersed manipulation in 2011 (baseline category), with decreasing effects thereafter. 
 
 ## Discussion and conclusion
 
