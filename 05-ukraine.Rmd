@@ -2,6 +2,12 @@
 
 \chaptermark{Election manipulation in Ukraine}
 
+Ukraine's 2004 presidential election was a moment of crisis for the incumbent regime. The stakes, as with many post-communist elections, were high. Turnover in the presidency would put the post-communist distribution of resources and power at risk, threatening the fortunes (and perhaps the liberty) of allies of the incumbent [@kuzio_kuchma_2005]. A deeply unpopular and scandal-plagued incumbent President Kuchma was unable to run again. Instead, a Kuchma protege, Viktor Yanukovych, became the standard-bearer for the incumbent coalition. Despite coming in second in the first round of the election, the official results declared Yanukovych to be the winner in the second round. Amid allegations of widespread fraud, hundreds of thousands of citizens took to the streets, braving the Ukrainian winter for weeks on end. Amid cascading defections from within the incumbent elite, the parliament and the supreme court endorsed a re-run of the second round [@kuzio_kuchma_2005]. Yanukovych lost the re-run to Viktor Yushchenko, ushering in several years of economic and political reforms.
+
+On one level, the outcome of the Orange Revolution vividly demonstrates the risk to incumbents of rigging an election. As such, the Orange Revolution looms large in the literature on election manipulation and protest; it is perhaps the paradigmatic example of the costs that governments can pay after rigging an election. On a closer read of the case, however, presents a more complicated picture. Preparations by civil society and opposition groups to monitor the election and protest the outcome were extensive and highly visible. The two main opposition camps coordinated in advance of the election. Opposition activists mobilized as many as 50,000 protesters in the streets *before* the election. In a highly polarized society, the risk and cost of protest were both high. Understood in this way, the Orange Revolution is a deviant case for the 'regime-weakness' model of manipulation. If electoral manipulation signals weakness, and protest risk can therefore deter manipulation, why didn't the Kuchma / Yanukovych group back down and hold clean(er) elections?
+
+
+
 
 
 The Ukrainian case provides an opportunity to test the theory in a very different set of circumstances. No ruling party has ever managed to dominate Ukrainian politics in the way United Russia does. Instead, Ukraine's political history from 2002 to 2014 (the period covered here) is one of crisis, alternation in power, polarization, democratization and democratic backsliding. In other words, the case provides an opportunity to test the regime-strength theory of election manipulation at the opposite end of the spectrum from Russia: where the regime is highly competitive and unconsolidated, though still in the context of extensive patronage networks and weak rule of law.
@@ -16,7 +22,13 @@ The results indicate that these less attributable forms of manipulation are sens
 
 ## Ukraine's political history, 2000 to 2014
 
-Though analysts should be wary of over-emphasizing the point, Ukraine’s political divisions during this period were broadly regional. Voters in the country’s east generally supported parties and candidates that adopted a more interventionist economic policy and took a more favorable view toward Russia. By contrast, voters in the west were more likely to support parties and candidates with economic and foreign policies oriented towards the market and towards Europe (Birch, 2000).  The two regions are characterized by ethnic and linguistic divisions, with the west home to more ethnic Ukrainians and Ukrainian-speakers, while Russian ethnicity and language is more common in the east.
+Though analysts should be wary of over-emphasizing the point, Ukraine’s political divisions during this period were broadly regional. Voters in the country’s east generally supported parties and candidates that adopted a more interventionist economic policy and took a more favorable view toward Russia. By contrast, voters in the west were more likely to support parties and candidates with economic and foreign policies oriented towards the market and towards Europe (Birch, 2000).  The two regions are characterized by ethnic and linguistic divisions, with the west home to more ethnic Ukrainians and Ukrainian-speakers, while Russian ethnicity and language is more common in the east. While this chapter uses 'pro-Western' and 'pro-Eastern' as an analytical shorthand, it is important to note that these labels average over considerable variation within each group.
+
+First, it is important to note that "Pro-eastern" and "Pro-western" attitudes are not immutable. In the 1991 referendum, majorities in every region of the country---including the predominantly ethnic Russian Crimea---voted in favor of independence from the Soviet Union.^[While bitterly fought in the media, the referendum appears to have been conducted in a free and fair manner[@potichnyjReferendumPresidentialElections1991].] Politicians have shifted in and out of each camp over time. After Russia's incursion in Ukraine in 2014 and full-scale invasion in 2022---outside the time period covered here---Ukrainian national identity and alienation from Russia have become more common across the country [@kulykNationalIdentityTime2024;@kulykSheddingRussiannessRecasting2018].
+
+Moreover, there is considerable regional heterogeneity within each group.
+
+
 
 ### Overall context
 
