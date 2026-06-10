@@ -150,11 +150,24 @@ In the original turnout-based measure of electoral manipulation developed by Mya
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
+#install.packages("renv")
+
+library(stringi)
 library(tidyverse)
 library(here)
 library(openxlsx)
 library(lme4)
 library(modelsummary)
+library(sessioninfo)
+
+renv::init()
+renv::snapshot()
+
+sink("sessionInfo.txt")
+R.version.string
+"RStudio version below:"
+rstudioapi::versionInfo()$version
+sink()
 
 elex_data <- read.csv(here("Russia_forensics", "Data", "analysis_data_master.csv"))
 vdem_data <- read.csv(here("Russia_forensics", "Data", "vdem_final.csv"))
@@ -234,7 +247,6 @@ full_data <- full_data %>% mutate(complaints_ihs = ifelse(is.na(complaints)== T,
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 ## Looking at absolute vote-share in 2007
-library(stringi)
 
 data2007_test <- read.csv(here("Russia_forensics", "Data", "2007.csv", "2007.csv"))
 data2007_test <- data2007_test %>% mutate(region = stri_trans_general(region, "cyrillic-latin"))
