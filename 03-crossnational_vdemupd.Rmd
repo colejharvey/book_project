@@ -426,8 +426,8 @@ nelda2.sub <- nelda2.sub %>% mutate(surv_status_censor_assume = ifelse(d.events.
 
 
 
-
-
+cox1b <- coxph(Surv(d.events.num, surv_status) ~ v2elirreg.inv*winner.share.upd +diem_fraud_max +  presidential  + v2elirreg.inv , data = nelda2.sub %>% filter(inc.lose == 0  & v2x_regime == 1))
+#summary(cox1b)
 
 
 
@@ -452,6 +452,10 @@ summary(cox1.cen)
 
 
 
+
+
+cox2b <- coxph(Surv(d.events.num, surv_status) ~  legcon.1lag + gdpgrowth.1lag +  + nelda28 + winner.share.upd  + presidential + inc.termlimit.num  +  physinteg.1lag  + urban.pct  + unscheduled_election + regional_success_lag + n.events.pre , data = nelda2.sub %>% filter(inc.lose == "0"  & v2x_regime == 1 & nelda28 != "N/A"))
+#summary(cox2b)
 
 
 
@@ -878,6 +882,10 @@ russia_plot_2
 dev.off()
 ```
 
+### Coder bias unlikely to drive results
+
+The measure of electoral fraud used here is derived from expert coders' retrospective evaluation of elections; it is possible that such evaluations could themselves be driven by protest. Since protests draw attention to election integrity, it could be that case that coders systematically assign higher fraud scores to protested elections than unprotested elections. This bias could be more severe the longer the protests last. This represents a possible threat to inference. If longer-lasting protest movements are associated with upwardly biased fraud scores due to measurement error, then the negative relationship between the fraud measurement and protest duration could be spurious. In that case, the true value of fraud in protested cases would be lower than the biased measurement. Protest movements might end more quickly in this case due to the incumbent's higher genuine popularity or lower social grievances, rather than being defeated by strong incumbents. 
+
 ## Conclusion
 
 
@@ -888,3 +896,153 @@ This chapter tests the core assumptions of these two models by examining the rel
 Additional tests, including on a broader dataset that includes electoral democracies, confirm the regime-strength conception of fraud. When confronted with a higher risk of electoral protest, incumbents tend to produce more election fraud rather than less. This correlation holds true across multiple modeling approaches and measures of manipulation.
 
 Taken together, these findings suggest that the threat of protest is unlikely to constrain election manipulation in the way the regime-weakness model predicts. The incumbents who manipulate most aggressively are also the best equipped to defeat the protests that may follow. This points to electoral authoritarianism as a remarkably durable equilibrium — and paints a bleak picture for those who hope that the threat of protest can discipline incumbents or open pathways to democratization. It also suggests that researchers should look beyond mass protest when modeling the forces that shape electoral manipulation. As subsequent chapters show, a promising approach for upholding election integrity involves breaking the links that tie political principals to their front-line agents.
+
+
+## Looking for measurement bias in V-Dem
+
+```{r}
+##
+## Ordered factor for no protest, short, and long. Short is one week.
+##
+library(MASS)        # polr() for ordered logit
+library(emmeans)     # for trend contrasts on the ordered factor
+library(sandwich)    # robust SEs (group-size imbalance)
+library(lmtest)      # coeftest()
+
+nelda2.sub <- nelda2.sub %>% mutate(protest_dur_cat = ifelse(d.events.num == 0, "None", 
+                                                             ifelse(d.events.num > 0 & d.events.num <= 7, "Short", "Long")))
+
+nelda2.sub$protest_dur_cat <- factor(
+  nelda2.sub$protest_dur_cat,
+  levels = c("None", "Short", "Long"),
+  ordered = TRUE
+)
+
+m_cond <- lm(
+  v2elirreg.inv ~ protest_dur_cat + diem_fraud_max,
+  data = nelda2.sub
+)
+
+## Robust (HC3) SEs — the no-protest group dwarfs the others, so
+## homoskedastic SEs are not credible here.
+coeftest(m_cond, vcov = vcovHC(m_cond, type = "HC3"))
+
+
+m_cond2 <- lm(v2elirreg.inv ~ d.events.num + diem_fraud_max, data = nelda2.sub)
+coeftest(m_cond2, vcov = vcovHC(m_cond2, type = "HC3"))
+
+```
+
+
+
+```{r}
+
+
+nelda2.sub <- nelda2.sub %>% mutate(protest_dur_cat = ifelse(d.events.num == 0, "None", 
+                                                             ifelse(d.events.num > 0 & d.events.num <= 7, "Short", "Long")))
+
+nelda2.sub$protest_dur_cat <- factor(
+  nelda2.sub$protest_dur_cat,
+  levels = c("None", "Short", "Long"),
+  ordered = TRUE
+)
+
+
+## ------------------------------------------------------------------
+## 1. Standard ordered logit (proportional odds)
+##    DV = protest_dur_cat
+##    RHS = v2elirreg.inv (V-Dem, retrospective) + diem_fraud_max
+## ------------------------------------------------------------------
+m_olr <- polr(
+  protest_dur_cat ~ v2elirreg.inv + diem_fraud_max,
+  data   = nelda2.sub,
+  Hess   = TRUE,        # needed for SEs
+  method = "logistic"   # ordered LOGIT; use "probit" for ordered probit
+)
+
+summary(m_olr)
+
+## polr() doesn't print p-values; compute them from the t-values
+ctable <- coef(summary(m_olr))
+p_vals <- 2 * (1 - pnorm(abs(ctable[, "t value"])))
+ctable <- cbind(ctable, "p value" = p_vals)
+print(ctable)
+
+## Odds ratios + 95% CI (often easier to interpret/report)
+exp(cbind(OR = coef(m_olr), confint(m_olr)))
+
+## ------------------------------------------------------------------
+## 1b. Check the proportional-odds assumption (matters here)
+##     If PO is violated, the single coefficient on v2elirreg.inv
+##     masks a different effect at the none|short vs short|long cut,
+##     which is exactly where contamination would show up.
+library(brant)
+brant(m_olr)   # nonsignificant = PO assumption holds
+
+
+
+
+
+## ------------------------------------------------------------------
+## 2. Jonckheere–Terpstra test
+##    Tests V-Dem manipulation for a MONOTONE TREND across the
+##    ordered protest groups. This is bivariate by construction —
+##    it's the unconditional comparison, with no control for
+##    diem_fraud_max. Treat as descriptive, not the load-bearing test.
+## ------------------------------------------------------------------
+## g must be an ordered factor; the test is directional
+JonckheereTerpstraTest(
+  v2elirreg.inv ~ protest_dur_cat,
+  data        = nelda2.sub,
+  alternative = "increasing",   # contamination story: score rises with duration
+  nperm = 1000
+  )
+
+
+
+library(emmeans)     # for trend contrasts on the ordered factor
+library(sandwich)    # robust SEs (group-size imbalance)
+library(lmtest)      # coeftest()
+## ------------------------------------------------------------------
+## Model 3: does the V-Dem manipulation score still trend with protest
+## duration AFTER conditioning on a contemporaneous fraud measure?
+##
+## v2elirreg.inv is continuous-ish -> OLS is the natural workhorse.
+## protest_dur_cat stays an ORDERED factor (none < short < long).
+## ------------------------------------------------------------------
+
+## Set polynomial contrasts so the ordered factor decomposes into
+## LINEAR (monotone trend) + QUADRATIC components. The linear term is
+## the contamination-relevant quantity.
+contrasts(nelda2.sub$protest_dur_cat) <- contr.poly(3)
+
+m_cond <- lm(
+  v2elirreg.inv ~ protest_dur_cat + diem_fraud_max,
+  data = nelda2.sub
+)
+
+## Robust (HC3) SEs — the no-protest group dwarfs the others, so
+## homoskedastic SEs are not credible here.
+coeftest(m_cond, vcov = vcovHC(m_cond, type = "HC3"))
+
+## Adjusted V-Dem means by protest group, holding diem_fraud_max at its mean
+emm <- emmeans(m_cond, ~ protest_dur_cat)
+emm
+
+## Explicit monotone-trend test on the adjusted means
+contrast(emm, "poly")          # linear + quadratic, conditioned on the control
+
+
+
+## Comparing short / long
+
+df_prot <- subset(nelda2.sub, protest_dur_cat %in% c("Short", "Long"))
+df_prot$long <- as.integer(df_prot$protest_dur_cat == "Long")
+
+m_dur <- lm(v2elirreg.inv ~ long + diem_fraud_max, data = df_prot)
+coeftest(m_dur, vcov = vcovHC(m_dur, type = "HC3"))
+
+m_dur2 <- lm(v2elirreg.inv ~ d.events.num + diem_fraud_max, data = nelda2.sub)
+coeftest(m_dur2, vcov = vcovHC(m_dur2, type = "HC3"))
+```
+
