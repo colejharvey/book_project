@@ -32,7 +32,7 @@ library(broom.helpers)
 library(kableExtra)
 library(gt)
 
-nelda2.sub <- read.csv(here::here("Crossnational_data", "nelda2_sub_vdem15_2025-05-29.csv"))
+nelda2.sub <- read.csv(here::here("Crossnational_data", "nelda2_sub_vdem15_2026-06-24.csv"))
 
 
 nelda2.sub <- nelda2.sub %>% mutate(legit_no_proc = (v2exl_legitperf + v2exl_legitlead + v2exl_legitideol))
@@ -154,6 +154,15 @@ nelda2.sub <- nelda2.sub %>% mutate(manipulation_index_mult = (elintim.inv.zeros
 
 ## For descriptive statistics
 nelda2.sub.auth <- nelda2.sub %>% filter(v2x_regime == "1")
+
+## Winner margin of victory vs. second-place as robustness
+
+nelda2.sub <- nelda2.sub %>% mutate(winner_margin_victory = ifelse(presidential == 1, winner.share.upd - (v2elvotsml/100), winner.share.upd - (v2ellovtsm/100)))
+
+## Electoral system, coding presidential elections as majoritarian
+
+nelda2.sub <- nelda2.sub %>% mutate(v2elparlel_mod = ifelse(presidential == 1, 0, v2elparlel))
+nelda2.sub$v2elparlel_mod <- factor(nelda2.sub$v2elparlel_mod)
 ```
 
 
@@ -305,7 +314,7 @@ Since vote-share data is given in V-Dem for the winning party in an election, wi
 
 For the models of protest duration, I exclude all cases where the incumbent lost the election outright. This limits the observations to those that fit the population of interest: protest following an election in which the incumbent claimed victory, possibly through reliance on election fraud.^[Excluding cases where incumbents stepped down after losing an election avoids introducing measurement error in the dependent variable, due to a quirk of the ECAV dataset, which codes the 'side' of the protest (pro- or anti-government) as missing during the period between an election and the swearing in of a new government in cases where the incumbent loses. Including these cases thus runs the risk of conflating pro- and anti-incumbent protest, along with cases where protesters goals are genuinely unknown. However, excluding them also influences the interpretation of the results from these models. Threats to inference from this section are evaluated in more detail in the discussion section.]  
 
-The models incorporate several potential confounding variables, in addition to the *election fraud* variable described above. The *lagged GDP growth rate*, taken from V-Dem, is used to capture economic grievances: lower GDP growth rates, especially negative ones, should be expected to increase citizens' sense of grievance. The winning party's *vote-share* is also taken from the V-Dem dataset.^[This variable has considerable missingness, which I reduced in part by updating missing values in V-Dem using data from Wikipedia (when links to official sources were available), and Psephos.]
+The models incorporate several potential confounding variables, in addition to the *election fraud* variable described above. The *lagged GDP growth rate*, taken from V-Dem, is used to capture economic grievances: lower GDP growth rates, especially negative ones, should be expected to increase citizens' sense of grievance. The winning party's *vote-share* is also taken from the V-Dem dataset.^[This variable has considerable missingness, which I reduced in part by updating missing values in V-Dem using data from Wikipedia (when links to official sources were available), and Psephos.] To account for mechanical differences in winning party vote share, I also include a categorical indicator of *electoral system* type from V-Dem (v2elparlel). This variable excludes executive elections in its original format; I modify the variable to code presidential elections as majoritarian electoral systems.
 
 As identified in prior research, other factors that may influence both fraud and protest are included as controls variables. The repressive capacity of the government [@Davenport2019] is measured using the *physical integrity index* from V-Dem (v2x_clphy), and its square term. Indicators of government *control over civil society* (the 'v2cseeorgs' variable from V-Dem), de facto *judicial independence* [@Linzer2015] and the available of *alternative sources of information* ('v2x_freexp_altinf' from V-Dem) are also employed. Since urban areas can make electoral manipulation more difficult [@ziblatt2009;@larreguy2016parties] while also making protest more likely [@Wallace2013a], I also include data on *urbanization* taken from the United Nations [@DepartmentofEconomicandSocialAffairsPopulationDivision2019]. All models include *legislative constraints* on the executive, a V-Dem variable which captures the extent to which the legislative body in the country acts independently in practice to limit executive power.  
 
@@ -334,6 +343,7 @@ incl.vars <- nelda2.sub %>% dplyr::select(#'Judicial independence' = jucon.1lag,
                                              'Election fraud' = v2elirreg.inv, 
                                             'Presidential election' = presidential,
                                             'Incumbent term-limited' = inc.termlimit.num,
+                                          "Electoral system (categorical)" = v2elparlel_mod2,
                                             'Physical integrity index' = physinteg.1lag,
                                             'Urbanization' = urban.pct, 
                                            
@@ -432,12 +442,12 @@ cox1b <- coxph(Surv(d.events.num, surv_status) ~ v2elirreg.inv*winner.share.upd 
 
 
 
-cox1 <- coxph(Surv(d.events.num, surv_status) ~ v2elirreg.inv*winner.share.upd  +  presidential  + v2elirreg.inv , data = nelda2.sub %>% filter(inc.lose == 0  & v2x_regime == 1))
+cox1 <- coxph(Surv(d.events.num, surv_status) ~ v2elirreg.inv*winner.share.upd  +  presidential  + v2elirreg.inv + v2elparlel_mod , data = nelda2.sub %>% filter(inc.lose == 0  & v2x_regime == 1))
 summary(cox1)
 
 
 
-cox1.cen <- coxph(Surv(d.events.num, surv_status_censor_assume) ~  v2elirreg.inv*winner.share.upd  +  presidential, data = nelda2.sub %>% filter(inc.lose == 0  & v2x_regime == 1))
+cox1.cen <- coxph(Surv(d.events.num, surv_status_censor_assume) ~  v2elirreg.inv*winner.share.upd  +  presidential + v2elparlel_mod, data = nelda2.sub %>% filter(inc.lose == 0  & v2x_regime == 1))
 summary(cox1.cen)
 
 
@@ -460,13 +470,13 @@ cox2b <- coxph(Surv(d.events.num, surv_status) ~  legcon.1lag + gdpgrowth.1lag +
 
 
 
-cox2 <- coxph(Surv(d.events.num, surv_status) ~  legcon.1lag + gdpgrowth.1lag +  + v2elirreg.inv*winner.share.upd  + presidential + inc.termlimit.num  +  physinteg.1lag  + urban.pct  + unscheduled_election + regional_success_lag + n.events.pre , data = nelda2.sub %>% filter(inc.lose == "0"  & v2x_regime == 1))
+cox2 <- coxph(Surv(d.events.num, surv_status) ~  legcon.1lag + gdpgrowth.1lag +  + v2elirreg.inv*winner.share.upd  + presidential + inc.termlimit.num  +  physinteg.1lag  + urban.pct  + unscheduled_election + regional_success_lag + v2elparlel_mod + n.events.pre , data = nelda2.sub %>% filter(inc.lose == "0"  & v2x_regime == 1))
 summary(cox2)
 p.duration.margin <- sjPlot::plot_model(cox2, type = "pred", terms = c("winner.share.upd", "v2elirreg.inv [-.53, 2.45]")) #) #This is the 5th and 95th quantiles
 p.duration.margin <- p.duration.margin +  labs(x = "Incumbent vote-share", y = "Hazard ratio", title = "Hazard ratio for protest movement end", color = "Election fraud") + theme_bw() + coord_cartesian(ylim = c(0, 8))
 
 
-cox2.cen <- coxph(Surv(d.events.num, surv_status_censor_assume) ~  legcon.1lag + gdpgrowth.1lag +  + v2elirreg.inv*winner.share.upd  + presidential + inc.termlimit.num  +  physinteg.1lag  + urban.pct  + unscheduled_election + regional_success_lag + n.events.pre, data = nelda2.sub %>% filter(inc.lose == "0"  & v2x_regime == 1))
+cox2.cen <- coxph(Surv(d.events.num, surv_status_censor_assume) ~  legcon.1lag + gdpgrowth.1lag +  + v2elirreg.inv*winner.share.upd  + presidential + inc.termlimit.num  +  physinteg.1lag  + urban.pct  + unscheduled_election + v2elparlel_mod + regional_success_lag + n.events.pre, data = nelda2.sub %>% filter(inc.lose == "0"  & v2x_regime == 1))
 summary(cox2.cen)
 
 p.duration.margin.cen <- sjPlot::plot_model(cox2.cen, type = "pred", terms = c("winner.share.upd", "v2elirreg.inv [-.23, 2.58]"))
@@ -475,7 +485,7 @@ p.duration.margin.cen <- p.duration.margin.cen +  labs(x = "Incumbent vote-share
 
 
 
-cox3.cen <-  coxph(Surv(d.events.num, surv_status_censor_assume) ~  legcon.1lag +  gdpgrowth.1lag +  + v2elirreg.inv*winner.share.upd  + presidential + inc.termlimit.num  +  physinteg.1lag  + urban.pct  + unscheduled_election +  any_large, data = nelda2.sub %>% filter(inc.lose == "0" & v2x_regime == 1))
+cox3.cen <-  coxph(Surv(d.events.num, surv_status_censor_assume) ~  legcon.1lag +  gdpgrowth.1lag +  + v2elirreg.inv*winner.share.upd  + presidential + inc.termlimit.num  +  physinteg.1lag  + urban.pct  + unscheduled_election + v2elparlel_mod +  any_large, data = nelda2.sub %>% filter(inc.lose == "0" & v2x_regime == 1))
 summary(cox3.cen)
 p.duration.margin.cen3 <- sjPlot::plot_model(cox3.cen, type = "pred", terms = c("winner.share.upd", "v2elirreg.inv [-.53, 2.45]")) + coord_cartesian(ylim = c(0, 10))
 
@@ -532,7 +542,10 @@ modelsummary::modelsummary(models3, gof_omit = "AIC|BIC|Log", longtable=F, stars
                  "urban.pct" = "Urbanization", "rentierstate" = "Rentier state", "taxstate" = "Tax state",
                  "n.events.post" = "N. of post-election protests", "median.participants.mm.pre" = "Median size of pre-election protests", "unscheduled_election" = "Off-schedule election",
                  "rentierstate1" = "Rentier state", "taxstate1" = "Tax state", "n.events.pre" = "Number of pre-election protests", "unscheduled_election1" = "Off-schedule election", "physinteg.1lag" = "Phys. integrity index (lag)",
-                 "physintlag.sq" = "Phys. int. lag squared", "regional_success_lag" = "Regional protest diffusion", 
+                 "physintlag.sq" = "Phys. int. lag squared",
+                 "v2elparlel_mod1" = "Electoral system: PR",
+                 "v2elparlel_mod2" = "Electoral system: Mixed",
+                 "regional_success_lag" = "Regional protest diffusion", 
                  "median.participants" = "Median protest size",
                  "any_large" = "Large protest (> 10,000)",
                                   "winner.share.upd" = "Incumbent vote-share",
@@ -567,7 +580,7 @@ model.binary.base <-  glm(any_protest ~ winner.share.upd*v2elirreg.inv*inc.lose 
 
 model.binary.base.auth <-  glm(any_protest ~ winner.share.upd*v2elirreg.inv*inc.lose + presidential, data = nelda2.sub %>% filter(v2x_regime == 1), family = binomial(link = "logit"))
 
-model.binary.full <- glm(any_protest ~ lji.lag + legcon.1lag + gdpgrowth.1lag + altinf.1lag  +  + osorg.1lag   +    winner.share.upd*v2elirreg.inv*inc.lose   + presidential + inc.termlimit.num  +  physinteg.1lag + physintlag.sq + urban.pct + n.events.pre + rentierstate + taxstate + unscheduled_election + regional_success_lag, family = binomial(link = "logit"), data = nelda2.sub %>% filter(v2x_regime == "1"))
+model.binary.full <- glm(any_protest ~ lji.lag + legcon.1lag + gdpgrowth.1lag + altinf.1lag  +  + osorg.1lag   +    winner.share.upd*v2elirreg.inv*inc.lose   + presidential + inc.termlimit.num  +  physinteg.1lag + physintlag.sq + urban.pct + n.events.pre + rentierstate + taxstate + v2elparlel_mod + unscheduled_election + regional_success_lag, family = binomial(link = "logit"), data = nelda2.sub %>% filter(v2x_regime == "1"))
 
 
 
@@ -600,6 +613,8 @@ reg_table <- modelsummary(models2, output = "gt",  stars = T, title = 'Table 3: 
                  "rentierstate1" = "Rentier state", 
                  "taxstate1" = "Tax state", 
                 "presidential1" = "Presidential",
+"v2elparlel_mod1" = "Electoral system: PR",
+"v2elparlel_mod2" = "Electoral system: Mixed",
                  "unscheduled_election1" = "Off-schedule election",
                  "n.events.pre" = "Number of pre-election protests", 
                  "physinteg.1lag" = "Phys. integrity index (lag)",
@@ -913,11 +928,11 @@ m_cond <- lm(
 
 ## Robust (HC3) SEs — the no-protest group dwarfs the others, so
 ## homoskedastic SEs are not credible here.
-coeftest(m_cond, vcov = vcovHC(m_cond, type = "HC3"))
+#coeftest(m_cond, vcov = vcovHC(m_cond, type = "HC3"))
 
 
 m_cond2 <- lm(v2elirreg.inv ~ d.events.num + diem_explicheat_max, data = nelda2.sub)
-coeftest(m_cond2, vcov = vcovHC(m_cond2, type = "HC3"))
+#coeftest(m_cond2, vcov = vcovHC(m_cond2, type = "HC3"))
 
 ```
 
