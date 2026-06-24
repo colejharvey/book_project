@@ -882,25 +882,13 @@ russia_plot_2
 dev.off()
 ```
 
-### Coder bias unlikely to drive results
+### Retrospective coder bias unlikely to drive results
 
 The measure of electoral fraud used here is derived from expert coders' retrospective evaluation of elections; it is possible that such evaluations could themselves be driven by protest. Since protests draw attention to election integrity, it could be that case that coders systematically assign higher fraud scores to protested elections than unprotested elections. This bias could be more severe the longer the protests last. This represents a possible threat to inference. If longer-lasting protest movements are associated with upwardly biased fraud scores due to measurement error, then the negative relationship between the fraud measurement and protest duration could be spurious. In that case, the true value of fraud in protested cases would be lower than the biased measurement. Protest movements might end more quickly in this case due to the incumbent's higher genuine popularity or lower social grievances, rather than being defeated by strong incumbents. 
 
-## Conclusion
+The evidence suggests that this sort of measurement error is not driving the results. To test this possibility, I regress the V-Dem measure of intentional voting irregularities on the duration of protest and a measure of election fraud from the Data on International Election Monitoring dataset [@kelley2012]. DIEM codes election observer reports from national elections in 108 countries from 1980 to 2004. The limited temporal coverage of DIEM makes it less suitable as a primary measure, but it has the advantage of capturing contemporaneous reports from on-the-ground monitors. I use the measure of 'explicit election-day cheating,' which captures fraud, falsification, vote-buying, and voter pressure. In the measurement error scenario, this indicator should be closer to the 'ground truth' than the V-Dem measure, which is retrospective and second-hand. After controlling for election monitors' evaluations, if there is a significant relationship between the duration of electoral protest and the V-Dem fraud score, that would suggest that the V-Dem measure is biased. We do not observe this, whether protest duration is measured as an interval or categorical variable.^[The categorical version divides elections into three groups: unprotested, 'short' protests less than one week in duration, and 'long' protests which persist longer than one week.]
 
-
-Scholars disagree about how election fraud relates to post-election protest. One family of models — which I have called the regime-weakness model — predicts that incumbents may opt for cleaner elections when the risk of post-election protest is higher. A competing family of models holds that election fraud can itself be a signal of incumbent strength. Building on the principal-agent literature on election fraud, I argue that large-scale fraud draws on the same resources that make incumbents resilient to protest, even when low popularity is reflected in weak vote-shares. Fraud is easier to carry out when incumbents control patronage resources and can shield front-line agents from legal consequences — and those same capacities help incumbents defuse mass protest. Resolving this debate has significant implications for our understanding of both election fraud and authoritarian stability.
-
-This chapter tests the core assumptions of these two models by examining the relationship between election fraud and two dimensions of protest: its initiation and its duration. The key insight is that the regime-weakness and regime-strength models may generate identical predictions about whether protest occurs, but diverge in what they predict about how long protest lasts. Drawing on cross-national data from the V-Dem, NELDA, and ECAV datasets — covering 659 elections in electoral authoritarian regimes — I show that protest is most likely when incumbent vote-shares are very low and fraud is extensive, a finding consistent with both models. More importantly, however, incumbents who engage in larger-scale fraud are able to put down protest movements more quickly.
-
-Additional tests, including on a broader dataset that includes electoral democracies, confirm the regime-strength conception of fraud. When confronted with a higher risk of electoral protest, incumbents tend to produce more election fraud rather than less. This correlation holds true across multiple modeling approaches and measures of manipulation.
-
-Taken together, these findings suggest that the threat of protest is unlikely to constrain election manipulation in the way the regime-weakness model predicts. The incumbents who manipulate most aggressively are also the best equipped to defeat the protests that may follow. This points to electoral authoritarianism as a remarkably durable equilibrium — and paints a bleak picture for those who hope that the threat of protest can discipline incumbents or open pathways to democratization. It also suggests that researchers should look beyond mass protest when modeling the forces that shape electoral manipulation. As subsequent chapters show, a promising approach for upholding election integrity involves breaking the links that tie political principals to their front-line agents.
-
-
-## Looking for measurement bias in V-Dem
-
-```{r}
+```{r, echo=FALSE, warning=FALSE, error=FALSE}
 ##
 ## Ordered factor for no protest, short, and long. Short is one week.
 ##
@@ -919,7 +907,7 @@ nelda2.sub$protest_dur_cat <- factor(
 )
 
 m_cond <- lm(
-  v2elirreg.inv ~ protest_dur_cat + diem_fraud_max,
+  v2elirreg.inv ~ protest_dur_cat + diem_explicheat_max,
   data = nelda2.sub
 )
 
@@ -928,10 +916,57 @@ m_cond <- lm(
 coeftest(m_cond, vcov = vcovHC(m_cond, type = "HC3"))
 
 
-m_cond2 <- lm(v2elirreg.inv ~ d.events.num + diem_fraud_max, data = nelda2.sub)
+m_cond2 <- lm(v2elirreg.inv ~ d.events.num + diem_explicheat_max, data = nelda2.sub)
 coeftest(m_cond2, vcov = vcovHC(m_cond2, type = "HC3"))
 
 ```
+
+```{r biastest, echo=FALSE, message=FALSE, warning=FALSE}
+library(modelsummary)
+
+models <- list(
+  "Model 11"      = m_cond2,
+    "Model 12" = m_cond
+)
+
+## Apply HC3 robust SEs to BOTH models via the vcov argument.
+## modelsummary recomputes coeftest-equivalent SEs internally, so you
+## don't pass the coeftest() objects — pass the lm objects + vcov spec.
+modelsummary(
+  models,
+  vcov = "HC3",                       # <- robust SEs, matches your vcovHC(type="HC3")
+  stars = c('*' = .05, '**' = .01, '***' = .001),
+  coef_map = c(
+    "protest_dur_cat.L"   = "Protest duration cat. (linear)",
+    "protest_dur_cat.Q"   = "Protest duration cat. (quadratic)",
+    "d.events.num"        = "Protest duration (interval)",
+    "diem_explicheat_max" = "DIEM explicit cheating",
+    "(Intercept)"         = "Intercept"
+  ),
+  gof_map = c("nobs", "r.squared", "adj.r.squared"),
+  title   = "V-Dem coded irregularities (v2elirreg, inverted) regressed on post-election protest and a contemporaneous fraud measure",
+  notes   = "HC3 heteroskedasticity-robust standard errors in parentheses. Higher values of the dependent variable indicate greater coded electoral irregularity. DIEM explicit-cheating measure derived from contemporaneous election-observer reports.",
+  output  = "default"
+)
+```
+
+Both models show that the DIEM variable is highly influential. It is a positive, substantively large, and statistically significant predictor of the V-Dem fraud measure. Model 11 shows no significant relationship between the duration of protest and the V-Dem measure. Model 12 shows no relationship for the categorical variable, when modeled either as a linear or quadratic relationship (a quadratic effect might be expected if, for example, there is a significant jump in the V-Dem measure across the unprotested and short-protest categories, but no significant jump between the short and long protest categories). While this test cannot conclusively prove that there is *no* measurement error in V-Dem's *intentional irregularities* measure driven by protest visibility, it does indicate that such error is not introducing significant bias into the results.
+
+## Conclusion
+
+
+Scholars disagree about how election fraud relates to post-election protest. One family of models — which I have called the regime-weakness model — predicts that incumbents may opt for cleaner elections when the risk of post-election protest is higher. A competing family of models holds that election fraud can itself be a signal of incumbent strength. Building on the principal-agent literature on election fraud, I argue that large-scale fraud draws on the same resources that make incumbents resilient to protest, even when low popularity is reflected in weak vote-shares. Fraud is easier to carry out when incumbents control patronage resources and can shield front-line agents from legal consequences — and those same capacities help incumbents defuse mass protest. Resolving this debate has significant implications for our understanding of both election fraud and authoritarian stability.
+
+This chapter tests the core assumptions of these two models by examining the relationship between election fraud and two dimensions of protest: its initiation and its duration. The key insight is that the regime-weakness and regime-strength models may generate identical predictions about whether protest occurs, but diverge in what they predict about how long protest lasts. Drawing on cross-national data from the V-Dem, NELDA, and ECAV datasets — covering 659 elections in electoral authoritarian regimes — I show that protest is most likely when incumbent vote-shares are very low and fraud is extensive, a finding consistent with both models. More importantly, however, incumbents who engage in larger-scale fraud are able to put down protest movements more quickly.
+
+Additional tests, including on a broader dataset that includes electoral democracies, confirm the regime-strength conception of fraud. When confronted with a higher risk of electoral protest, incumbents tend to produce more election fraud rather than less. This correlation holds true across multiple modeling approaches and measures of manipulation.
+
+Taken together, these findings suggest that the threat of protest is unlikely to constrain election manipulation in the way the regime-weakness model predicts. The incumbents who manipulate most aggressively are also the best equipped to defeat the protests that may follow. This points to electoral authoritarianism as a remarkably durable equilibrium — and paints a bleak picture for those who hope that the threat of protest can discipline incumbents or open pathways to democratization. It also suggests that researchers should look beyond mass protest when modeling the forces that shape electoral manipulation. As subsequent chapters show, a promising approach for upholding election integrity involves breaking the links that tie political principals to their front-line agents.
+
+
+## Looking for measurement bias in V-Dem
+
+
 
 
 
