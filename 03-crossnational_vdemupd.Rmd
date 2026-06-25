@@ -585,7 +585,9 @@ model.binary.full <- glm(any_protest ~ lji.lag + legcon.1lag + gdpgrowth.1lag + 
 
 
 plot_binary_margin_typ_n <- sjPlot::plot_model(model.binary.full, type = "pred", terms = c("winner.share.upd", "v2elirreg.inv [.16, 2.09]", "inc.lose"), show.data = T)
-plot_binary_margin_typ_n <- plot_binary_margin_typ_n +  labs(x = "Winner's vote-share", y = "Predicted probability", title = "Predicted probability of protest", color = "Election fraud") + theme_bw()
+plot_binary_margin_typ_n <- plot_binary_margin_typ_n +  labs(x = "Winner's vote-share", y = "Predicted probability", title = "Predicted probability of protest", color = "Election fraud") + theme_bw() +
+  facet_wrap(~facet, labeller = as_labeller(
+    c("0" = "Incumbent wins", "1" = "Incumbent loses")))
 ```
 
 
@@ -640,7 +642,7 @@ reg_table |> tab_options(
 Table \@ref(tab:logit-table) shows the results for Hypothesis 2. Model 6 is a base model, where incumbent loss, winner vote-share, and *election fraud* are standalone variables. In keeping with the general (though inconsistent) findings in the prior literature, there is a significant positive relationship between fraud severity and the likelihood of protest initiation. The winner's claimed margin of victory is negatively associated with protest initiation. Model 7 includes the three-way interaction between *election fraud*, incumbent loss, and winning vote-share, with no controls other than a dummy variable for *presidential elections*. This allows for the largest possible sample size, and shows that the coefficient signs are consistent with those of the full Model 8. 
 
 
-Model 8 is the main model, which includes the full set of controls. Given the complexity of the model, Figure \@ref(fig:margin-prob-fig) illustrates the effects of election fraud on protest risk across various levels of winning vote-share and incumbent loss^[All other variables constant at their means (continuous variables) or modes (categorical variables).]. The values for election fraud represent one standard deviation above and below the mean value. 
+Model 8 is the main model, which includes the full set of controls. Given the complexity of the model, Figure \@ref(fig:margin-prob-fig) illustrates the effects of election fraud on protest risk across various levels of winning vote-share and incumbent loss^[All other variables constant at their means (continuous variables) or modes (categorical variables).]. The values for election fraud represent one standard deviation above and below the mean value. The dots in the graph represent actual case outcomes (protested or not), shaded according to the severity of manipulation. 
 
 The direction of the effect supports Hypothesis 2. When an incumbent claims victory (left panel) and their vote-share is low, electoral protest is significantly likelier when fraud is elevated than when the election is relatively clean. Furthermore, protest against winning incumbents is significantly likelier when fraud is high and vote-shares are low, compared to an election with an equivalent level of fraud but high claimed vote-shares. As noted above, such a finding could be consistent with either the regime-weakness or regime-strength models of manipulation, under different conceptualizations of protest. To distinguish between the two, we turn to the models of protest duration.
 
