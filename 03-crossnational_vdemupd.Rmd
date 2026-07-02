@@ -900,7 +900,7 @@ In sum, these tests show that protest risk, by various measures, is associated w
 ```{r include=FALSE, message=FALSE, warning=FALSE}
 ## Making plots for Russia chapter
 
-russia <- nelda2.sub %>% filter(country == "Russia (Soviet Union)")
+russia <- nelda2.sub.fraudpred %>% filter(country == "Russia (Soviet Union)")
 
 russia_plot_1 <- ggplot(russia, aes(x = propensity_score, y = v2elirreg.inv)) +
   geom_point() +

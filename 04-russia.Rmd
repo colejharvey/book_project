@@ -160,14 +160,14 @@ library(lme4)
 library(modelsummary)
 library(sessioninfo)
 
-renv::init()
-renv::snapshot()
+#renv::init()
+#renv::snapshot()
 
-sink("sessionInfo.txt")
-R.version.string
-"RStudio version below:"
-rstudioapi::versionInfo()$version
-sink()
+#sink("sessionInfo.txt")
+#R.version.string
+#"RStudio version below:"
+#rstudioapi::versionInfo()$version
+#sink()
 
 elex_data <- read.csv(here("Russia_forensics", "Data", "analysis_data_master.csv"))
 vdem_data <- read.csv(here("Russia_forensics", "Data", "vdem_final.csv"))
