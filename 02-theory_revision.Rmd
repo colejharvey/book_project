@@ -80,7 +80,7 @@ The literature on authoritarian elections, electoral manipulation, and protest i
 
 The incumbent's popularity, by contrast, is his likelihood of winning a free and fair election. Some influential models conflate strength with popularity; in these models, popularity determines whether an incumbent is likely to survive a challenge. In those models, electoral manipulation can only signal weakness if exposed, since manufactured votes displace authentic ones for any particular vote total. 
 
-Leventoğlu et al [-@leventogluSynthesizingTheoriesAuthoritarian2025] provide an excellent analysis of the distinctions between popularity and strength, but I depart from their analysis in one way. Popularity is, in my view, a component of strength; popularity provides an additional resource for surviving challenges beyond infrastructural power. A popular regime can, for instance, rely on its genuine supporters to counter-mobilize against protesters or coup plotters.
+Leventoğlu et al [-@leventogluSynthesizingTheoriesAuthoritarian2025] provide an excellent analysis of the distinctions between popularity and strength, but I depart from their approach in one way. Popularity is, in my view, a component of strength; popularity provides an additional resource for surviving challenges beyond infrastructural power. A more popular regime deprives its opponents of possible recruits [@rosenfeldAutocraticMiddleClass2021], and can rely on its genuine supporters to counter-mobilize against protesters or coup plotters [@hellmeierPullingStringsStrategic2020].
 
 ## Part 1: What do authoritarian principals want from elections?
 
