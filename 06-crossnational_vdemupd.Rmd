@@ -166,7 +166,7 @@ nelda2.sub$v2elparlel_mod <- factor(nelda2.sub$v2elparlel_mod)
 ```
 
 
-Beginning with the 'Bulldozer Revolution' in Serbia, and ending with the 2009 electoral protests in Moldova, a series of mass protest events succeeded in ousting incumbent governments across the post-communist region. These 'Color Revolutions' (though only one, Ukraine's Orange Revolution, is technically named after a color) often captivated public attention, with dramatic scenes of sustained mass protest, sometimes in the face of harsh repression. They also drew considerable attention of scholars of democracy and authoritarianism, coming as they did in the second decade after the fall of the Soviet Union brought about a 'third wave' of democracy. 
+Beginning with the 'Bulldozer Revolution' in Serbia, and ending with the 2009 electoral protests in Moldova, a series of mass protest events succeeded in ousting incumbent governments across the post-communist region. These 'Color Revolutions' often captivated public attention, with dramatic scenes of sustained mass protest, sometimes in the face of harsh repression. They also drew considerable attention of scholars of democracy and authoritarianism, coming as they did in the second decade after the fall of the Soviet Union brought about a 'third wave' of democracy. 
 
 Whether driven by effective opposition strategy [@bunce2010] or structural factors [@LucanWay2008;@hale_democracy_2006], these contentious elections appeared to highlight a significant risk that incumbents accept when they manipulate elections. Though far from certain, egregious manipulation could result in mass protests that are costly to the regime, regardless of their outcome. In the worst case, as in Georgia (2003), Ukraine (2004), Kyrgyzstan (2005) and Moldova (2009), incumbents may find themselves ousted. Even in the case of a 'failed revolution,' as in Russia (2011-2012) or Belarus (2020-2021) incumbents may find themselves paying considerable resource costs, experiencing international repercussions, making concessions to the opposition, and/or reallocating the distribution of rents to elites and the security services in order to survive protest outbreaks.
 
@@ -533,7 +533,7 @@ models3[['Model 5']] <- cox3.cen
 
 
 
-modelsummary::modelsummary(models3, gof_omit = "AIC|BIC|Log", longtable=F, stars = T, title = 'Table 4: Cox proportional hazard models of protest duration', coef_map = 
+modelsummary::modelsummary(models3, gof_omit = "AIC|BIC|Log", longtable=F, stars = T, title = 'Cox proportional hazard models of protest duration', coef_map = 
                c("(Intercept)" = "(Intercept)", "presidential1" = "Presidential election", "lji.lag" = "Judical independence (lag)", "legcon.1lag" = "Leg. constraints (lag)", 
                  "gdpgrowth.1lag" = "GDP growth rate (lag)", "altinf.1lag" = "Alternative info. (lag)", 
                  "osorg.1lag" = "Civil soc. openness (lag)", 
@@ -599,7 +599,7 @@ models2[['Model 7']] <- model.binary.base
 models2[['Model 8']] <- model.binary.full
 #models2[['Model 6']] <- model.margin.binary_noc
 
-reg_table <- modelsummary(models2, output = "gt",  stars = T, title = 'Table 3: Logit models of protest occurrence', gof_omit = c("Log|RMSE"), coef_map = c("(Intercept)" = "(Intercept)",
+reg_table <- modelsummary(models2, output = "gt",  stars = T, title = 'Logit models of protest occurrence', gof_omit = c("Log|RMSE"), coef_map = c("(Intercept)" = "(Intercept)",
              "inc.lose1" = "Incumbent loss",
              "v2elirreg.inv" = "Election fraud",
              "winner.share.upd" = "Winner vote-share",
@@ -928,7 +928,7 @@ The measure of electoral fraud used here is derived from expert coders' retrospe
 
 The evidence suggests that this sort of measurement error is not driving the results. To test this possibility, I regress the V-Dem measure of intentional voting irregularities on the duration of protest and a measure of election fraud from the Data on International Election Monitoring dataset [@kelley2012]. DIEM codes election observer reports from national elections in 108 countries from 1980 to 2004. The limited temporal coverage of DIEM makes it less suitable as a primary measure, but it has the advantage of capturing contemporaneous reports from on-the-ground monitors. I use the measure of 'explicit election-day cheating,' which captures fraud, falsification, vote-buying, and voter pressure. In the measurement error scenario, this indicator should be closer to the 'ground truth' than the V-Dem measure, which is retrospective and second-hand. After controlling for election monitors' evaluations, if there is a significant relationship between the duration of electoral protest and the V-Dem fraud score, that would suggest that the V-Dem measure is biased. We do not observe this, whether protest duration is measured as an interval or categorical variable.^[The categorical version divides elections into three groups: unprotested, 'short' protests less than one week in duration, and 'long' protests which persist longer than one week.]
 
-```{r, echo=FALSE, warning=FALSE, error=FALSE}
+```{r, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE}
 ##
 ## Ordered factor for no protest, short, and long. Short is one week.
 ##
@@ -985,7 +985,7 @@ modelsummary(
   ),
   gof_map = c("nobs", "r.squared", "adj.r.squared"),
   title   = "V-Dem coded irregularities (v2elirreg, inverted) regressed on post-election protest and a contemporaneous fraud measure",
-  notes   = "HC3 heteroskedasticity-robust standard errors in parentheses. Higher values of the dependent variable indicate greater coded electoral irregularity. DIEM explicit-cheating measure derived from contemporaneous election-observer reports.",
+  notes   = "HC3 heteroskedasticity-robust standard errors in parentheses.",
   output  = "default"
 )
 ```
