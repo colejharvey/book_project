@@ -148,7 +148,7 @@ Opposition parties know that criminal-legal risk is part of agents' calculations
 
 The same edition of the paper also depicted the unfairness of the election outcome in an editorial cartoon, shown in Figure \@ref(fig:cartoon). In it, ballots in United Russia's favor are made to weigh more by a television and a policeman's baton---two pillars of the incumbent's 'administrative resources' used to bias elections. 
 
-```{r cartoon, out.width="80%", echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Post-election cartoon showing United Russia's advantages: control over the media and police. (Source: Hoover Institution Library & Archives)"}
+```{r cartoon, out.width="80%", echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Post-election cartoon showing United Russia's advantages: control over the media and police. (Source: Hoover Institution Library and Archives)"}
 knitr::include_graphics("pravda_rossii_cartoon.png")
 ```
 
